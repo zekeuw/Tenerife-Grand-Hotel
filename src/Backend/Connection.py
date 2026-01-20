@@ -2,9 +2,9 @@ from pymongo import MongoClient
 import urllib.parse 
 
 
-username = urllib.parse.quote_plus("admin")  # O el usuario que definiste
-password = urllib.parse.quote_plus("admin") # O la contraseña que definiste
-host = "localhost"
+username = urllib.parse.quote_plus("admin") 
+password = urllib.parse.quote_plus("admin")
+host = "10.102.8.248"
 port = 27017
 
 uri = f"mongodb://{username}:{password}@{host}:{port}/?authSource=admin"
