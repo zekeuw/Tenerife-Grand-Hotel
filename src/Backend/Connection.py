@@ -4,7 +4,7 @@ import urllib.parse
 
 username = urllib.parse.quote_plus("admin") 
 password = urllib.parse.quote_plus("admin")
-host = "10.102.8.248"
+host = "10.102.8.228"
 port = 27017
 
 uri = f"mongodb://{username}:{password}@{host}:{port}/?authSource=admin"
@@ -13,11 +13,11 @@ myclient = MongoClient(uri) # Cambiar puerto dependiendo docker
 
 mydb = myclient["Tenerife_Grand_Hotel"]
 
-def contctRoomCollection():
+def conectRoomCollection():
     return mydb["rooms"]
 
-def contctUsersCollection():
+def conectUsersCollection():
     return mydb["users"]
 
-def contctBookingCollection():
+def conectBookingCollection():
     return mydb["bookings"]

@@ -560,7 +560,15 @@ room_data = {
             "price": 50,
             "description": "Individual básica. Cuenta con una pequeña nevera vacía para que guardes tus bebidas."
         },
-        "images": ["/media/img/Regular/Regular1.jpg","/media/img/Regular/Regular2.jpg","/media/img/Regular/Regular2.jpg"]
+        "images": ["/media/img/Regular/Regular1.jpg","/media/img/Regular/Regular2.jpg","/media/img/Regular/Regular2.jpg"],
+        "reviews":{
+            "0":{
+                "user_id":1,
+                "mark":5,
+                "description":"esto es una prueba de una reseña",
+                "room":"RG1"
+            }
+        }
     }
 }
 
