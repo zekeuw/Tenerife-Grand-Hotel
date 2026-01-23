@@ -40,7 +40,7 @@ def main(page: ft.Page):
     page.add(barra_superior)
 
     img = ft.Image(
-        src= "./src/img/best-tenerife.jpg",
+        src= "../../media/img",
         width=1100,
         height=200,
         align=ft.Alignment.CENTER,
@@ -51,7 +51,7 @@ def main(page: ft.Page):
 
     page.add(ft.Text("Habitaciones mejor valoradas", color="black"))
 
-    carousel = ft.Basic
+    # carousel = ft.Basic
 
     def responsive(e):
         # Modo móvil
