@@ -570,18 +570,814 @@ room_data = {
             }
         }
     }
+    
 }
 
 
 users_data = {
-    "123":{ # ID Autoincremental
-        "username": "prueba",
-        "password": "123456as",
-        "name": "Alberto",
-        "surname": "Rodriguez Afonso",
-        "phone": "695288521",
-        "birth": "10/10/2010"
+    {
+    "user1": {
+        "username": "luis01",
+        "password": "passLuis01",
+        "name": "Luis",
+        "surname": "Benitez",
+        "phone": "604343958",
+        "birth": "1982-12-06"
+    },
+    "user2": {
+        "username": "luis02",
+        "password": "passLuis02",
+        "name": "Luis",
+        "surname": "Diaz",
+        "phone": "682773620",
+        "birth": "1997-04-22"
+    },
+    "user3": {
+        "username": "javier03",
+        "password": "passJavier03",
+        "name": "Javier",
+        "surname": "Alvarez",
+        "phone": "672603876",
+        "birth": "1978-11-12"
+    },
+    "user4": {
+        "username": "sofia04",
+        "password": "passSofia04",
+        "name": "Sofia",
+        "surname": "Torres",
+        "phone": "671186270",
+        "birth": "1997-02-15"
+    },
+    "user5": {
+        "username": "beatriz05",
+        "password": "passBeatriz05",
+        "name": "Beatriz",
+        "surname": "Perez",
+        "phone": "681811867",
+        "birth": "1986-11-15"
+    },
+    "user6": {
+        "username": "pedro06",
+        "password": "passPedro06",
+        "name": "Pedro",
+        "surname": "Sanchez",
+        "phone": "669634582",
+        "birth": "1970-09-24"
+    },
+    "user7": {
+        "username": "raquel07",
+        "password": "passRaquel07",
+        "name": "Raquel",
+        "surname": "Lopez",
+        "phone": "659987992",
+        "birth": "1971-10-16"
+    },
+    "user8": {
+        "username": "luis08",
+        "password": "passLuis08",
+        "name": "Luis",
+        "surname": "Vazquez",
+        "phone": "667155989",
+        "birth": "1993-09-07"
+    },
+    "user9": {
+        "username": "marta09",
+        "password": "passMarta09",
+        "name": "Marta",
+        "surname": "Hernandez",
+        "phone": "612882132",
+        "birth": "1983-10-07"
+    },
+    "user10": {
+        "username": "antonio10",
+        "password": "passAntonio10",
+        "name": "Antonio",
+        "surname": "Romero",
+        "phone": "666819601",
+        "birth": "1970-04-24"
+    },
+    "user11": {
+        "username": "antonio11",
+        "password": "passAntonio11",
+        "name": "Antonio",
+        "surname": "Navarro",
+        "phone": "675352282",
+        "birth": "2000-06-11"
+    },
+    "user12": {
+        "username": "francisco12",
+        "password": "passFrancisco12",
+        "name": "Francisco",
+        "surname": "Rodriguez",
+        "phone": "660458764",
+        "birth": "1974-01-14"
+    },
+    "user13": {
+        "username": "patricia13",
+        "password": "passPatricia13",
+        "name": "Patricia",
+        "surname": "Fernandez",
+        "phone": "698961378",
+        "birth": "1970-03-30"
+    },
+    "user14": {
+        "username": "david14",
+        "password": "passDavid14",
+        "name": "David",
+        "surname": "Benitez",
+        "phone": "628224984",
+        "birth": "2005-12-16"
+    },
+    "user15": {
+        "username": "lucia15",
+        "password": "passLucia15",
+        "name": "Lucia",
+        "surname": "Perez",
+        "phone": "627034271",
+        "birth": "1992-10-13"
+    },
+    "user16": {
+        "username": "antonio16",
+        "password": "passAntonio16",
+        "name": "Antonio",
+        "surname": "Ramirez",
+        "phone": "669715521",
+        "birth": "1983-09-18"
+    },
+    "user17": {
+        "username": "francisco17",
+        "password": "passFrancisco17",
+        "name": "Francisco",
+        "surname": "Rodriguez",
+        "phone": "678359243",
+        "birth": "1993-01-25"
+    },
+    "user18": {
+        "username": "antonio18",
+        "password": "passAntonio18",
+        "name": "Antonio",
+        "surname": "Gomez",
+        "phone": "685640027",
+        "birth": "1974-12-27"
+    },
+    "user19": {
+        "username": "manuel19",
+        "password": "passManuel19",
+        "name": "Manuel",
+        "surname": "Navarro",
+        "phone": "683587618",
+        "birth": "1988-03-26"
+    },
+    "user20": {
+        "username": "beatriz20",
+        "password": "passBeatriz20",
+        "name": "Beatriz",
+        "surname": "Gomez",
+        "phone": "693579070",
+        "birth": "1982-11-15"
+    },
+    "user21": {
+        "username": "juan21",
+        "password": "passJuan21",
+        "name": "Juan",
+        "surname": "Martinez",
+        "phone": "647893622",
+        "birth": "1985-01-30"
+    },
+    "user22": {
+        "username": "isabel22",
+        "password": "passIsabel22",
+        "name": "Isabel",
+        "surname": "Navarro",
+        "phone": "673254336",
+        "birth": "1982-06-26"
+    },
+    "user23": {
+        "username": "carlos23",
+        "password": "passCarlos23",
+        "name": "Carlos",
+        "surname": "Muñoz",
+        "phone": "690832202",
+        "birth": "1975-06-17"
+    },
+    "user24": {
+        "username": "carla24",
+        "password": "passCarla24",
+        "name": "Carla",
+        "surname": "Alonso",
+        "phone": "697204655",
+        "birth": "2002-01-03"
+    },
+    "user25": {
+        "username": "marta25",
+        "password": "passMarta25",
+        "name": "Marta",
+        "surname": "Flores",
+        "phone": "613123895",
+        "birth": "1985-06-26"
+    },
+    "user26": {
+        "username": "patricia26",
+        "password": "passPatricia26",
+        "name": "Patricia",
+        "surname": "Benitez",
+        "phone": "685589901",
+        "birth": "2005-08-30"
+    },
+    "user27": {
+        "username": "juan27",
+        "password": "passJuan27",
+        "name": "Juan",
+        "surname": "Castillo",
+        "phone": "664732851",
+        "birth": "1992-03-22"
+    },
+    "user28": {
+        "username": "sofia28",
+        "password": "passSofia28",
+        "name": "Sofia",
+        "surname": "Perez",
+        "phone": "676050113",
+        "birth": "1999-04-11"
+    },
+    "user29": {
+        "username": "isabel29",
+        "password": "passIsabel29",
+        "name": "Isabel",
+        "surname": "Flores",
+        "phone": "608927148",
+        "birth": "2003-03-09"
+    },
+    "user30": {
+        "username": "miguel30",
+        "password": "passMiguel30",
+        "name": "Miguel",
+        "surname": "Torres",
+        "phone": "647740718",
+        "birth": "1982-12-21"
+    },
+    "user31": {
+        "username": "ana31",
+        "password": "passAna31",
+        "name": "Ana",
+        "surname": "Fernandez",
+        "phone": "698838783",
+        "birth": "1996-12-10"
+    },
+    "user32": {
+        "username": "maria32",
+        "password": "passMaria32",
+        "name": "Maria",
+        "surname": "Benitez",
+        "phone": "618387763",
+        "birth": "1999-09-06"
+    },
+    "user33": {
+        "username": "patricia33",
+        "password": "passPatricia33",
+        "name": "Patricia",
+        "surname": "Navarro",
+        "phone": "697616617",
+        "birth": "1991-10-27"
+    },
+    "user34": {
+        "username": "laura34",
+        "password": "passLaura34",
+        "name": "Laura",
+        "surname": "Hernandez",
+        "phone": "601915812",
+        "birth": "1980-01-20"
+    },
+    "user35": {
+        "username": "jose35",
+        "password": "passJose35",
+        "name": "Jose",
+        "surname": "Rodriguez",
+        "phone": "646342039",
+        "birth": "1989-01-01"
+    },
+    "user36": {
+        "username": "raquel36",
+        "password": "passRaquel36",
+        "name": "Raquel",
+        "surname": "Romero",
+        "phone": "631532150",
+        "birth": "1995-06-22"
+    },
+    "user37": {
+        "username": "carmen37",
+        "password": "passCarmen37",
+        "name": "Carmen",
+        "surname": "Diaz",
+        "phone": "681186868",
+        "birth": "1990-09-12"
+    },
+    "user38": {
+        "username": "raquel38",
+        "password": "passRaquel38",
+        "name": "Raquel",
+        "surname": "Diaz",
+        "phone": "623307381",
+        "birth": "1987-02-12"
+    },
+    "user39": {
+        "username": "sofia39",
+        "password": "passSofia39",
+        "name": "Sofia",
+        "surname": "Lopez",
+        "phone": "628355294",
+        "birth": "2003-02-13"
+    },
+    "user40": {
+        "username": "luis40",
+        "password": "passLuis40",
+        "name": "Luis",
+        "surname": "Alonso",
+        "phone": "685155586",
+        "birth": "1988-10-31"
+    },
+    "user41": {
+        "username": "carla41",
+        "password": "passCarla41",
+        "name": "Carla",
+        "surname": "Diaz",
+        "phone": "602365048",
+        "birth": "1978-01-27"
+    },
+    "user42": {
+        "username": "manuel42",
+        "password": "passManuel42",
+        "name": "Manuel",
+        "surname": "Romero",
+        "phone": "640132793",
+        "birth": "1973-02-12"
+    },
+    "user43": {
+        "username": "laura43",
+        "password": "passLaura43",
+        "name": "Laura",
+        "surname": "Castillo",
+        "phone": "630885599",
+        "birth": "1996-04-15"
+    },
+    "user44": {
+        "username": "lucia44",
+        "password": "passLucia44",
+        "name": "Lucia",
+        "surname": "Gomez",
+        "phone": "600901570",
+        "birth": "1998-10-17"
+    },
+    "user45": {
+        "username": "maria45",
+        "password": "passMaria45",
+        "name": "Maria",
+        "surname": "Lopez",
+        "phone": "625676664",
+        "birth": "1983-10-18"
+    },
+    "user46": {
+        "username": "carla46",
+        "password": "passCarla46",
+        "name": "Carla",
+        "surname": "Fernandez",
+        "phone": "643209010",
+        "birth": "1989-12-24"
+    },
+    "user47": {
+        "username": "marta47",
+        "password": "passMarta47",
+        "name": "Marta",
+        "surname": "Sanchez",
+        "phone": "693862117",
+        "birth": "1987-12-30"
+    },
+    "user48": {
+        "username": "elena48",
+        "password": "passElena48",
+        "name": "Elena",
+        "surname": "Alonso",
+        "phone": "695561647",
+        "birth": "1999-01-07"
+    },
+    "user49": {
+        "username": "alejandro49",
+        "password": "passAlejandro49",
+        "name": "Alejandro",
+        "surname": "Gutierrez",
+        "phone": "668046933",
+        "birth": "1992-09-25"
+    },
+    "user50": {
+        "username": "paula50",
+        "password": "passPaula50",
+        "name": "Paula",
+        "surname": "Ruiz",
+        "phone": "610647468",
+        "birth": "1996-07-28"
+    },
+    "user51": {
+        "username": "paula51",
+        "password": "passPaula51",
+        "name": "Paula",
+        "surname": "Sanchez",
+        "phone": "684488680",
+        "birth": "1975-04-23"
+    },
+    "user52": {
+        "username": "carlos52",
+        "password": "passCarlos52",
+        "name": "Carlos",
+        "surname": "Torres",
+        "phone": "640025291",
+        "birth": "1993-10-14"
+    },
+    "user53": {
+        "username": "manuel53",
+        "password": "passManuel53",
+        "name": "Manuel",
+        "surname": "Sanchez",
+        "phone": "699430318",
+        "birth": "1976-07-21"
+    },
+    "user54": {
+        "username": "jose54",
+        "password": "passJose54",
+        "name": "Jose",
+        "surname": "Fernandez",
+        "phone": "650407569",
+        "birth": "1980-09-03"
+    },
+    "user55": {
+        "username": "miguel55",
+        "password": "passMiguel55",
+        "name": "Miguel",
+        "surname": "Martinez",
+        "phone": "639750985",
+        "birth": "1988-10-18"
+    },
+    "user56": {
+        "username": "lucia56",
+        "password": "passLucia56",
+        "name": "Lucia",
+        "surname": "Sanchez",
+        "phone": "654736584",
+        "birth": "2002-09-12"
+    },
+    "user57": {
+        "username": "juan57",
+        "password": "passJuan57",
+        "name": "Juan",
+        "surname": "Gil",
+        "phone": "601851886",
+        "birth": "1971-12-09"
+    },
+    "user58": {
+        "username": "ana58",
+        "password": "passAna58",
+        "name": "Ana",
+        "surname": "Garcia",
+        "phone": "661857916",
+        "birth": "1985-06-21"
+    },
+    "user59": {
+        "username": "paula59",
+        "password": "passPaula59",
+        "name": "Paula",
+        "surname": "Ramirez",
+        "phone": "633030991",
+        "birth": "2000-04-15"
+    },
+    "user60": {
+        "username": "maria60",
+        "password": "passMaria60",
+        "name": "Maria",
+        "surname": "Benitez",
+        "phone": "639340989",
+        "birth": "1981-11-21"
+    },
+    "user61": {
+        "username": "carla61",
+        "password": "passCarla61",
+        "name": "Carla",
+        "surname": "Martinez",
+        "phone": "657093043",
+        "birth": "1970-03-02"
+    },
+    "user62": {
+        "username": "laura62",
+        "password": "passLaura62",
+        "name": "Laura",
+        "surname": "Muñoz",
+        "phone": "630555351",
+        "birth": "1971-05-18"
+    },
+    "user63": {
+        "username": "alejandro63",
+        "password": "passAlejandro63",
+        "name": "Alejandro",
+        "surname": "Benitez",
+        "phone": "604676804",
+        "birth": "1995-09-26"
+    },
+    "user64": {
+        "username": "carla64",
+        "password": "passCarla64",
+        "name": "Carla",
+        "surname": "Flores",
+        "phone": "675066763",
+        "birth": "1996-07-10"
+    },
+    "user65": {
+        "username": "luis65",
+        "password": "passLuis65",
+        "name": "Luis",
+        "surname": "Diaz",
+        "phone": "655438173",
+        "birth": "1974-07-15"
+    },
+    "user66": {
+        "username": "paula66",
+        "password": "passPaula66",
+        "name": "Paula",
+        "surname": "Ruiz",
+        "phone": "635018336",
+        "birth": "1987-02-21"
+    },
+    "user67": {
+        "username": "alejandro67",
+        "password": "passAlejandro67",
+        "name": "Alejandro",
+        "surname": "Alonso",
+        "phone": "629616083",
+        "birth": "1982-12-13"
+    },
+    "user68": {
+        "username": "elena68",
+        "password": "passElena68",
+        "name": "Elena",
+        "surname": "Gomez",
+        "phone": "602541133",
+        "birth": "2002-06-19"
+    },
+    "user69": {
+        "username": "carla69",
+        "password": "passCarla69",
+        "name": "Carla",
+        "surname": "Alonso",
+        "phone": "617542363",
+        "birth": "2002-12-02"
+    },
+    "user70": {
+        "username": "francisco70",
+        "password": "passFrancisco70",
+        "name": "Francisco",
+        "surname": "Castillo",
+        "phone": "631239085",
+        "birth": "1983-10-31"
+    },
+    "user71": {
+        "username": "paula71",
+        "password": "passPaula71",
+        "name": "Paula",
+        "surname": "Garcia",
+        "phone": "637942809",
+        "birth": "1970-03-03"
+    },
+    "user72": {
+        "username": "beatriz72",
+        "password": "passBeatriz72",
+        "name": "Beatriz",
+        "surname": "Martinez",
+        "phone": "625884625",
+        "birth": "2002-01-16"
+    },
+    "user73": {
+        "username": "paula73",
+        "password": "passPaula73",
+        "name": "Paula",
+        "surname": "Torres",
+        "phone": "636174815",
+        "birth": "2004-06-08"
+    },
+    "user74": {
+        "username": "raquel74",
+        "password": "passRaquel74",
+        "name": "Raquel",
+        "surname": "Castillo",
+        "phone": "635802459",
+        "birth": "1979-07-27"
+    },
+    "user75": {
+        "username": "antonio75",
+        "password": "passAntonio75",
+        "name": "Antonio",
+        "surname": "Vazquez",
+        "phone": "618396336",
+        "birth": "1984-04-24"
+    },
+    "user76": {
+        "username": "pablo76",
+        "password": "passPablo76",
+        "name": "Pablo",
+        "surname": "Gutierrez",
+        "phone": "645207307",
+        "birth": "1971-06-17"
+    },
+    "user77": {
+        "username": "luis77",
+        "password": "passLuis77",
+        "name": "Luis",
+        "surname": "Flores",
+        "phone": "608606909",
+        "birth": "2002-05-19"
+    },
+    "user78": {
+        "username": "elena78",
+        "password": "passElena78",
+        "name": "Elena",
+        "surname": "Benitez",
+        "phone": "644827366",
+        "birth": "1978-09-28"
+    },
+    "user79": {
+        "username": "pablo79",
+        "password": "passPablo79",
+        "name": "Pablo",
+        "surname": "Alvarez",
+        "phone": "616212778",
+        "birth": "1970-04-28"
+    },
+    "user80": {
+        "username": "maria80",
+        "password": "passMaria80",
+        "name": "Maria",
+        "surname": "Torres",
+        "phone": "619139147",
+        "birth": "1995-09-10"
+    },
+    "user81": {
+        "username": "carmen81",
+        "password": "passCarmen81",
+        "name": "Carmen",
+        "surname": "Castillo",
+        "phone": "601336313",
+        "birth": "1981-05-04"
+    },
+    "user82": {
+        "username": "carlos82",
+        "password": "passCarlos82",
+        "name": "Carlos",
+        "surname": "Garcia",
+        "phone": "609107621",
+        "birth": "1982-02-28"
+    },
+    "user83": {
+        "username": "maria83",
+        "password": "passMaria83",
+        "name": "Maria",
+        "surname": "Castillo",
+        "phone": "683211442",
+        "birth": "1989-01-29"
+    },
+    "user84": {
+        "username": "carla84",
+        "password": "passCarla84",
+        "name": "Carla",
+        "surname": "Alvarez",
+        "phone": "676994918",
+        "birth": "1987-10-15"
+    },
+    "user85": {
+        "username": "lucia85",
+        "password": "passLucia85",
+        "name": "Lucia",
+        "surname": "Castillo",
+        "phone": "628274569",
+        "birth": "1974-12-26"
+    },
+    "user86": {
+        "username": "maria86",
+        "password": "passMaria86",
+        "name": "Maria",
+        "surname": "Navarro",
+        "phone": "606916456",
+        "birth": "2002-05-14"
+    },
+    "user87": {
+        "username": "beatriz87",
+        "password": "passBeatriz87",
+        "name": "Beatriz",
+        "surname": "Sanchez",
+        "phone": "616159292",
+        "birth": "2003-01-10"
+    },
+    "user88": {
+        "username": "lucia88",
+        "password": "passLucia88",
+        "name": "Lucia",
+        "surname": "Diaz",
+        "phone": "656728559",
+        "birth": "2003-02-28"
+    },
+    "user89": {
+        "username": "manuel89",
+        "password": "passManuel89",
+        "name": "Manuel",
+        "surname": "Benitez",
+        "phone": "644138518",
+        "birth": "1979-12-09"
+    },
+    "user90": {
+        "username": "marta90",
+        "password": "passMarta90",
+        "name": "Marta",
+        "surname": "Torres",
+        "phone": "685165835",
+        "birth": "1973-12-27"
+    },
+    "user91": {
+        "username": "elena91",
+        "password": "passElena91",
+        "name": "Elena",
+        "surname": "Perez",
+        "phone": "653598271",
+        "birth": "1977-11-04"
+    },
+    "user92": {
+        "username": "laura92",
+        "password": "passLaura92",
+        "name": "Laura",
+        "surname": "Gutierrez",
+        "phone": "601993880",
+        "birth": "2000-02-14"
+    },
+    "user93": {
+        "username": "jose93",
+        "password": "passJose93",
+        "name": "Jose",
+        "surname": "Torres",
+        "phone": "696656237",
+        "birth": "2004-06-10"
+    },
+    "user94": {
+        "username": "carlos94",
+        "password": "passCarlos94",
+        "name": "Carlos",
+        "surname": "Ramirez",
+        "phone": "666478049",
+        "birth": "1971-04-04"
+    },
+    "user95": {
+        "username": "lucia95",
+        "password": "passLucia95",
+        "name": "Lucia",
+        "surname": "Perez",
+        "phone": "600449052",
+        "birth": "1974-01-14"
+    },
+    "user96": {
+        "username": "diego96",
+        "password": "passDiego96",
+        "name": "Diego",
+        "surname": "Ramirez",
+        "phone": "680642186",
+        "birth": "1985-06-08"
+    },
+    "user97": {
+        "username": "isabel97",
+        "password": "passIsabel97",
+        "name": "Isabel",
+        "surname": "Hernandez",
+        "phone": "673452015",
+        "birth": "1999-05-08"
+    },
+    "user98": {
+        "username": "carla98",
+        "password": "passCarla98",
+        "name": "Carla",
+        "surname": "Gomez",
+        "phone": "670698794",
+        "birth": "1984-02-04"
+    },
+    "user99": {
+        "username": "elena99",
+        "password": "passElena99",
+        "name": "Elena",
+        "surname": "Perez",
+        "phone": "630582412",
+        "birth": "1988-10-02"
+    },
+    "user100": {
+        "username": "luis100",
+        "password": "passLuis100",
+        "name": "Luis",
+        "surname": "Lopez",
+        "phone": "673954583",
+        "birth": "2000-09-12"
     }
+}
+
 }
 
 bookings_data = {

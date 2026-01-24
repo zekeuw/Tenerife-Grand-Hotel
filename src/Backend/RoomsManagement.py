@@ -7,6 +7,7 @@ def TakeAllRooms() -> list[dict]:
 
 def TakeMostValuedRooms():
     room_collection = conectRoomCollection()
+    return list(room_collection.find({}, {"Presidential":1}))
     
 
 if __name__ == "__main__": TakeAllRooms()
