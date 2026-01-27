@@ -9,7 +9,7 @@ import urllib.parse
 
 username = urllib.parse.quote_plus("admin")  # O el usuario que definiste
 password = urllib.parse.quote_plus("admin") # O la contraseña que definiste
-host = "10.102.8.228"
+host = "127.0.0.1"
 port = 27017
 
 uri = f"mongodb://{username}:{password}@{host}:{port}/?authSource=admin"
@@ -58,7 +58,69 @@ room_data = {
             "price": 2500,
             "description": "La cúspide del hotel. Acceso directo al helipuerto, cristales blindados y bodega privada con colección centenaria. Solo para VIPs."
         },
-        "images": ["/media/img/Presidential/Presidential1.jpg","/media/img/Presidential/Presidential2.jpg","/media/img/Presidential/Presidential3.jpg"]
+        "images": ["/media/img/Rooms/Presidential/Presidential1.jpg","/media/img/Rooms/Presidential/Presidential2.jpg","/media/img/Rooms/Presidential/Presidential3.jpg"]
+        ,"reviews": {
+            "rev_1": {
+                "id_Client": "user_45",
+                "id_room": "PR_1",
+                "mark": 5,
+                "description": "Inolvidable. Despertar con esa vista panorámica de 360 grados es algo que hay que vivir una vez en la vida."
+            },
+            "rev_2": {
+                "id_Client": "user_12",
+                "id_room": "PR_3",
+                "mark": 5,
+                "description": "La piscina dentro de la habitación es una locura. El techo retráctil funcionó perfecto para ver las estrellas desde el agua."
+            },
+            "rev_3": {
+                "id_Client": "user_89",
+                "id_room": "PR_5",
+                "mark": 4,
+                "description": "El servicio de mayordomo fue excelente, aunque el acceso al helipuerto tuvo un pequeño retraso por viento. La bodega es espectacular."
+            },
+            "rev_4": {
+                "id_Client": "user_33",
+                "id_room": "PR_2",
+                "mark": 5,
+                "description": "Privacidad absoluta. Subir del garaje directo a la habitación sin cruzarme con nadie era justo lo que necesitaba."
+            },
+            "rev_5": {
+                "id_Client": "user_67",
+                "id_room": "PR_4",
+                "mark": 5,
+                "description": "La sala de cine tiene una acústica de estudio profesional. Disfrutamos mucho del piano de cola."
+            },
+            "rev_6": {
+                "id_Client": "user_21",
+                "id_room": "PR_1",
+                "mark": 5,
+                "description": "La cama King doble es inmensa. Todo el mobiliario respira lujo imperial."
+            },
+            "rev_7": {
+                "id_Client": "user_09",
+                "id_room": "PR_3",
+                "mark": 3,
+                "description": "Mucho lujo, pero el sistema del techo tardó un poco en cerrarse cuando empezó a llover. Por este precio esperaba perfección."
+            },
+            "rev_8": {
+                "id_Client": "user_99",
+                "id_room": "PR_2",
+                "mark": 5,
+                "description": "La sauna privada es maravillosa después de un día de reuniones. Acabados de mármol impecables."
+            },
+            "rev_9": {
+                "id_Client": "user_55",
+                "id_room": "PR_4",
+                "mark": 4,
+                "description": "Ideal para viajes diplomáticos. Espacio de sobra para reuniones privadas en los salones."
+            },
+            "rev_10": {
+                "id_Client": "user_77",
+                "id_room": "PR_5",
+                "mark": 5,
+                "description": "Sin palabras. Los cristales blindados dan una sensación de seguridad total. La mejor experiencia VIP que he tenido."
+            }
+        }    
     },
     "Luxury": {
         "LX_1": {
@@ -201,7 +263,69 @@ room_data = {
             "price": 460,
             "description": "Terraza privada de 30m2 con sofás de exterior y música ambiental. Perfecta para tomar una copa al atardecer."
         },
-        "images": ["/media/img/Luxury/Luxury1.jpg","/media/img/Luxury/Luxury2.jpg","/media/img/Luxury/Luxury3.jpg"]
+        "images": ["/media/img/Rooms/Luxury/Luxury1.jpg","/media/img/Rooms/Luxury/Luxury2.jpg","/media/img/Rooms/Luxury/Luxury3.jpg"],
+        "reviews": {
+            "rev_1": {
+                "id_Client": "user_101",
+                "id_room": "LX_3",
+                "mark": 5,
+                "description": "El jacuzzi en la habitación estaba impecable y el minibar muy completo. Perfecto para una escapada romántica."
+            },
+            "rev_2": {
+                "id_Client": "user_202",
+                "id_room": "LX_12",
+                "mark": 5,
+                "description": "El paraíso de un gamer. La pantalla gigante y la consola de última generación hicieron que no quisiera salir de la habitación."
+            },
+            "rev_3": {
+                "id_Client": "user_303",
+                "id_room": "LX_6",
+                "mark": 4,
+                "description": "La ducha efecto lluvia es muy relajante, aunque eché de menos tener plaza de garaje incluida en esta tarifa."
+            },
+            "rev_4": {
+                "id_Client": "user_404",
+                "id_room": "LX_2",
+                "mark": 3,
+                "description": "La domótica es genial cuando funciona, pero a veces Alexa no entendía bien las órdenes para apagar las luces."
+            },
+            "rev_5": {
+                "id_Client": "user_505",
+                "id_room": "LX_15",
+                "mark": 5,
+                "description": "Ver las estrellas con el telescopio desde la cama fue mágico. El techo de cristal estaba limpísimo."
+            },
+            "rev_6": {
+                "id_Client": "user_606",
+                "id_room": "LX_4",
+                "mark": 5,
+                "description": "La terraza privada es enorme. Desayunar en la hamaca con esas vistas no tiene precio."
+            },
+            "rev_7": {
+                "id_Client": "user_707",
+                "id_room": "LX_19",
+                "mark": 5,
+                "description": "Pude trabajar perfectamente gracias a la silla ergonómica y la impresora. WiFi muy rápido y estable."
+            },
+            "rev_8": {
+                "id_Client": "user_808",
+                "id_room": "LX_14",
+                "mark": 4,
+                "description": "Tener gimnasio en la propia habitación es un lujo, aunque la cinta de correr hace un poco de ruido al correr rápido."
+            },
+            "rev_9": {
+                "id_Client": "user_909",
+                "id_room": "LX_1",
+                "mark": 5,
+                "description": "Las sábanas de seda egipcia son otro nivel de confort. Se nota la calidad en cada detalle."
+            },
+            "rev_10": {
+                "id_Client": "user_110",
+                "id_room": "LX_18",
+                "mark": 5,
+                "description": "Me encantó el estilo japonés. El tatami es sorprendentemente cómodo y el jardín zen relaja muchísimo."
+            }
+        }
     },
     "Privacy": {
         "PV1": {
@@ -337,9 +461,71 @@ room_data = {
             "price": 180,
             "description": "Habitación lúdica. Espaciosa y con espejo de pared completa. Garaje amplio para SUVs."
         },
-        "images": ["/media/img/Privacy/Privacy1.jpg","/media/img/Privacy/Privacy2.jpg","/media/img/Apartamento/Privacy3.jpg"]
+        "images": ["/media/img/Rooms/Privacy/Privacy1.jpg","/media/img/Rooms/Privacy/Privacy2.jpg","/media/img/Rooms/Privacy/Privacy3.jpg"]
+        ,"reviews": {
+            "rev_1": {
+                "id_Client": "user_11",
+                "id_room": "PV1",
+                "mark": 5,
+                "description": "Discreción total garantizada. La insonorización es perfecta, no se oye nada del exterior."
+            },
+            "rev_2": {
+                "id_Client": "user_22",
+                "id_room": "PV_12",
+                "mark": 5,
+                "description": "Pude cargar el coche eléctrico en mi propia plaza privada mientras descansaba. Muy práctico y moderno."
+            },
+            "rev_3": {
+                "id_Client": "user_33",
+                "id_room": "PV4",
+                "mark": 4,
+                "description": "El torno para el servicio de habitaciones es un gran invento, aunque la comida llegó un poco tibia."
+            },
+            "rev_4": {
+                "id_Client": "user_44",
+                "id_room": "PV_17",
+                "mark": 5,
+                "description": "El sistema de pasaplatos es genial, cero contacto con el personal. Limpieza de 10."
+            },
+            "rev_5": {
+                "id_Client": "user_55",
+                "id_room": "PV6",
+                "mark": 5,
+                "description": "Una habitación muy divertida para parejas. El sillón tantra y la iluminación crean un ambiente único."
+            },
+            "rev_6": {
+                "id_Client": "user_66",
+                "id_room": "PV_14",
+                "mark": 5,
+                "description": "El proceso de pago anónimo y entrada autónoma funcionó a la perfección. Nadie te molesta."
+            },
+            "rev_7": {
+                "id_Client": "user_77",
+                "id_room": "PV_10",
+                "mark": 4,
+                "description": "La bañera redonda es relajante, pero tardó bastante en llenarse. Por lo demás, privacidad excelente."
+            },
+            "rev_8": {
+                "id_Client": "user_88",
+                "id_room": "PV_13",
+                "mark": 5,
+                "description": "Controlar las luces LED desde el móvil le da un toque muy chulo. Puedes cambiar el ambiente en un segundo."
+            },
+            "rev_9": {
+                "id_Client": "user_99",
+                "id_room": "PV3",
+                "mark": 3,
+                "description": "Cumple su función para una estancia corta, pero la escalera desde el garaje es un poco estrecha."
+            },
+            "rev_10": {
+                "id_Client": "user_00",
+                "id_room": "PV_18",
+                "mark": 5,
+                "description": "Las cortinas blackout funcionan de maravilla. Dormí a mediodía como si fuera medianoche. Oscuridad total."
+            }
+        }
     },
-    "Apartamento": {
+    "Apartment": {
         "AP_1": {
             "guests": 5,
             "bed": ["Matrimonio", "Individual", "Sofa-cama"],
@@ -445,7 +631,69 @@ room_data = {
             "price": 260,
             "description": "Especial Gemelos. Espacio amplio con dos cunas y protectores en todos los enchufes y esquinas."
         },
-        "images": ["/media/img/Apartamento/Apartamento1.jpg","/media/img/Apartamento/Apartamento2.jpg","/media/img/Apartamento/Apartamento2.jpg"]
+        "images": ["/media/img/Rooms/Apartments/Apartment1.jpg","/media/img/Rooms/Apartments/Apartment2.jpg","/media/img/Rooms/Apartments/Apartment2.jpg"]
+        ,"reviews": {
+            "rev_1": {
+                "id_Client": "user_123",
+                "id_room": "AP_1",
+                "mark": 5,
+                "description": "Ideal para familias numerosas. La nevera grande nos salvó la vida y los niños tenían espacio de sobra."
+            },
+            "rev_2": {
+                "id_Client": "user_234",
+                "id_room": "AP_8",
+                "mark": 5,
+                "description": "La cocina está equipadísima, el horno es profesional. Hicimos una cena estupenda sin echar nada en falta."
+            },
+            "rev_3": {
+                "id_Client": "user_345",
+                "id_room": "AP_15",
+                "mark": 5,
+                "description": "Perfecto para ir con bebés. Las cunas estaban preparadas y los protectores en los enchufes nos dieron mucha tranquilidad."
+            },
+            "rev_4": {
+                "id_Client": "user_456",
+                "id_room": "AP_5",
+                "mark": 4,
+                "description": "Tener dos baños fue clave siendo 6 personas. El sofá cama es aceptable, pero mejor para niños que para adultos."
+            },
+            "rev_5": {
+                "id_Client": "user_567",
+                "id_room": "AP_11",
+                "mark": 5,
+                "description": "Totalmente accesible. Mi madre va en silla de ruedas y pudo moverse por el baño y la cocina sin problemas."
+            },
+            "rev_6": {
+                "id_Client": "user_678",
+                "id_room": "AP_3",
+                "mark": 5,
+                "description": "El lavavajillas es un puntazo para estancias largas. Te sientes como en tu propia casa."
+            },
+            "rev_7": {
+                "id_Client": "user_789",
+                "id_room": "AP_9",
+                "mark": 5,
+                "description": "Cocinar en la isla mirando al mar es una experiencia increíble. Diseño muy moderno y luminoso."
+            },
+            "rev_8": {
+                "id_Client": "user_890",
+                "id_room": "AP_13",
+                "mark": 4,
+                "description": "El dúplex es precioso y separa bien la zona de dormir, aunque las escaleras pueden cansar si subes y bajas mucho."
+            },
+            "rev_9": {
+                "id_Client": "user_901",
+                "id_room": "AP_6",
+                "mark": 3,
+                "description": "Económico para compartir entre amigos, pero la cocina es algo justa si todos queremos cocinar a la vez."
+            },
+            "rev_10": {
+                "id_Client": "user_012",
+                "id_room": "AP_14",
+                "mark": 5,
+                "description": "Sorprendente cómo se aprovecha el espacio. Todo plegable y funcional. Muy ingenioso para una persona o pareja."
+            }
+        }
     },
     "Regular": {
         "RG_1": {
@@ -560,23 +808,75 @@ room_data = {
             "price": 50,
             "description": "Individual básica. Cuenta con una pequeña nevera vacía para que guardes tus bebidas."
         },
-        "images": ["/media/img/Regular/Regular1.jpg","/media/img/Regular/Regular2.jpg","/media/img/Regular/Regular2.jpg"],
-        "reviews":{
-            "0":{
-                "user_id":1,
-                "mark":5,
-                "description":"esto es una prueba de una reseña",
-                "room":"RG1"
+        "images": ["/media/img/Rooms/Regular/Regular1.jpg","/media/img/Rooms/Regular/Regular2.jpg","/media/img/Rooms/Regular/Regular2.jpg"],
+        "reviews": {
+            "rev_1": {
+                "id_Client": "user_150",
+                "id_room": "RG_1",
+                "mark": 4,
+                "description": "Cumple perfectamente para un viaje de negocios. Limpia, funcional y el escritorio sirve para trabajar un rato."
+            },
+            "rev_2": {
+                "id_Client": "user_250",
+                "id_room": "RG_11",
+                "mark": 2,
+                "description": "El precio es imbatible, pero tener que salir al pasillo para usar el baño compartido es bastante incómodo por la noche."
+            },
+            "rev_3": {
+                "id_Client": "user_350",
+                "id_room": "RG_9",
+                "mark": 5,
+                "description": "Al dar al patio interior es súper silenciosa. No se oye ni un coche. Descanso garantizado."
+            },
+            "rev_4": {
+                "id_Client": "user_450",
+                "id_room": "RG_14",
+                "mark": 4,
+                "description": "Muy acogedora con el techo abuhardillado, aunque cuidado con la cabeza si eres muy alto."
+            },
+            "rev_5": {
+                "id_Client": "user_550",
+                "id_room": "RG_4",
+                "mark": 3,
+                "description": "Es pequeña y sin aire acondicionado (solo ventilador), pero por este precio no se puede pedir más. Estaba limpia."
+            },
+            "rev_6": {
+                "id_Client": "user_650",
+                "id_room": "RG_7",
+                "mark": 4,
+                "description": "No tiene TV, pero me vino bien para desconectar. La radio le da un toque vintage simpático."
+            },
+            "rev_7": {
+                "id_Client": "user_750",
+                "id_room": "RG_13",
+                "mark": 5,
+                "description": "Básicamente una oficina donde dormir. El escritorio es amplio y cómodo. Genial si vienes solo a trabajar."
+            },
+            "rev_8": {
+                "id_Client": "user_850",
+                "id_room": "RG_8",
+                "mark": 4,
+                "description": "Durante el día tienes un salón bastante majo. El sofá-cama es más cómodo de lo que esperaba."
+            },
+            "rev_9": {
+                "id_Client": "user_950",
+                "id_room": "RG_2",
+                "mark": 5,
+                "description": "La mejor opción calidad-precio para parejas. Tiene aire acondicionado y baño privado, no necesitamos más."
+            },
+            "rev_10": {
+                "id_Client": "user_050",
+                "id_room": "RG_16",
+                "mark": 4,
+                "description": "La neverita vacía es un detalle útil para guardar agua y yogures. Habitación sencilla pero correcta."
             }
         }
     }
     
 }
 
-
 users_data = {
-    {
-    "user1": {
+    "user_1": {
         "username": "luis01",
         "password": "passLuis01",
         "name": "Luis",
@@ -1378,7 +1678,6 @@ users_data = {
     }
 }
 
-}
 
 bookings_data = {
     "P654":{
