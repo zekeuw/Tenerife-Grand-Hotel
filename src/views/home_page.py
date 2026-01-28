@@ -1,6 +1,7 @@
 import flet as ft
 from src.Backend.RoomsManagement import TakeMostValuedRooms, TakeRandomPhotoByRoomType
 from src.components.navigation_bar import NavigationBar
+from src.views.page_404 import connectionErrorPage
 
 ROOMS_TYPES = ["Presidential", "Luxury", "Privacy", "Apartment", "Regular"]
 
@@ -101,7 +102,11 @@ def homePage(page: ft.Page):
             )
         )
 
-    best_rooms = TakeMostValuedRooms()    
+    best_rooms = TakeMostValuedRooms()
+    print("BESTO ROOMS", best_rooms)
+    if best_rooms == None: 
+        page.go("/404")
+        return
     
     cards_list = []
     
@@ -120,7 +125,6 @@ def homePage(page: ft.Page):
    
     async def leftCardScroll(e):
         await card_carrusel.scroll_to(delta=(-desplazamiento), duration=500, curve="easeOut")
-
     async def rigthCardScroll(e):
         await card_carrusel.scroll_to(delta=desplazamiento, duration=500, curve="easeOut")
 
@@ -308,9 +312,6 @@ def homePage(page: ft.Page):
             ]
         )
     )
-
-    
-
 
     def responsive(e):
         if not page.width: return
