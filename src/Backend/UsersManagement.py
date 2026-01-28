@@ -5,7 +5,7 @@ from passlib.hash import bcrypt
 import json
 
 #----- Archivos propios -------
-from Connection import mydb, contctBookingCollection, contctUsersCollection, contctRoomCollection
+from Connection import conectUsersCollection
 import Utils.Validations as Validations
 
 #------ Errores --------
@@ -38,7 +38,7 @@ def createUser(data: dict):
 
     #----------------------- Inserción -----------------------
     #conexión a la coleccion de la bd
-    coll = contctUsersCollection()
+    coll = conectUsersCollection()
 
     try:
         return coll.insert_one(user_data)
@@ -65,8 +65,9 @@ def updateUser(username, new_username, password, name, surname, phone, birth):
 
     '''################################################ importante cambiar esto a tener un diccionario y actualizarlo '''
 
+    changes = {} #lista vacia que va a ir almacenando los cambios realizados
 
-    users = contctUsersCollection()
+    users = conectUsersCollection()
 
     #recogemos todos los datos del usuario para reemplazar las variables que esten a None
     query = {"username": username}
@@ -78,46 +79,44 @@ def updateUser(username, new_username, password, name, surname, phone, birth):
     if data == None:
         raise NotFoundError("Usuario no encontrado.")
 
-    if new_username == None:
-        new_username = data["username"]
-
-    #comprobamos que el nombre de usuario no este en uso    
-    elif Validations.retrieveUser(new_username) != None:
-        raise DuplicateKeyError("Nombre de usuario ya en uso.")
+    if new_username != None:
+        #comprobamos que el nombre de usuario no este en uso    
+        if Validations.retrieveUser(new_username) != None:
+            raise DuplicateKeyError("Nombre de usuario ya en uso.")
+        changes["username"] = new_username
         
-    if password == None:
-        password = data["password"]
-
-    else:
+    if password != None:
         bufferPswd = password.copy()
         password = bcrypt.hash(bufferPswd)
+        changes["password"] = password
 
-    if name == None:
-        name = data["name"]
+    if name != None:
+        changes["name"] = name
     
-    if surname == None:
-        surname = data["surname"]
+    if surname != None:
+        changes["surname"] = surname
     
-    if phone == None:
-        phone = data["phone"]
-    
-    else:
+    if phone != None:
         if not phone.isdigit() or len(phone) != 9:
             raise ValueError("El formato del teléfono no es válido")
+        
+        changes["phone"] = phone
     
-    if birth == None:
-        birth = data["birth"]
-    
-    else:
+    if birth != None:
         try:
             datetime.strptime(data["birth"], "%Y-%m-%d")
+            changes["birth"] = birth
 
         except ValueError:
             raise ValueError("Formato de fecha no válido")
 
     #------------------------------- Actualizacion ------------------------------
 
-    newvalues = {""}
+    filt = {'username': username}
+    update = { '$set' :
+            changes}
+    
+    users.update_one(filt, update)
     
 
 
@@ -134,7 +133,7 @@ def sampleData():
             except Exception as e:
                 print(f"No se pudo insertar {user['username']}: {e}")
 
-sampleData()
+updateUser("luis01", None, None, "Pepito", "Perez", None, None)
 
 
 
