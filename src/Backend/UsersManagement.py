@@ -1,7 +1,7 @@
 import pymongo
 from pymongo import collection # para poner en la funcion que la variable tabla es una colección
 from datetime import datetime
-from passlib.hash import bcrypt
+import bcrypt
 import json
 
 #----- Archivos propios -------
@@ -11,6 +11,8 @@ import Utils.Validations as Validations
 #------ Errores --------
 from pymongo.errors import DuplicateKeyError
 from Utils.Exceptions import NotFoundError
+
+'''Por ahora, de todo lo que hay creao solo esta testeado (y bastante pobremente además) el createUser y updateUser'''
 
 def createUser(data: dict):
     '''Crea un nuevo usuario en la base de datos en funcion a los datos introducidos en "data".'''
@@ -32,16 +34,17 @@ def createUser(data: dict):
     except ValueError:
         raise ValueError("Formato de fecha no válido")
     
-    #hasheamos la contraseña (creamos una copia pq no me fio de hacer contraseña = bcrypt.hash(contraseña))
-    user_data = data.copy()
-    user_data["password"] = bcrypt.hash(data["password"])
+    pass_bytes = data["password"].encode('utf-8')
+    salt = bcrypt.gensalt()
+    hash_bytes = bcrypt.hashpw(pass_bytes, salt)
+    data["password"] = hash_bytes.decode('utf-8')
 
     #----------------------- Inserción -----------------------
     #conexión a la coleccion de la bd
     coll = conectUsersCollection()
 
     try:
-        return coll.insert_one(user_data)
+        return coll.insert_one(data)
     except Exception as e:
         raise Exception("Error al insertar: ", e)
 
@@ -53,17 +56,19 @@ def logIn(username: str, password: str):
     user = Validations.retrieveUser(username)
 
     if not user:
+        # pa todas las paginas que alguna vez me han dicho "usuario o contraseña invalido" esta va pa ti
+        # *ya he creado una excepcion llamada notFoundError pero por ahora se queda asi :D
         return False
     
     #bcrypt.verify devuelve true/false
-    return bcrypt.verify(password, user["password"])
+    pass_bytes = password.encode('utf-8')
+    db_hash = user["password"].encode('utf-8')
+
+    return bcrypt.checkpw(pass_bytes, db_hash)
 
 def updateUser(username, new_username, password, name, surname, phone, birth):
     '''Actualiza los usuarios con los datos puestos en los datos de arriba, username es para buscar el usuario, y new_username es el nuevo username'''
     '''Todos los datos salvo username pueden ser None, en caso de que lo sean no se actualizan.'''
-
-
-    '''################################################ importante cambiar esto a tener un diccionario y actualizarlo '''
 
     changes = {} #lista vacia que va a ir almacenando los cambios realizados
 
@@ -86,9 +91,9 @@ def updateUser(username, new_username, password, name, surname, phone, birth):
         changes["username"] = new_username
         
     if password != None:
-        bufferPswd = password.copy()
-        password = bcrypt.hash(bufferPswd)
-        changes["password"] = password
+        pass_bytes = password.encode('utf-8')
+        hash_bytes = bcrypt.hashpw(pass_bytes, bcrypt.gensalt())
+        changes["password"] = hash_bytes.decode('utf-8')
 
     if name != None:
         changes["name"] = name
@@ -104,7 +109,7 @@ def updateUser(username, new_username, password, name, surname, phone, birth):
     
     if birth != None:
         try:
-            datetime.strptime(data["birth"], "%Y-%m-%d")
+            datetime.strptime(birth, "%Y-%m-%d")
             changes["birth"] = birth
 
         except ValueError:
@@ -113,14 +118,25 @@ def updateUser(username, new_username, password, name, surname, phone, birth):
     #------------------------------- Actualizacion ------------------------------
 
     filt = {'username': username}
-    update = { '$set' :
-            changes}
+    update = { '$set' :changes}
     
     users.update_one(filt, update)
+
+def deleteUser(username):
+    '''Vamos a confiar en el frontend para que nadie pueda borrar un usuario que no toca'''
+    '''Y por cierto, la funcion borra usuarios :p'''
+
+    user = Validations.retrieveUser(username)
+    col = conectUsersCollection()
+
+    if not user:
+        raise NotFoundError("No se ha encontrado al usuario")
     
+    query = {"username": username} #en tí confío pymongo
+    col.delete_one(query)
 
 
-def sampleData():
+def userSampleData():
     '''Crea un puñao de usuarios para la base de datos'''
     with open("./src/Backend/SampleData/Users.json", "r") as f:
         USERS = json.load(f)
@@ -131,10 +147,8 @@ def sampleData():
                 createUser(user)
 
             except Exception as e:
-                print(f"No se pudo insertar {user['username']}: {e}")
-
-updateUser("luis01", None, None, "Pepito", "Perez", None, None)
+                print(f"No se pudo insertar {user['username']}: {e}") #esta funcion es de debug asiq da un poco igual poner un print aqui
 
 
-
-
+print(logIn("luis02", "passLuis02"))
+# updateUser("luis01", None, None, "Pepito", "Perez", None, None) #testeo basico de update user
