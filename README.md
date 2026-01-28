@@ -4,3 +4,7 @@ Librerías a instalar para el correcto funcionamiento:
 - flet
 <br>
 - pymongo
+<br>
+- bcrypt
+<br>
+- datetime
