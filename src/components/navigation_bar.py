@@ -1,7 +1,7 @@
 import flet as ft
 
 class NavigationBar(ft.Container):
-    def __init__ (self, page:ft.Page):
+    def __init__ (self, page:ft.Page, state: str = "logged_out"):
         super().__init__()
         self.main_page = page
         self.padding = 30 
@@ -45,6 +45,13 @@ class NavigationBar(ft.Container):
                 color="blue"
             )
         ) 
+
+        
+        self.user_button = ft.TextButton(
+            content="Mi cuenta",
+            style=ft.ButtonStyle(color="black"),
+            on_click=lambda _: page.go("/userPage")
+        )
         
 
         self.top_var_container_mobile = ft.Stack(
@@ -79,8 +86,14 @@ class NavigationBar(ft.Container):
                             ft.TextButton("Mis Reservas"),
                             ft.TextButton("Habitaciones", on_click=lambda _: self.NavigateAndClose("/allRooms")),
                             ft.Divider(),
-                            ft.ElevatedButton("Log in", bgcolor="blue", color="white", width=float("inf")),
-                            ft.OutlinedButton("Sign up", width=float("inf"))
+                            *( #donde estaba esto durante los dos años que llevo en este ciclo? >:(
+                                [ft.ElevatedButton("Log in", bgcolor="blue", color="white", width=float("inf")),
+                                ft.OutlinedButton("Sign up", width=float("inf"))]
+                                if state == "logged_out" else
+                                [ft.TextButton("Mi cuenta", width=float("inf"), on_click=lambda _: page.go("/userPage"))]
+                                if state == "logged_in" else
+                                []
+                            )
                         ]
                     )
                 )
@@ -97,6 +110,14 @@ class NavigationBar(ft.Container):
                 on_click = self.openMobileMenu
         )
 
+        if state == "logged_out":
+            auth_controls = [self.signup_button, self.login_button]
+        if state == "logged_in":
+            auth_controls = [self.user_button]
+        if state == "user_page":
+            auth_controls = []
+
+
         self.content = ft.Row(
              controls=[
                 ft.Row(
@@ -104,8 +125,11 @@ class NavigationBar(ft.Container):
                     spacing=50  
                 ),
                 ft.Row(
-                    controls=[self.signup_button, self.login_button,self.icon_menu
-                ])
+                    
+                    controls = auth_controls,
+                    ),
+                    self.icon_menu
+                
             ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN
         )
         
@@ -136,5 +160,6 @@ class NavigationBar(ft.Container):
         self.rooms.visible = not is_mobile
         self.login_button.visible = not is_mobile
         self.signup_button.visible = not is_mobile
+        self.user_button.visible = not is_mobile
         
         self.icon_menu.visible = is_mobile
