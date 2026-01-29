@@ -7,7 +7,7 @@ from src.views.page_404 import connectionErrorPage
 def main(page: ft.Page):
     page.title = "Tenerife Grand Hotel"
     def route_change(route):
-
+        
         print(f"Ruta actual: {page.route}") # Debug para ver qué pasa
         page.views.clear() if page.views  else None
          # Pa saltar directamente a users en debug

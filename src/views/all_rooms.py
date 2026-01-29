@@ -1,6 +1,60 @@
 import flet as ft
 from src.components.navigation_bar import NavigationBar
 from datetime import datetime 
+from src.Backend.RoomsManagement import TakeAllRooms, TakeRandomPhotoByRoomType
+
+ROOMS_TYPES = ["Presidential", "Luxury", "Privacy", "Apartment", "Regular"]
+cards_list = []
+def AllRoomCards():
+    def CreateRoomCard(data, room_type, id_room):
+        return ft.Container(
+            width=300,
+            height=320,
+            padding= 5,
+            margin=15,
+            bgcolor="white",
+            border_radius=15,
+            shadow= ft.BoxShadow(
+                blur_radius=5,
+                color=ft.Colors.BLACK,
+            ),
+            ink=True,
+            on_click=lambda e: print(id_room),
+            content= ft.Column(
+                controls=[
+                    ft.Image(
+                        src=f"{TakeRandomPhotoByRoomType(room_type)}",
+                        width=float("inf"),
+                        height=180,
+                        border_radius=5,
+                        fit= "COVER"
+                    ),
+                    ft.Container(
+                        content=ft.Column(
+                            controls=[
+                                ft.Text(value=room_type, color="black", size=18),
+                                ft.Text(value=f"{data['description']}", color="black",size=12, text_align=ft.TextAlign.JUSTIFY),
+                                ft.Text(value=f"Desde {data['price']}$/noche", color="black",weight="bold")
+                            ]
+                        )
+                    )
+                ]
+
+            )
+        )
+
+    list_all_rooms = TakeAllRooms()
+    
+    
+    global cards_list
+
+    for room_type in ROOMS_TYPES:
+        if room_type in list_all_rooms[0]:
+            type_data = list_all_rooms[0][room_type]
+            for id_room in type_data:
+                if id_room in ["images", "reviews"]: continue
+                card = CreateRoomCard(list_all_rooms[0][room_type][id_room], room_type, id_room)
+                cards_list.append(card)
 
 def allRooms(page: ft.Page):
     menu = NavigationBar(page)
@@ -272,14 +326,10 @@ def allRooms(page: ft.Page):
         )
     )
 
-    all_rooms_layout = ft.GridView(
-        expand=True,
-        runs_count=5,
-        max_extent=300,
-        child_aspect_ratio=1.0,
-        spacing=10,
-        run_spacing=10,
-    )
+    if not cards_list: AllRoomCards()
+    
+    
+
 
     def responsive(e):
         if not page.width: return
@@ -301,8 +351,7 @@ def allRooms(page: ft.Page):
         bgcolor="white",
         padding=0,
         controls=[
-            ft.Stack(
-                
+            ft.Stack(   
                 expand=True,
                 controls=[
                     ft.Column(
@@ -323,10 +372,13 @@ def allRooms(page: ft.Page):
                                                 right=ft.BorderSide(width=1, color="grey")
                                             ),
                                         ),
-                                        ft.Container(
-                                            content=all_rooms_layout,
-                                            expand=True
-                                        )
+                                        ft.GridView(
+                                                expand=True,
+                                                controls=cards_list,
+                                                cache_extent=5000,
+                                                max_extent = 500
+                                            )
+                                        
                                     ],
                                     vertical_alignment=ft.CrossAxisAlignment.START
                                 )

@@ -8,6 +8,60 @@ ROOMS_TYPES = ["Presidential", "Luxury", "Privacy", "Apartment", "Regular"]
 desplazamiento = 340 * 2
 photo_moving = 0
 
+cards_list = []
+
+def BestRoomsCardList():
+    def CreateRoomCard(data, room_type):
+        return ft.Container(
+            width=300,
+            height=320,
+            padding= 5,
+            margin=15,
+            bgcolor="white",
+            border_radius=15,
+            shadow= ft.BoxShadow(
+                blur_radius=5,
+                color=ft.Colors.BLACK,
+            ),
+            ink=True,
+            on_click=lambda e: print(data["id"]),
+            content= ft.Column(
+                controls=[
+                    ft.Image(
+                        src=f"{TakeRandomPhotoByRoomType(room_type)}",
+                        width=float("inf"),
+                        height=180,
+                        border_radius=5,
+                        fit= "COVER"
+                    ),
+                    ft.Container(
+                        content=ft.Column(
+                            controls=[
+                                ft.Text(value=room_type, color="black", size=18),
+                                ft.Text(value=f"Valoracion: {data["avg_rating"]}", color="black"),
+                                ft.Text(value=f"Desde {data["price"]}$/noche", color="black",weight="bold")
+                            ]
+                        )
+                    )
+                ]
+
+            )
+        )
+
+    best_rooms = TakeMostValuedRooms()
+    print(best_rooms)
+    if best_rooms == None: 
+        return None
+    
+    global cards_list
+    
+    for room_type in ROOMS_TYPES:
+        if room_type in best_rooms:
+            for room_data in best_rooms[room_type]:
+                card = CreateRoomCard(room_data, room_type)
+                cards_list.append(card)
+    return True
+
 def homePage(page: ft.Page):
     global photo_moving
     VIEWS_WIDTH = page.width *0.8
@@ -65,6 +119,7 @@ def homePage(page: ft.Page):
 
     # BEST ROOMS
     
+<<<<<<< Updated upstream
     def CreateRoomCard(data, room_type):
         return ft.Container(
             width=300,
@@ -115,6 +170,11 @@ def homePage(page: ft.Page):
             for room_data in best_rooms[room_type]:
                 card = CreateRoomCard(room_data, room_type)
                 cards_list.append(card)
+=======
+    if not cards_list: 
+        BestRoomsCardList()
+        if not cards_list: page.go("/404")
+>>>>>>> Stashed changes
 
     card_carrusel = ft.Row(
         expand=True,

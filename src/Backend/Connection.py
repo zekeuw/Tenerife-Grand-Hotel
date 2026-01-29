@@ -17,7 +17,6 @@ def tryConnection(collection):
             )
         mydb = client["Tenerife_Grand_Hotel"]
         ping = client.admin.command('ping')
-        print(ping)
         return mydb[collection]
     except (errors.ServerSelectionTimeoutError, errors.ConnectionFailure):
         return None

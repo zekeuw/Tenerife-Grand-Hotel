@@ -3,14 +3,16 @@ from .Connection import conectRoomCollection
 
 ROOMS_TYPES = ["Presidential", "Luxury", "Privacy", "Apartment", "Regular"]
 
+
+
+
 def TakeAllRooms() -> list[dict]:
     room_collection = conectRoomCollection()
-    return list(room_collection.find())
+    return list(room_collection.find({}, {"_id": 0}))
 
 def TakeMostValuedRooms()-> list[dict]:
     """This function will take the 2 best valued rooms and return them"""
     room_collection = conectRoomCollection()
-    print("ROOM COLLECTION", room_collection)
     if room_collection is None: return None
 
     best_rooms = {}
