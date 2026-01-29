@@ -166,3 +166,4 @@ class NavigationBar(ft.Container):
         self.user_button.visible = not is_mobile
         
         self.icon_menu.visible = is_mobile
+        

@@ -150,5 +150,5 @@ def userSampleData():
                 print(f"No se pudo insertar {user['username']}: {e}") #esta funcion es de debug asiq da un poco igual poner un print aqui
 
 
-print(logIn("luis02", "passLuis02"))
+
 # updateUser("luis01", None, None, "Pepito", "Perez", None, None) #testeo basico de update user

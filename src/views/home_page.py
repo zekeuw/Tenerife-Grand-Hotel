@@ -68,7 +68,13 @@ def homePage(page: ft.Page):
     VIEWS_HEIGTH = 800
     page.assets_dir = "assets"
     photo_moving = VIEWS_WIDTH
-    menu = NavigationBar(page)
+    if page.username:
+         # Si hay usuario, mostramos menú de logueado
+         print(f"Usuario detectado: {page.session}") # Debug
+         menu = NavigationBar(page, state="logged_in")
+    else:
+         # Si no, menú normal
+         menu = NavigationBar(page)
     photo_list = [
         ft.Image(src="media/img/photo_views/photo1.jpg", border_radius=15,width=VIEWS_WIDTH, height=VIEWS_HEIGTH, fit="COVER"),
         ft.Image(src="media/img/photo_views/photo2.jpg", border_radius=15,width=VIEWS_WIDTH, height=VIEWS_HEIGTH, fit="COVER"),

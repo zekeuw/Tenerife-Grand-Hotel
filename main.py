@@ -8,6 +8,9 @@ from src.views.page_404 import connectionErrorPage
 
 def main(page: ft.Page):
     page.title = "Tenerife Grand Hotel"
+    page.username = "None"
+
+    
     def route_change(route):
         
         print(f"Ruta actual: {page.route}") # Debug para ver qué pasa
@@ -42,4 +45,6 @@ def main(page: ft.Page):
     page.on_view_pop = view_pop
     
     route_change("/")
+
+
 ft.run(main)
