@@ -1,5 +1,5 @@
 # This file will control the rooms updates
-from .Connection import conectRoomCollection
+from Connection import conectRoomCollection
 
 ROOMS_TYPES = ["Presidential", "Luxury", "Privacy", "Apartment", "Regular"]
 
@@ -61,6 +61,9 @@ def TakeRandomPhotoByRoomType(room_type):
     from random import randint
     room_collection = conectRoomCollection()
     return room_collection.find_one({}, {room_type: 1, "_id": 0})[room_type]["images"][randint(0,2)]
-    
 
-if __name__ == "__main__": TakeRandomPhotoByRoomType("Presidential")
+def FiterRooms(filters:list[str]) -> list[dict] :
+    all_rooms = TakeAllRooms()
+    print(all_rooms)
+
+if __name__ == "__main__": FiterRooms([])
