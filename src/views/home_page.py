@@ -92,8 +92,8 @@ def homePage(page: ft.Page):
                         content=ft.Column(
                             controls=[
                                 ft.Text(value=room_type, color="black", size=18),
-                                ft.Text(value=f"Valoracion: {data["avg_rating"]}", color="black"),
-                                ft.Text(value=f"Desde {data["price"]}$/noche", color="black",weight="bold")
+                                ft.Text(value=f"Valoracion: {data['avg_rating']}", color="black"),
+                                ft.Text(value=f"Desde {data['price']}$/noche", color="black",weight="bold")
                             ]
                         )
                     )
