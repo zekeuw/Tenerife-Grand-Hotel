@@ -2,6 +2,8 @@ import flet as ft
 from src.views.home_page import homePage
 from src.views.all_rooms import allRooms
 from src.views.user_page import userPage
+from src.views.login import logIn
+from src.views.signup import signUp
 from src.views.page_404 import connectionErrorPage
 
 def main(page: ft.Page):
@@ -22,6 +24,13 @@ def main(page: ft.Page):
 
         elif page.route == "/404":
             page.views.append(connectionErrorPage(page))
+
+        elif page.route == "/logIn":
+            page.views.append(logIn(page))
+
+        elif page.route == "/signUp":
+            page.views.append(signUp(page))
+
         page.update()
 
     def view_pop(view):

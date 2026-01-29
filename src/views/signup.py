@@ -1,16 +1,7 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
-
 import flet as ft
 from src.components.navigation_bar import NavigationBar
 
-def main(page: ft.Page):
-    page.title = "Tenerife Grand Hotel"
-    page.bgcolor = "white"
-    page.vertical_alignment = ft.MainAxisAlignment.START
-    page.horizontal_alignment = ft.MainAxisAlignment.START
-    page.padding = 20
+def signUp(page: ft.Page):
 
     menu = NavigationBar(page)
 
@@ -71,9 +62,24 @@ def main(page: ft.Page):
         ),
         alignment=ft.Alignment.CENTER, 
     )
-   
 
-    page.add(menu)
-    page.add(central_container)
-
-ft.app(main)
+    return ft.View(
+        route="/signUp",
+        bgcolor="white",
+        padding=20,
+        controls=[
+            ft.Stack(
+                expand=True,
+                controls=[
+                    ft.Column(
+                        scroll=ft.ScrollMode.AUTO, 
+                        expand=True,
+                        controls=[
+                                menu,
+                                central_container
+                        ]
+                    ),
+                ]
+            )
+        ]
+    )

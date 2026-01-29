@@ -35,15 +35,18 @@ class NavigationBar(ft.Container):
             content="Log in", 
             align=ft.Alignment.TOP_RIGHT,
             color="white",
-            bgcolor="blue"
-            )
+            bgcolor="blue",
+            on_click=lambda _: page.go("/signUp")
+        )
+        
         self.signup_button = ft.OutlinedButton(
             content="Sign up", 
             align=ft.Alignment.TOP_RIGHT,
             style=ft.ButtonStyle(
                 side=ft.BorderSide(width=1, color=ft.Colors.BLUE),
                 color="blue"
-            )
+            ),
+            on_click=lambda _: page.go("/logIn")
         ) 
 
         
