@@ -1,5 +1,5 @@
 import pymongo
-from Connection import conectUsersCollection
+from ..Connection import conectUsersCollection
 
 def retrieveUser(username: str):
     '''Busca al usuario por el username y devuelve el diccionario correspondiente'''

@@ -5,12 +5,12 @@ import bcrypt
 import json
 
 #----- Archivos propios -------
-from Connection import conectUsersCollection
-import Utils.Validations as Validations
+from src.Backend.Connection import conectUsersCollection
+from src.Backend.Utils import Validations
 
 #------ Errores --------
 from pymongo.errors import DuplicateKeyError
-from Utils.Exceptions import NotFoundError
+from .Utils.Exceptions import NotFoundError
 
 '''Por ahora, de todo lo que hay creao solo esta testeado (y bastante pobremente además) el createUser y updateUser'''
 
