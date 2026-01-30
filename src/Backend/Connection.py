@@ -2,12 +2,12 @@ from pymongo import MongoClient, errors
 import urllib.parse 
 
 
-username = urllib.parse.quote_plus("admin") 
-password = urllib.parse.quote_plus("admin")
-host = "10.102.8.163"
+username = urllib.parse.quote_plus("gaelverar_db_user") 
+password = urllib.parse.quote_plus("NoQ1HNz0HcHAT6Z5")
+host = "clustertest"
 port = 27017
 
-uri = f"mongodb://{username}:{password}@{host}:{port}/?authSource=admin"
+uri = "mongodb+srv://gaelverar_db_user:NoQ1HNz0HcHAT6Z5@clustertest.rhdsz6d.mongodb.net/?appName=ClusterTest"
 
 def tryConnection(collection):
     try:
