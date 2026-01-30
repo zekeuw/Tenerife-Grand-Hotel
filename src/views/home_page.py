@@ -10,7 +10,7 @@ photo_moving = 0
 
 cards_list = []
 
-def BestRoomsCardList():
+def BestRoomsCardList(page):
     def CreateRoomCard(data, room_type):
         return ft.Container(
             width=300,
@@ -24,7 +24,7 @@ def BestRoomsCardList():
                 color=ft.Colors.BLACK,
             ),
             ink=True,
-            on_click=lambda e: print(data["id"]),
+            on_click=lambda e: page.go("/singleRoom"),
             content= ft.Column(
                 controls=[
                     ft.Image(
@@ -38,8 +38,8 @@ def BestRoomsCardList():
                         content=ft.Column(
                             controls=[
                                 ft.Text(value=room_type, color="black", size=18),
-                                ft.Text(value=f"Valoracion: {data["avg_rating"]}", color="black"),
-                                ft.Text(value=f"Desde {data["price"]}$/noche", color="black",weight="bold")
+                                ft.Text(value=f"Valoracion: {data['avg_rating']}", color="black"),
+                                ft.Text(value=f"Desde {data['price']}$/noche", color="black",weight="bold")
                             ]
                         )
                     )
@@ -128,7 +128,7 @@ def homePage(page: ft.Page):
 
 
     if not cards_list: 
-        BestRoomsCardList()
+        BestRoomsCardList(page)
         if not cards_list: page.go("/404")
 
     card_carrusel = ft.Row(
@@ -367,9 +367,6 @@ def homePage(page: ft.Page):
     page.on_resize = responsive
     if page.width:
         responsive(None)
-    
-    
-
     return ft.View(
         route="/",
         bgcolor="white",

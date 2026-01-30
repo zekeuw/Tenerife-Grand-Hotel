@@ -5,10 +5,11 @@ from src.views.user_page import userPage
 from src.views.login import logIn
 from src.views.signup import signUp
 from src.views.page_404 import connectionErrorPage
+from src.views.single_room import singleRoom
 
 def main(page: ft.Page):
     page.title = "Tenerife Grand Hotel"
-    page.username = "None"
+    page.username = None
 
     
     def route_change(route):
@@ -33,6 +34,9 @@ def main(page: ft.Page):
 
         elif page.route == "/signUp":
             page.views.append(signUp(page))
+
+        elif page.route == "/singleRoom":
+            page.views.append(singleRoom(page))
 
         page.update()
 

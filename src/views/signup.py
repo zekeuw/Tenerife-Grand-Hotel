@@ -5,14 +5,7 @@ def signUp(page: ft.Page):
 
     menu = NavigationBar(page)
 
-    central_container = ft.Container(
-        expand=True,
-        content= ft.Container(
-            content=ft.Column(
-                [
-                    ft.Text("🌴 Tu estancia en Tenerife empieza aquí 🌴", size=30, weight="bold", color="black"),
-                    ft.Text("Registro", size=30, weight="bold", color="black"),
-                    ft.TextField(
+    user_name = ft.TextField(
                         label="Nombre de usuario", 
                         color="#000000",
                         hint_text="Introduzca su nombre de usuario...", 
@@ -20,17 +13,29 @@ def signUp(page: ft.Page):
                         hint_style=ft.TextStyle(color=ft.Colors.BLACK),
                         focused_border_color="black",
                         margin=15
-                        ),
-                    ft.TextField(
-                        label="Correo electrónico", 
+                        )
+    
+    name = ft.TextField(
+                        label="Nombre", 
                         color="#000000",
-                        hint_text="Introduzca su correo...", 
+                        hint_text="Introduzca su nombre...", 
                         label_style=ft.TextStyle(color=ft.Colors.BLACK), 
                         hint_style=ft.TextStyle(color=ft.Colors.BLACK),
                         focused_border_color="black",
                         margin=15
-                        ),
-                    ft.TextField(
+                        )
+    
+    last_names = ft.TextField(
+                        label="Apellidos", 
+                        color="#000000",
+                        hint_text="Introduzca su(s) apellido(s)...", 
+                        label_style=ft.TextStyle(color=ft.Colors.BLACK), 
+                        hint_style=ft.TextStyle(color=ft.Colors.BLACK),
+                        focused_border_color="black",
+                        margin=15
+                        )
+    
+    passwd = ft.TextField(
                         label="Contraseña",
                         color="black",
                         hint_text="Introduzca su contraseña...", 
@@ -39,8 +44,9 @@ def signUp(page: ft.Page):
                         hint_style=ft.TextStyle(color=ft.Colors.BLACK),
                         focused_border_color="black",
                         margin=15
-                        ),
-                    ft.TextField(
+                        )
+    
+    validate_passwd = ft.TextField(
                         label="Repita la contraseña",
                         color="black",
                         hint_text="Introduzca de nuevo su contraseña...", 
@@ -49,7 +55,21 @@ def signUp(page: ft.Page):
                         hint_style=ft.TextStyle(color=ft.Colors.BLACK),
                         focused_border_color="black",
                         margin=15
-                        ),
+                        )
+
+
+    central_container = ft.Container(
+        expand=True,
+        content= ft.Container(
+            content=ft.Column(
+                [
+                    ft.Text("🌴 Tu estancia en Tenerife empieza aquí 🌴", size=30, weight="bold", color="black"),
+                    ft.Text("Registro", size=30, weight="bold", color="black"),
+                    user_name,
+                    name,
+                    last_names,
+                    passwd,
+                    validate_passwd,
                     ft.Button(content="Crear cuenta", color="white", bgcolor="blue", scale=1.5, margin=10),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -62,6 +82,8 @@ def signUp(page: ft.Page):
         ),
         alignment=ft.Alignment.CENTER, 
     )
+
+    
 
     return ft.View(
         route="/signUp",
