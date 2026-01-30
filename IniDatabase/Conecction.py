@@ -12,7 +12,7 @@ password = urllib.parse.quote_plus("admin") # O la contraseña que definiste
 host = "127.0.0.1"
 port = 27017
 
-uri = f"mongodb://{username}:{password}@{host}:{port}/?authSource=admin"
+uri = "mongodb+srv://gaelverar_db_user:NoQ1HNz0HcHAT6Z5@clustertest.rhdsz6d.mongodb.net/?appName=ClusterTest"
 
 myclient = MongoClient(uri) # Cambiar puerto dependiendo docker
 
