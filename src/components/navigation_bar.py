@@ -6,6 +6,8 @@ class NavigationBar(ft.Container):
         self.main_page = page
         self.padding = 30 
 
+        
+
         self.hotel_name =  ft.TextButton(
             content=ft.Text("Tenerife\nGrand Hotel", weight="bold" ,size=20, color="black"),
             style=ft.ButtonStyle(
@@ -55,6 +57,13 @@ class NavigationBar(ft.Container):
             style=ft.ButtonStyle(color="black"),
             on_click=lambda _: page.go("/userPage")
         )
+
+        if state == "logged_out":
+            auth_controls = [self.signup_button, self.login_button]
+        if state == "logged_in":
+            auth_controls = [self.user_button]
+        if state == "user_page":
+            auth_controls = []
         
 
         self.top_var_container_mobile = ft.Stack(
@@ -90,8 +99,8 @@ class NavigationBar(ft.Container):
                             ft.TextButton("Habitaciones", on_click=lambda _: self.NavigateAndClose("/allRooms")),
                             ft.Divider(),
                             *( #donde estaba esto durante los dos años que llevo en este ciclo? >:(
-                                [ft.ElevatedButton("Log in", bgcolor="blue", color="white", width=float("inf")),
-                                ft.OutlinedButton("Sign up", width=float("inf"))]
+                                [ft.ElevatedButton("Log in", bgcolor="blue", color="white", width=float("inf"),  on_click=lambda _: page.go("/logIn")),
+                                ft.OutlinedButton("Sign up", width=float("inf"), on_click=lambda _: page.go("/signUp"))]
                                 if state == "logged_out" else
                                 [ft.TextButton("Mi cuenta", width=float("inf"), on_click=lambda _: page.go("/userPage"))]
                                 if state == "logged_in" else
@@ -113,12 +122,7 @@ class NavigationBar(ft.Container):
                 on_click = self.openMobileMenu
         )
 
-        if state == "logged_out":
-            auth_controls = [self.signup_button, self.login_button]
-        if state == "logged_in":
-            auth_controls = [self.user_button]
-        if state == "user_page":
-            auth_controls = []
+        
 
 
         self.content = ft.Row(
