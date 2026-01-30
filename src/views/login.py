@@ -35,7 +35,7 @@ def logIn(page: ft.Page):
         content= ft.Container(
             content=ft.Column(
                 [
-                    ft.Text("🌴 Tu estancia en Tenerife empieza aquí 🌴", size=30, weight="bold", color="black"),
+                    ft.Text("Iniciar sesión", size=30, weight="bold", color="black"),
                     usuario,
                     contra,
                     error,

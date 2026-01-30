@@ -1,4 +1,5 @@
 import flet as ft
+from src.Backend.UsersManagement import createUser
 from src.components.navigation_bar import NavigationBar
 
 def signUp(page: ft.Page):
@@ -34,6 +35,23 @@ def signUp(page: ft.Page):
                         focused_border_color="black",
                         margin=15
                         )
+                        
+    phone = ft.TextField(
+                        label="Teléfono", 
+                        color="#000000",
+                        hint_text="Introduzca su número de teléfono...", 
+                        label_style=ft.TextStyle(color=ft.Colors.BLACK), 
+                        hint_style=ft.TextStyle(color=ft.Colors.BLACK),
+                        focused_border_color="black",
+                        margin=15
+                        )
+    
+    birth = ft.DatePicker(
+                        label="Fecha de nacimiento", 
+                        color="#000000",
+                        focused_border_color="black",
+                        margin=15
+                        )
     
     passwd = ft.TextField(
                         label="Contraseña",
@@ -63,14 +81,14 @@ def signUp(page: ft.Page):
         content= ft.Container(
             content=ft.Column(
                 [
-                    ft.Text("🌴 Tu estancia en Tenerife empieza aquí 🌴", size=30, weight="bold", color="black"),
                     ft.Text("Registro", size=30, weight="bold", color="black"),
                     user_name,
                     name,
                     last_names,
                     passwd,
                     validate_passwd,
-                    ft.Button(content="Crear cuenta", color="white", bgcolor="blue", scale=1.5, margin=10),
+                    ft.Button(content="Crear cuenta", color="white", bgcolor="blue", scale=1.5, margin=10, 
+                              on_click=lambda e: buffer(user_name.value, name.value, last_names.value, phone.value, birth.value, passwd.value, validate_passwd.value))
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 alignment=ft.MainAxisAlignment.CENTER,
@@ -83,7 +101,21 @@ def signUp(page: ft.Page):
         alignment=ft.Alignment.CENTER, 
     )
 
-    
+    def buffer(user_name, name, last_names, passwd):
+        if validatePassword():
+            data = {"username": user_name, "password": passwd, "name": name, "surname": last_names, "phone": phone, "birth": birth}
+            createUser(data)
+
+    def validatePassword():
+        pass   
+
+    def responsive(e):
+        if not page.width: return
+        menu.resize(page.width)
+
+    page.on_resize = responsive
+    if page.width:
+        responsive(None)
 
     return ft.View(
         route="/signUp",
