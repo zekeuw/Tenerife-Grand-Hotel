@@ -15,7 +15,7 @@ def main(page: ft.Page):
         
         print(f"Ruta actual: {page.route}") # Debug para ver qué pasa
         page.views.clear() if page.views  else None
-         # Pa saltar directamente a users en debug
+         # Pa s altar directamente a users en debug
         if page.route == "/":
             page.views.append(homePage(page))
 

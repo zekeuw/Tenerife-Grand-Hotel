@@ -1,5 +1,5 @@
 # This file will control the rooms updates
-from Connection import conectRoomCollection
+from .Connection import conectRoomCollection
 
 ROOMS_TYPES = ["Presidential", "Luxury", "Privacy", "Apartment", "Regular"]
 
@@ -62,8 +62,52 @@ def TakeRandomPhotoByRoomType(room_type):
     room_collection = conectRoomCollection()
     return room_collection.find_one({}, {room_type: 1, "_id": 0})[room_type]["images"][randint(0,2)]
 
-def FiterRooms(filters:list[str]) -> list[dict] :
-    all_rooms = TakeAllRooms()
-    print(all_rooms)
+def FilterRooms(filters: list[str]) -> list[dict]:
+    all_data = TakeAllRooms()[0]
+    filtered_results = []
 
-if __name__ == "__main__": FiterRooms([])
+    type_filters = [f for f in filters if f in ROOMS_TYPES]
+    price_filters = [f for f in filters if "€" in f]
+    feature_filters = [f for f in filters if f not in type_filters and f not in price_filters]
+
+    for room_type, rooms_group in all_data.items():
+        if room_type in ["images", "reviews"]: continue
+        
+        if type_filters and room_type not in type_filters:
+            continue
+
+        for room_id, room_info in rooms_group.items():
+            if room_id in ["images", "reviews"]: continue
+            
+            room_flat = room_info.copy()
+            room_flat["id"] = room_id
+            room_flat["type"] = room_type
+
+            if price_filters:
+                price = room_flat.get("price", 0)
+                price_match = False
+                for pf in price_filters:
+                    clean_str = pf.replace("€", "").strip()
+                    
+                    if "+" in clean_str: 
+                        limit = int(clean_str.replace("+", ""))
+                        if price >= limit: price_match = True
+                    elif "-" in clean_str: 
+                        min_p, max_p = map(int, clean_str.split("-"))
+                        if min_p <= price <= max_p: price_match = True
+                    
+                    if price_match: break 
+                
+                if not price_match: continue 
+
+            if feature_filters:
+                room_features = room_flat.get("content", []) + room_flat.get("bed", [])
+                
+                if not all(f in room_features for f in feature_filters):
+                    continue
+
+            filtered_results.append(room_flat)
+
+    return filtered_results
+
+if __name__ == "__main__": print(FilterRooms(["King"]))

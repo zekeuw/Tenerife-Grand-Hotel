@@ -1,15 +1,18 @@
 import flet as ft
 from src.components.navigation_bar import NavigationBar
 from datetime import datetime 
-from src.Backend.RoomsManagement import TakeAllRooms, TakeRandomPhotoByRoomType, FiterRooms
+from src.Backend.RoomsManagement import TakeAllRooms, TakeRandomPhotoByRoomType, FilterRooms
 import random
 
 ROOMS_TYPES = ["Presidential", "Luxury", "Privacy", "Apartment", "Regular"]
 cards_list = []
 current_card_list = []
 filters = []
+
 def AllRoomCards():
     def CreateRoomCard(data, room_type, id_room):
+        id_text = ft.Text(value=id_room)
+        
         return ft.Container(
             width=300,
             height=320,
@@ -35,6 +38,7 @@ def AllRoomCards():
                     ft.Container(
                         content=ft.Column(
                             controls=[
+                                id_text,
                                 ft.Text(value=room_type, color="black", size=18),
                                 ft.Text(value=f"{data['description']}", color="black",size=12, text_align=ft.TextAlign.JUSTIFY),
                                 ft.Text(value=f"Desde {data['price']}$/noche", color="black",weight="bold")
@@ -59,11 +63,16 @@ def AllRoomCards():
                 card = CreateRoomCard(list_all_rooms[0][room_type][id_room], room_type, id_room)
                 cards_list.append(card)
 
-def FilterRoomCards():
+def FilterRoomCards(filters):
     global current_card_list
     
     if not filters: current_card_list.copy(cards_list)
-    else: FiterRooms(filters=filters)
+    else:   
+        print("FILTEEER")
+        print(card.id for card in cards_list)
+
+        filtered_rooms = FilterRooms(filters=filters)
+        
 
 def allRooms(page: ft.Page):
     menu = NavigationBar(page)
@@ -123,7 +132,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="King", color="black", size=12, text_align=ft.Alignment.CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -133,7 +142,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="Matrimonio", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -143,7 +152,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="Individual", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -153,7 +162,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="Cuna", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -168,7 +177,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="Presidential", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -178,7 +187,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="Luxury", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -188,7 +197,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="Privacy", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -198,7 +207,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="Apartment", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -208,7 +217,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="Regular", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -231,7 +240,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="Garaje", color="black", size=12, text_align=ft.Alignment.CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -241,7 +250,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="Wifi", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -251,7 +260,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="TV", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -261,7 +270,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="Cuna", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -276,7 +285,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="0€ - 50€", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -286,7 +295,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="50€ - 100€", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -296,7 +305,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="100€ - 150€", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -306,7 +315,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="100€ - 200€", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -316,7 +325,7 @@ def allRooms(page: ft.Page):
                                 ft.Checkbox(
                                     label= ft.Text(value="+200€", color="black", size=12, text_align=ft.Alignment.TOP_CENTER), 
                                     value=False,
-                                    on_change=lambda e: (print(f"Filtrando por: {e.control.value}"), filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), print(filters)),
+                                    on_change=lambda e: (filters.append(e.control.label.value) if e.control.value else filters.remove(e.control.label.value), FilterRoomCards(filters)),
                                     check_color="white", 
                                     fill_color={
                                             ft.ControlState.SELECTED: "blue",  
@@ -397,7 +406,6 @@ def allRooms(page: ft.Page):
                                     expand=True,
                                     controls=[
                                         desktop_filter_container,
-
                                         ft.GridView(
                                                 expand=True,
                                                 controls= random.sample(cards_list, len(cards_list))[0:12],

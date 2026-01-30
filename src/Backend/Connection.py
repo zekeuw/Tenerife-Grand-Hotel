@@ -4,7 +4,7 @@ import urllib.parse
 
 username = urllib.parse.quote_plus("admin") 
 password = urllib.parse.quote_plus("admin")
-host = "127.0.0.1"
+host = "10.102.8.163"
 port = 27017
 
 uri = f"mongodb://{username}:{password}@{host}:{port}/?authSource=admin"
