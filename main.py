@@ -9,7 +9,7 @@ from src.views.single_room import singleRoom
 
 def main(page: ft.Page):
     page.title = "Tenerife Grand Hotel"
-    page.username = "luis02"
+    page.username = None
 
     
     def route_change(route):
