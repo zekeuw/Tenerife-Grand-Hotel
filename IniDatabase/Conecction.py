@@ -18,7 +18,7 @@ myclient = MongoClient(uri) # Cambiar puerto dependiendo docker
 
 mydb = myclient["Tenerife_Grand_Hotel"]
 
-rooms = mydb["rooms"]
+rooms_collection = mydb["rooms"] 
 
 
 room_data = {
@@ -1688,5 +1688,60 @@ bookings_data = {
 
 }
 
-result = rooms.insert_one(room_data)
-print(result)
+def repoblar_db_optimizado():
+    lista_habitaciones_optimizada = []
+
+    print("⚙️ Procesando datos...")
+    
+    # Recorremos cada Categoría (Presidential, Luxury, etc.)
+    for categoria, contenido in room_data.items():
+        
+        # Extraemos los datos comunes de la categoría
+        imagenes_categoria = contenido.get("images", [])
+        reviews_categoria = contenido.get("reviews", {})
+        
+        # Recorremos cada elemento dentro de la categoría
+        for key, valor in contenido.items():
+            
+            # Saltamos las claves que no son habitaciones
+            if key in ["images", "reviews"]:
+                continue
+            
+            # 'key' es el ID de la habitación (ej: PR_1)
+            # 'valor' son los datos (precio, guests, etc)
+            
+            # Creamos el documento INDIVIDUAL para esta habitación
+            habitacion_doc = valor.copy()
+            habitacion_doc["_id"] = key  # Usamos el código (PR_1) como ID único en Mongo
+            habitacion_doc["category"] = categoria # Añadimos el campo categoría
+            habitacion_doc["category_images"] = imagenes_categoria
+            
+            # Buscamos las reviews que pertenecen a ESTA habitación específica
+            mis_reviews = []
+            for rev_id, rev_data in reviews_categoria.items():
+                if rev_data.get("id_room") == key:
+                    mis_reviews.append(rev_data)
+            
+            habitacion_doc["reviews"] = mis_reviews # Incrustamos solo sus reviews
+            
+            lista_habitaciones_optimizada.append(habitacion_doc)
+
+    # --- 4. INSERCIÓN MASIVA ---
+    if lista_habitaciones_optimizada:
+        rooms_collection.insert_many(lista_habitaciones_optimizada)
+        print(f"✅ ¡Éxito! Se han insertado {len(lista_habitaciones_optimizada)} habitaciones como documentos individuales.")
+        
+        # --- 5. CREACIÓN DE ÍNDICES (CLAVE PARA VELOCIDAD) ---
+        print("⚡ Creando índices de velocidad...")
+        rooms_collection.create_index("category")
+        rooms_collection.create_index("price")
+        print("🚀 Base de datos optimizada lista.")
+
+if __name__ == "__main__":
+    # Necesitas copiar TODO tu diccionario room_data arriba antes de ejecutar esto
+    # O importar room_data de otro archivo si prefieres
+    
+    # Para que funcione el ejemplo con tu código pegado:
+    # 1. Pega tu diccionario room_data enorme donde indico arriba.
+    # 2. Ejecuta esta función:
+    repoblar_db_optimizado()

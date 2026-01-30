@@ -116,7 +116,24 @@ def userPage(page: ft.Page):
                         ]
                     )
                 ),
-                        
+            ft.Container(
+                margin=ft.Margin.only(bottom=30),
+                on_click=lambda e: manageDelete(page.username),
+                content=ft.Row(
+                        controls=[
+                            ft.Image(
+                                src="/media/icons/log_out.png",
+                                height=20,
+                                width=20
+                            ),
+                            ft.Text(
+                                value="Borrar cuenta",
+                                color="#fe0f13",
+                                weight="bold",
+                            ),
+                        ]
+                    )
+                )       
                 ]
                 ),
 
@@ -207,6 +224,13 @@ def userPage(page: ft.Page):
             )
         ]
     )
+
+    def manageDelete(username):
+        '''Devuelve al usuario a la pagina principal y cambia el usuario logueado a none'''
+        deleteUser(username)
+        page.username = None
+        page.go("/")
+
     def responsive(e):
         if not page.width: return
         is_mobile = page.width < 800
