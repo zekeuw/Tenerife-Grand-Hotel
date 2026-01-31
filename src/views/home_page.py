@@ -54,6 +54,7 @@ def BestRoomsCardList(page):
         return None
     
     global cards_list
+    cards_list.clear()
     
     for room_type in ROOMS_TYPES:
         if room_type in best_rooms:
