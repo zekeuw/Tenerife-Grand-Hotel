@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
 import flet as ft
 from src.components.navigation_bar import NavigationBar
 
@@ -5,38 +9,48 @@ def singleRoom(page: ft.Page):
 
     menu = NavigationBar(page)
 
-    def add_image(dir_img, altura):
+    def img(src, expand=1):
         return ft.Container(
-        content=ft.Image(
-            src=dir_img
-        ),
-        border_radius=15,
-        height=altura,
-    )
+            expand=expand,
+            border_radius=16,
+            clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+            content=ft.Image(
+                src=src,
+                fit=ft.BoxFit.COVER,
+            ),
+        )
 
-    imagenes_habitacion = ft.ResponsiveRow(
-            controls=[
-                ft.Column(
-                    col={"sm": 12, "md": 6},
-                    controls=[
-                        add_image("media/img/Rooms/Apartments/Apartment1.jpg", 410)
-                    ],
-                ),
-                ft.Column(
-                    controls=[
-                        ft.ResponsiveRow(
-                            controls=[
-                                ft.Column(col=6, controls=[add_image("media/img/Rooms/Apartments/Apartment1.jpg", 200)]),
-                                ft.Column(col=6, controls=[add_image("media/img/Rooms/Apartments/Apartment1.jpg", 200)]),
-                                ft.Column(col=6, controls=[add_image("media/img/Rooms/Apartments/Apartment1.jpg", 200)]),
-                                ft.Column(col=6, controls=[add_image("media/img/Rooms/Apartments/Apartment1.jpg", 200)]),
-                            ],
-                            spacing=10,
-                            run_spacing=10,
-                        )
-                    ]
-                )
-            ])
+    imagenes_habitacion = ft.Row(
+        spacing=12,
+        controls=[
+            # Imagen grande izquierda
+            img("media/img/Rooms/Apartments/Apartment1.jpg", expand=1),
+
+            # Columna derecha
+            ft.Column(
+                spacing=12,
+                expand=1,
+                controls=[
+                    ft.Row(
+                        spacing=12,
+                        expand=1,
+                        controls=[
+                            img("media/img/Rooms/Apartments/Apartment1.jpg"),
+                            img("media/img/Rooms/Apartments/Apartment1.jpg"),
+                        ],
+                    ),
+                    ft.Row(
+                        spacing=12,
+                        expand=1,
+                        controls=[
+                            img("media/img/Rooms/Apartments/Apartment1.jpg"),
+                            img("media/img/Rooms/Apartments/Apartment1.jpg"),
+                        ],
+                    ),
+                ],
+            ),
+        ],
+    )
 
     def responsive(e):
         if not page.width: return
