@@ -128,4 +128,5 @@ def GetBookingsOfUser(userName:str) -> list:
         raise NotFoundError("No hay ninguna reserva")
     
     data = list(data)
+    return data
 
