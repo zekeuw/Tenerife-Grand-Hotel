@@ -78,19 +78,56 @@ def singleRoom(page: ft.Page):
             weight="bold",
     )
 
-    propiedades = ft.ResponsiveRow(
-        spacing=10,
-        run_spacing=10,
-        controls=[
-            ft.Container(
-                col={"sm": 6, "md": 4}, # Esto es para el responsive
-                content=ft.Row([
-                    ft.Text(item, color="black")
-                ]),
-                padding=5,
-            ) for item in data["content"]
-        ],
+    datepicker_entrada = ft.DatePicker(
+        on_change=lambda _: print(f"Entrada: {datepicker_entrada.value}")
     )
+    datepicker_salida = ft.DatePicker(
+        on_change=lambda _: print(f"Salida: {datepicker_salida.value}")
+    )
+
+    propiedades =ft.Container(
+        width=600, 
+        content=ft.ResponsiveRow(
+            spacing=0,
+            run_spacing=5,
+            controls=[
+                ft.Container(
+                    col={"sm": 6, "md": 6}, 
+                    content=ft.Row(
+                        controls=[
+                            ft.Text(item, color="black", size=14)
+                        ],
+                        spacing=5
+                    ),
+                    padding=ft.padding.only(top=2, bottom=2),
+                ) for item in data["content"]
+            ],
+        )
+    )
+        
+    seccion_info = ft.Row(
+        vertical_alignment=ft.CrossAxisAlignment.START,
+        spacing=50,
+        controls=[
+            propiedades,
+            ft.Container(
+            content=ft.Column([
+                ft.Text("Reserva tu estancia", weight="bold", size=16, color="black"),
+               ft.Row([
+                    ft.ElevatedButton(
+                        "Fecha Entrada",
+                        on_click=lambda _: setattr(datepicker_entrada, "open", True) or page.update(),
+                    ),
+                    ft.ElevatedButton(
+                        "Fecha Salida",
+                        on_click=lambda _: setattr(datepicker_salida, "open", True) or page.update(),
+                    ),
+                ], spacing=10),
+            ], spacing=15)
+        )
+    ])
+
+
 
     def responsive(e):
         if not page.width: return
@@ -116,7 +153,7 @@ def singleRoom(page: ft.Page):
                                 imagenes_habitacion,
                                 tipo_habitacion,
                                 propiedades_text,
-                                propiedades
+                                seccion_info
                         ]
                     ),
                 ]
