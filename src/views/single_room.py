@@ -4,8 +4,15 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')
 
 import flet as ft
 from src.components.navigation_bar import NavigationBar
+import src.Backend.RoomsManagement as rm
 
 def singleRoom(page: ft.Page):
+
+    room_info = getattr(page, "selected_room_data", None)
+    
+    data = room_info["data"]
+    room_type_name = room_info["type"]
+    foto_portada = room_info.get("foto_portada")
 
     menu = NavigationBar(page)
 
@@ -21,11 +28,10 @@ def singleRoom(page: ft.Page):
         )
 
     imagenes_habitacion = ft.Row(
+        height=400,
         spacing=12,
         controls=[
-            # Imagen grande izquierda
-            img("media/img/Rooms/Apartments/Apartment1.jpg", expand=1),
-
+            img(foto_portada),
             # Columna derecha
             ft.Column(
                 spacing=12,
@@ -35,21 +41,34 @@ def singleRoom(page: ft.Page):
                         spacing=12,
                         expand=1,
                         controls=[
-                            img("media/img/Rooms/Apartments/Apartment1.jpg"),
-                            img("media/img/Rooms/Apartments/Apartment1.jpg"),
+                            img(rm.TakeRandomPhotoByRoomType(room_info["type"])),
+                            img(rm.TakeRandomPhotoByRoomType(room_info["type"])),
                         ],
                     ),
                     ft.Row(
                         spacing=12,
                         expand=1,
                         controls=[
-                            img("media/img/Rooms/Apartments/Apartment1.jpg"),
-                            img("media/img/Rooms/Apartments/Apartment1.jpg"),
+                            img(rm.TakeRandomPhotoByRoomType(room_info["type"])),
+                            img(rm.TakeRandomPhotoByRoomType(room_info["type"])),
                         ],
                     ),
                 ],
             ),
         ],
+    )
+
+    tipo_habitacion = ft.Text(
+            value=room_type_name,
+            color="black",
+            size=32,
+            weight="bold",
+    )
+
+    propiedades = ft.Text(
+            value=f"Valoración: {data['avg_rating']} - Precio: {data['price']}$/noche" if room_info else "Cargando...", 
+            color="black",
+            size=16,
     )
 
     def responsive(e):
@@ -73,7 +92,9 @@ def singleRoom(page: ft.Page):
                         expand=True,
                         controls=[
                                 menu,
-                                imagenes_habitacion
+                                imagenes_habitacion,
+                                tipo_habitacion,
+                                propiedades
                         ]
                     ),
                 ]

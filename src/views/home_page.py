@@ -12,6 +12,10 @@ cards_list = []
 
 def BestRoomsCardList(page):
     def CreateRoomCard(data, room_type):
+        # Esto antes se usaba en el content que está más abajo.
+        # la necesito antes para cargarla en el onclick
+        ruta_img_random = TakeRandomPhotoByRoomType(room_type)
+
         return ft.Container(
             width=300,
             height=320,
@@ -24,11 +28,14 @@ def BestRoomsCardList(page):
                 color=ft.Colors.BLACK,
             ),
             ink=True,
-            on_click=lambda e: page.go("/singleRoom"),
+            on_click=lambda e: (
+                setattr(page, "selected_room_data", {"data": data, "type": room_type, "foto_portada": ruta_img_random}),
+                page.go("/singleRoom")
+            ),
             content= ft.Column(
                 controls=[
                     ft.Image(
-                        src=f"{TakeRandomPhotoByRoomType(room_type)}",
+                        src=ruta_img_random,
                         width=float("inf"),
                         height=180,
                         border_radius=5,
