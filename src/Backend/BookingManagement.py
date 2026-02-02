@@ -130,3 +130,31 @@ def GetBookingsOfUser(userName:str) -> list:
     data = list(data)
     return data
 
+
+def GetAvailableRooms(StartDate:str, EndDate:str):
+    '''First searches for not available rooms and then searches for any room that is not (not) available'''
+
+    bookings = conectBookingCollection()
+    rooms = conectRoomCollection()
+
+    query = {
+        "IniDate": {"$lte": EndDate},
+        "FinDate": {"$gte": StartDate}
+    }
+
+    data = bookings.find(query) #now searching for one is not enough :D
+
+    data = list(data)
+    ids = []
+    for elemento in data:
+        ids.append(elemento["RoomId"])
+
+    query = {
+        "RoomId" : {"$nin": ids}
+    }
+
+    data = rooms.find(query)
+
+    return list(data)
+
+    
