@@ -1,7 +1,16 @@
 from .Connection import conectRoomCollection
-from random import choice
+from random import choice, randint
 
 ROOMS_TYPES = ["Presidential", "Luxury", "Privacy", "Apartment", "Regular"]
+
+def TakeRandomPhotoByRoomType(room_type):
+    room_collection = conectRoomCollection()
+    room = room_collection.find_one({"category": room_type}, {"category_images": 1})
+    
+    if room and "category_images" in room and room["category_images"]:
+        images = room["category_images"]
+        idx = randint(0, len(images) - 1)
+        return images[idx]
 
 def TakeRoomImage(room):
     room["main_image"] = choice(room["category_images"])
