@@ -1,15 +1,19 @@
 import sys
 import os
+import datetime 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 import flet as ft
 from src.components.navigation_bar import NavigationBar
 import src.Backend.RoomsManagement as rm
-from random import choice
+from src.Backend.BookingManagement import DateAvailable
 
 def singleRoom(page: ft.Page):
 
     room_info = getattr(page, "selected_room_data", None)
+    
+    if not room_info:
+        page.go("/404")
     
     data = room_info["data"]
     room_type_name = room_info["type"]
@@ -24,34 +28,144 @@ def singleRoom(page: ft.Page):
             clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
             content=ft.Image(src=src, fit=ft.BoxFit.COVER),
         )
+    
+    today = datetime.datetime.now()
+    
+    entry_date_inputs = []
+    exit_date_inputs = []
 
-    # Contenedor principal adaptable
+    def UpdateEntryDate(e):
+        if entry_datepicker.value:
+            fecha_entrada = entry_datepicker.value
+            fecha_str = fecha_entrada.strftime("%d-%m-%Y")
+
+            for text_field in entry_date_inputs:
+                text_field.value = fecha_str
+                text_field.update()
+
+            min_exit_date = fecha_entrada + datetime.timedelta(days=1)
+            exit_datepicker.first_date = min_exit_date
+            
+            if exit_datepicker.value and exit_datepicker.value <= fecha_entrada:
+                exit_datepicker.value = None
+                for text_field in exit_date_inputs:
+                    text_field.value = ""
+                    text_field.update()
+            
+            exit_datepicker.update()
+
+    def UpdateExitDate(e):
+        if exit_datepicker.value:
+            fecha_str = exit_datepicker.value.strftime("%d-%m-%Y")
+            for text_field in exit_date_inputs:
+                text_field.value = fecha_str
+                text_field.update()
+
+    entry_datepicker = ft.DatePicker(
+        on_change=UpdateEntryDate,
+        cancel_text="Cancelar",
+        confirm_text="Confirmar Entrada",
+        help_text="Selecciona fecha de llegada",
+        first_date=today 
+    )
+    
+    exit_datepicker = ft.DatePicker(
+        on_change=UpdateExitDate,
+        cancel_text="Cancelar",
+        confirm_text="Confirmar Salida",
+        help_text="Selecciona fecha de salida",
+        first_date=today + datetime.timedelta(days=1)
+    )
+
+    page.overlay.extend([entry_datepicker, exit_datepicker])
+
+    errorLog = ft.Text(value="", color="#fe0f13", visible=False)
+
+    def open_entry_picker(e):
+        entry_datepicker.open = True
+        entry_datepicker.update()
+
+    def open_exit_picker(e):
+        exit_datepicker.open = True
+        exit_datepicker.update()
+
+    input_fecha_entrada = ft.TextField(
+        border_radius=35,
+        height=30,
+        label=ft.Text(value="Fecha Entrada", size=10),
+        hint_text="DD-MM-AAAA",
+        width=150,
+        read_only=True,
+        text_style=ft.TextStyle(color="black", size=12),
+        suffix_icon=ft.Icons.CALENDAR_MONTH,
+        on_click=open_entry_picker
+    )
+
+    input_fecha_salida = ft.TextField(
+        border_radius=35,
+        height=30,
+        label=ft.Text(value="Fecha Salida", size=10),
+        hint_text="DD-MM-AAAA",
+        width=150,
+        read_only=True, 
+        text_style=ft.TextStyle(color="black", size=12), 
+        suffix_icon=ft.Icons.CALENDAR_TODAY,
+        on_click=open_exit_picker 
+    )
+
+
+    entry_date_inputs.append(input_fecha_entrada)
+    exit_date_inputs.append(input_fecha_salida)
+
+    def confirmar_reserva(e):
+        
+        fecha_in = entry_datepicker.value
+        fecha_out = exit_datepicker.value
+
+        
+        if not fecha_in or not fecha_out:
+            errorLog.visible = True
+            errorLog.value = "Debe de elegir ambas fechas"
+            page.update()
+            return
+
+        str_fecha_in = fecha_in.strftime("%Y-%m-%d")
+        str_fecha_out = fecha_out.strftime("%Y-%m-%d")
+
+
+
+        
+        room_id = room_info["data"].get("_id") or room_info["data"].get("id")
+
+        if not DateAvailable(room_id, str_fecha_in, str_fecha_out):
+            errorLog.visible = True
+            errorLog.value = "Habitacion ya reservada durante las fechas introducidas"
+            page.update()
+        else:
+
+            #---------------------------------------- AQUI FALTA LA PAGINA A LA QUE IR -----------------------------------
+            page.go("/pagina")
+        
+
     imagenes_habitacion = ft.Container(
-        # Esto centra el bloque en PC y deja margen en móvil
         alignment=ft.Alignment.CENTER,
         padding=ft.padding.all(20),
         content=ft.ResponsiveRow(
             spacing=12,
             run_spacing=12,
             controls=[
-                # IMAGEN PRINCIPAL: 12 columnas en móvil (sm), 8 en PC (md)
                 ft.Container(
                     col={"sm": 12, "md": 8},
-                    # En móvil bajamos la altura para que no ocupe toda la pantalla
                     content=img(foto_portada, h=300 if page.width < 600 else 412),
                 ),
-                
-                # BLOQUE DERECHO: Se va abajo en móvil automáticamente
                 ft.Column(
                     col={"sm": 12, "md": 4},
                     spacing=12,
                     controls=[
-                        # Usamos otra fila responsive para las pequeñas
                         ft.ResponsiveRow(
                             spacing=12,
                             run_spacing=12,
                             controls=[
-                                # En móvil: 2 fotos por fila (col=6). En PC: 1 por fila (col=12)
                                 ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200)),
                                 ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200)),
                                 ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200)),
@@ -78,14 +192,7 @@ def singleRoom(page: ft.Page):
             weight="bold",
     )
 
-    datepicker_entrada = ft.DatePicker(
-        on_change=lambda _: print(f"Entrada: {datepicker_entrada.value}")
-    )
-    datepicker_salida = ft.DatePicker(
-        on_change=lambda _: print(f"Salida: {datepicker_salida.value}")
-    )
-
-    propiedades =ft.Container(
+    propiedades = ft.Container(
         width=600, 
         content=ft.ResponsiveRow(
             spacing=0,
@@ -111,23 +218,19 @@ def singleRoom(page: ft.Page):
         controls=[
             propiedades,
             ft.Container(
-            content=ft.Column([
-                ft.Text("Reserva tu estancia", weight="bold", size=16, color="black"),
-               ft.Row([
-                    ft.ElevatedButton(
-                        "Fecha Entrada",
-                        on_click=lambda _: setattr(datepicker_entrada, "open", True) or page.update(),
-                    ),
-                    ft.ElevatedButton(
-                        "Fecha Salida",
-                        on_click=lambda _: setattr(datepicker_salida, "open", True) or page.update(),
-                    ),
-                ], spacing=10),
-            ], spacing=15)
-        )
-    ])
-
-
+                content=ft.Column([
+                    ft.Text("Reserva tu estancia", weight="bold", size=16, color="black"),
+                    
+                    ft.Row([
+                        input_fecha_entrada,
+                        input_fecha_salida,
+                    ], spacing=10),
+                    errorLog,
+                    ft.ElevatedButton("Confirmar Reserva", bgcolor="blue", color="white", on_click=lambda e: confirmar_reserva(e))
+                ], spacing=15)
+            )
+        ]
+    )
 
     def responsive(e):
         if not page.width: return
@@ -138,7 +241,7 @@ def singleRoom(page: ft.Page):
         responsive(None)
 
     return ft.View(
-        route="/logIn",
+        route="/singleRoom", 
         bgcolor="white",
         padding=20,
         controls=[
