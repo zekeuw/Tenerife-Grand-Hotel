@@ -4,6 +4,7 @@ from src.Backend.RoomsManagement import conectRoomCollection
 from src.Backend.Utils.Exceptions import NotFoundError
 
 from datetime import datetime
+import json
 
 # booking dict example :
 '''    {
@@ -122,12 +123,13 @@ def GetBookingsOfUser(userName:str) -> list:
 
     bookings = conectBookingCollection()
 
-    data = bookings.find({"username": userName})
+    data = bookings.find({"UserName": userName})
 
     if not data:
         raise NotFoundError("No hay ninguna reserva")
     
     data = list(data)
+    
     return data
 
 
@@ -156,5 +158,19 @@ def GetAvailableRooms(StartDate:str, EndDate:str):
     data = rooms.find(query)
 
     return list(data)
+
+def BookingSampleData():
+    '''Crea un puñao de bookings para la base de datos'''
+    with open("./src/Backend/SampleData/Bookings.json", "r") as f:
+        BOOKINGS = json.load(f)
+
+        for booking in BOOKINGS:
+
+            try:
+                createBooking(booking["RoomId"], booking["IniDate"], booking["FinDate"], booking["UserName"])
+
+            except Exception as e:
+                print(f"No se pudo insertar {booking}: {e}") #esta funcion es de debug asiq da un poco igual poner un print aqui
+
 
     

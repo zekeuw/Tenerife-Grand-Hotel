@@ -18,10 +18,15 @@ class NavigationBar(ft.Container):
             on_click=lambda _: page.go("/")
             )
         
-        self.bookings = ft.Text(
-            value="Mis reservas", 
-            color="black",size=18 ,
-            align=ft.Alignment.TOP_LEFT)
+        self.bookings = ft.TextButton(
+            content=ft.Text("Mis Reservas", size=18, color="black"),
+            style=ft.ButtonStyle(
+                color="black", 
+                text_style=ft.TextStyle(size=18), 
+                overlay_color="transparent"
+            ),
+            on_click=lambda _: page.go("/MyBookings")
+        )
         
         self.rooms = ft.TextButton(
             content=ft.Text("Habitaciones", size=18, color="black"),
