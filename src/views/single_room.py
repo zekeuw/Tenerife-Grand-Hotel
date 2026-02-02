@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')
 import flet as ft
 from src.components.navigation_bar import NavigationBar
 import src.Backend.RoomsManagement as rm
+from random import choice
 
 def singleRoom(page: ft.Page):
 
@@ -51,8 +52,8 @@ def singleRoom(page: ft.Page):
                             run_spacing=12,
                             controls=[
                                 # En móvil: 2 fotos por fila (col=6). En PC: 1 por fila (col=12)
-                                ft.Container(col={"sm": 6, "md": 12}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200)),
-                                ft.Container(col={"sm": 6, "md": 12}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200)),
+                                ft.Container(col={"sm": 6, "md": 12}, content=img(choice(room_info["data"]["category_images"]), h=200)),
+                                ft.Container(col={"sm": 6, "md": 12}, content=img(choice(room_info["data"]["category_images"]), h=200)),
                             ]
                         )
                     ]

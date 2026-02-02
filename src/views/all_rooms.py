@@ -1,15 +1,15 @@
 import flet as ft
 from src.components.navigation_bar import NavigationBar
-from src.Backend.RoomsManagement import TakeAllRooms, TakeRandomPhotoByRoomType, FilterRooms
-import random
+from src.Backend.RoomsManagement import TakeAllRooms, FilterRooms
+from random import sample
+import datetime 
 
-def CreateRoomCard(room_data, on_click_handler=None):
-    room_id = room_data.get("id", room_data.get("_id", "Unknown"))
-    room_type = room_data.get("category", "Regular") 
-    price = room_data.get("price", 0)
-    description = room_data.get("description", "Sin descripción")
-    
-    img_src = f"{TakeRandomPhotoByRoomType(room_type)}"
+def CreateRoomCard(page, room_data):
+    room_id = room_data.get("id", room_data.get("_id"))
+    room_type = room_data.get("category") 
+    price = room_data.get("price")
+    description = room_data.get("description")
+    img_src = room_data.get("main_image")
 
     return ft.Container(
         width=300,
@@ -18,12 +18,11 @@ def CreateRoomCard(room_data, on_click_handler=None):
         margin=15,
         bgcolor="white",
         border_radius=15,
-        shadow=ft.BoxShadow(
-            blur_radius=5,
-            color=ft.Colors.BLACK,
-        ),
+        shadow=ft.BoxShadow(blur_radius=5, color=ft.Colors.BLACK),
         ink=True,
-        on_click=lambda e: print(f"Click en habitación: {room_id}"), 
+        on_click= lambda e: (
+                setattr(page, "selected_room_data", {"data": room_data, "type": room_type, "foto_portada": img_src}),
+                page.go("/singleRoom")), 
         content=ft.Column(
             controls=[
                 ft.Image(
@@ -48,9 +47,10 @@ def CreateRoomCard(room_data, on_click_handler=None):
 
 def allRooms(page: ft.Page):
     menu = NavigationBar(page)
-    
     active_filters = [] 
-    
+    entry_date_inputs = []
+    exit_date_inputs = []
+
     grid_rooms = ft.GridView(
         expand=True,
         runs_count=5, 
@@ -61,89 +61,156 @@ def allRooms(page: ft.Page):
         controls=[] 
     )
 
-    
-    def load_cards(rooms_data, should_update=False):
+    def LoadCards(rooms_data, should_update=False):
         cards = []
         for room in rooms_data:
-            cards.append(CreateRoomCard(room))
-        
-        grid_rooms.controls = cards
+            cards.append(CreateRoomCard(page, room))
+
+        if cards:
+            grid_rooms.controls = sample(cards, len(cards))
+        else:
+            grid_rooms.controls = []
         
         if should_update:
             grid_rooms.update()
 
-    def on_filter_change(e):
-        label = e.control.label.value
+    def FilterChange(e):
+        e.control.update() 
+        label = e.control.label.value 
         is_checked = e.control.value
 
         if is_checked:
-            if label not in active_filters:
-                active_filters.append(label)
+            if label not in active_filters: active_filters.append(label)
         else:
-            if label in active_filters:
-                active_filters.remove(label)
+            if label in active_filters: active_filters.remove(label)
         
-        print(f"Filtros activos: {active_filters}")
+        if not active_filters: rooms = TakeAllRooms()
+        else: rooms = FilterRooms(active_filters)
         
-        if not active_filters:
-            rooms = TakeAllRooms()
-        else:
-            rooms = FilterRooms(active_filters)
-        
-        load_cards(rooms, should_update=True)
+        LoadCards(rooms, should_update=True)
 
 
-    initial_rooms = TakeAllRooms()
-    load_cards(initial_rooms, should_update=False)
+    today = datetime.datetime.now()
 
+    def UpdateEntryDate(e):
+        if entry_datepicker.value:
+            fecha_entrada = entry_datepicker.value
+            fecha_str = fecha_entrada.strftime("%d-%m-%Y")
+            
+            for text_field in entry_date_inputs:
+                text_field.value = fecha_str
+                text_field.update()
 
-    def actualizar_fecha(e):
-        input_fecha.value = datepicker.value.strftime("%d-%m-%Y")
-        input_fecha.update()
+            min_exit_date = fecha_entrada + datetime.timedelta(days=1)
+            exit_datepicker.first_date = min_exit_date
+            
+            if exit_datepicker.value and exit_datepicker.value <= fecha_entrada:
+                exit_datepicker.value = None
+                for text_field in exit_date_inputs:
+                    text_field.value = ""
+                    text_field.update()
+            
+            exit_datepicker.update()
 
-    datepicker = ft.DatePicker(
-        on_change=actualizar_fecha,
+    def UpdateExitDate(e):
+        if exit_datepicker.value:
+            fecha_str = exit_datepicker.value.strftime("%d-%m-%Y")
+            for text_field in exit_date_inputs:
+                text_field.value = fecha_str
+                text_field.update()
+
+    entry_datepicker = ft.DatePicker(
+        on_change=UpdateEntryDate,
         cancel_text="Cancelar",
-        confirm_text="Confirmar"
+        confirm_text="Confirmar Entrada",
+        help_text="Selecciona fecha de llegada",
+        first_date=today 
+    )
+    
+    exit_datepicker = ft.DatePicker(
+        on_change=UpdateExitDate,
+        cancel_text="Cancelar",
+        confirm_text="Confirmar Salida",
+        help_text="Selecciona fecha de salida",
+        first_date=today + datetime.timedelta(days=1)
     )
 
-    if datepicker not in page.overlay:
-        page.overlay.append(datepicker)
+    page.overlay.extend([entry_datepicker, exit_datepicker])
 
-    input_fecha = ft.TextField(
-        border_radius=35,
-        height=30,
-        label=ft.Text(value="Fecha entrada", size=10),
-        hint_text="DD-MM-AAAA",
-        width=300,
-        read_only=True,  
-        on_click=lambda e: page.show_dialog(datepicker) 
-    )
+    def open_entry_picker(e):
+        entry_datepicker.open = True
+        entry_datepicker.update()
 
-    def create_checkbox(label_text):
-        return ft.Checkbox(
-            label=ft.Text(value=label_text, color="black", size=12),
-            value=False,
-            on_change=on_filter_change, 
-            check_color="white",
-            fill_color={ft.ControlState.SELECTED: "blue", ft.ControlState.DEFAULT: "white"}
+    def open_exit_picker(e):
+
+        exit_datepicker.open = True
+        exit_datepicker.update()
+
+    def create_filters_view():     
+        input_fecha_entrada = ft.TextField(
+            border_radius=35,
+            height=30,
+            label=ft.Text(value="Fecha Entrada", size=10),
+            hint_text="DD-MM-AAAA",
+            width=300,
+            read_only=True,
+            text_style=ft.TextStyle(color="black"),
+            suffix_icon=ft.Icons.CALENDAR_MONTH,
+            on_click=open_entry_picker 
+        )
+        
+        input_fecha_salida = ft.TextField(
+            border_radius=35,
+            height=30,
+            label=ft.Text(value="Fecha Salida", size=10),
+            hint_text="DD-MM-AAAA",
+            width=300,
+            read_only=True,
+            text_style=ft.TextStyle(color="black"), 
+            suffix_icon=ft.Icons.CALENDAR_TODAY,
+            on_click=open_exit_picker
         )
 
-    filters_column = ft.Column(
+        entry_date_inputs.append(input_fecha_entrada)
+        exit_date_inputs.append(input_fecha_salida)
+
+        def create_checkbox_local(label_text):
+            return ft.Checkbox(
+                label=ft.Text(value=label_text, color="black", size=12),
+                value=False,
+                on_change=FilterChange, 
+                fill_color={
+                    ft.ControlState.HOVERED: "grey", 
+                    ft.ControlState.FOCUSED: "grey", 
+                    ft.ControlState.SELECTED: "blue", 
+                    ft.ControlState.DEFAULT: "white",                
+                },
+                check_color="white" 
+            )
+
+        return ft.Column(
             alignment=ft.Alignment.TOP_CENTER,
             scroll=ft.ScrollMode.AUTO, 
             controls=[
                 ft.Text(value="Busca tu mejor habitación", color="black", size=20, weight="bold", text_align=ft.TextAlign.CENTER),
                 ft.Divider(),
-                ft.Text(value="Fechas", color="black", weight="bold"),
-                input_fecha,
+                
+                ft.Text(value="Fechas de Estancia", color="black", weight="bold"),
+                ft.Container(height=10), 
+                input_fecha_entrada,     
+                ft.Container(height=5),  
+                input_fecha_salida,      
+                
+                ft.Container(height=15), 
+                
                 ft.TextField(
                     border_radius=35, height=30,
                     label=ft.Text(value="Numero de personas", size=10),
                     keyboard_type=ft.KeyboardType.NUMBER,
                     input_filter=ft.InputFilter(allow=True, regex_string=r"[0-9]", replacement_string="")
                 ),
-                ft.Button(content="Buscar Disponibilidad", bgcolor="blue", color="white", width=float("inf")),
+                ft.Container(height=10),
+                ft.Button(content=ft.Text("Buscar Disponibilidad"), bgcolor="blue", color="white", width=float("inf")),
                 ft.Divider(),
                 
                 ft.Row(
@@ -151,18 +218,18 @@ def allRooms(page: ft.Page):
                     controls=[
                         ft.Column(controls=[
                             ft.Text(value="Tipo de cama", color="black", weight="bold", size=16),
-                            create_checkbox("King"),
-                            create_checkbox("Matrimonio"),
-                            create_checkbox("Individual"),
-                            create_checkbox("Cuna")
+                            create_checkbox_local("King"),
+                            create_checkbox_local("Matrimonio"),
+                            create_checkbox_local("Individual"),
+                            create_checkbox_local("Cuna")
                         ]),
                         ft.Column(controls=[
                             ft.Text(value="Categoría", color="black", weight="bold", size=16),
-                            create_checkbox("Presidential"),
-                            create_checkbox("Luxury"),
-                            create_checkbox("Privacy"),
-                            create_checkbox("Apartment"),
-                            create_checkbox("Regular"),
+                            create_checkbox_local("Presidential"),
+                            create_checkbox_local("Luxury"),
+                            create_checkbox_local("Privacy"),
+                            create_checkbox_local("Apartment"),
+                            create_checkbox_local("Regular"),
                         ]),                   
                     ],
                     alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
@@ -173,18 +240,18 @@ def allRooms(page: ft.Page):
                     controls=[
                         ft.Column(controls=[
                             ft.Text(value="Servicios", color="black", weight="bold", size=16),
-                            create_checkbox("Garaje"),
-                            create_checkbox("Wifi"),
-                            create_checkbox("TV"),
-                            create_checkbox("Jacuzzi")
+                            create_checkbox_local("Garaje"),
+                            create_checkbox_local("Wifi"),
+                            create_checkbox_local("TV"),
+                            create_checkbox_local("Jacuzzi")
                         ]),
                         ft.Column(controls=[
                             ft.Text(value="Precio", color="black", weight="bold", size=16),
-                            create_checkbox("0€ - 50€"),
-                            create_checkbox("50€ - 100€"),
-                            create_checkbox("100€ - 150€"),
-                            create_checkbox("100€ - 200€"),
-                            create_checkbox("+200€"),
+                            create_checkbox_local("0€ - 50€"),
+                            create_checkbox_local("50€ - 100€"),
+                            create_checkbox_local("100€ - 150€"),
+                            create_checkbox_local("100€ - 200€"),
+                            create_checkbox_local("+200€"),
                         ]),                   
                     ],
                     alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
@@ -192,17 +259,20 @@ def allRooms(page: ft.Page):
             ],
         )
 
+    desktop_filters_view = create_filters_view()
+    mobile_filters_view = create_filters_view()
+
     desktop_filter_container = ft.Container(
         width=350,
         padding=20,
         alignment=ft.Alignment.TOP_LEFT,
         border=ft.border.only(right=ft.BorderSide(width=1, color="grey")),
-        content=filters_column 
+        content=desktop_filters_view 
     )
 
     mobile_filter_drawer = ft.NavigationDrawer(
         controls=[
-            ft.Container(padding=20, content=filters_column) 
+            ft.Container(padding=20, content=mobile_filters_view)
         ],
         bgcolor="white",
     )
@@ -223,24 +293,20 @@ def allRooms(page: ft.Page):
     def responsive(e):
         if not page.width: return
         is_mobile = page.width < 800
-        
         menu.resize(page.width)
-
         desktop_filter_container.visible = not is_mobile
         fab_filters.visible = is_mobile
-        
         if page.width < 600: grid_rooms.runs_count = 1
         elif page.width < 900: grid_rooms.runs_count = 2
         elif page.width < 1200: grid_rooms.runs_count = 3
         else: grid_rooms.runs_count = 4
-
-        try:
-            page.update()
-        except:
-            pass
+        try: page.update()
+        except: pass
 
     page.on_resize = responsive
-    
+    initial_rooms = TakeAllRooms()
+    LoadCards(initial_rooms, should_update=False)
+
     if page.width: responsive(None)
 
     return ft.View(

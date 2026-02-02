@@ -47,10 +47,8 @@ def signUp(page: ft.Page):
                         )
     
     birth = ft.DatePicker(
-                        label="Fecha de nacimiento", 
-                        color="#000000",
-                        focused_border_color="black",
-                        margin=15
+                        field_label_text="Fecha de nacimiento", 
+                        barrier_color="#000000",
                         )
     
     passwd = ft.TextField(

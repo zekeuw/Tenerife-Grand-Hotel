@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "tenerife-grand-hotel"
+version = "0.1.0"
+description = "Hotel room management page"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flet = {extras = ["all"], version = "^0.80.5"}
+pymongo = "^4.16.0"
+bcrypt = "^5.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

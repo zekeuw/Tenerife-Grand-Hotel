@@ -1,7 +1,7 @@
 import flet as ft
-from src.Backend.RoomsManagement import TakeMostValuedRooms, TakeRandomPhotoByRoomType
+from src.Backend.RoomsManagement import TakeMostValuedRooms
 from src.components.navigation_bar import NavigationBar
-from src.views.page_404 import connectionErrorPage
+from random import sample
 
 ROOMS_TYPES = ["Presidential", "Luxury", "Privacy", "Apartment", "Regular"]
 
@@ -12,9 +12,7 @@ cards_list = []
 
 def BestRoomsCardList(page):
     def CreateRoomCard(data, room_type):
-        # Esto antes se usaba en el content que está más abajo.
-        # la necesito antes para cargarla en el onclick
-        ruta_img_random = TakeRandomPhotoByRoomType(room_type)
+        img_src = data.get("main_image")
 
         return ft.Container(
             width=300,
@@ -29,13 +27,13 @@ def BestRoomsCardList(page):
             ),
             ink=True,
             on_click=lambda e: (
-                setattr(page, "selected_room_data", {"data": data, "type": room_type, "foto_portada": ruta_img_random}),
+                setattr(page, "selected_room_data", {"data": data, "type": room_type, "foto_portada": img_src}),
                 page.go("/singleRoom")
             ),
             content= ft.Column(
                 controls=[
                     ft.Image(
-                        src=ruta_img_random,
+                        src=img_src,
                         width=float("inf"),
                         height=180,
                         border_radius=5,
@@ -56,7 +54,6 @@ def BestRoomsCardList(page):
         )
 
     best_rooms = TakeMostValuedRooms()
-    print(best_rooms)
     if best_rooms == None: 
         return None
     
@@ -132,8 +129,6 @@ def homePage(page: ft.Page):
     )
 
     # BEST ROOMS
-    
-
 
     if not cards_list: 
         BestRoomsCardList(page)
@@ -141,7 +136,7 @@ def homePage(page: ft.Page):
 
     card_carrusel = ft.Row(
         expand=True,
-        controls=cards_list,
+        controls = sample(cards_list, len(cards_list)),
         scroll = ft.ScrollMode.HIDDEN,
         spacing=10,
     )
@@ -375,6 +370,7 @@ def homePage(page: ft.Page):
     page.on_resize = responsive
     if page.width:
         responsive(None)
+    
     return ft.View(
         route="/",
         bgcolor="white",
