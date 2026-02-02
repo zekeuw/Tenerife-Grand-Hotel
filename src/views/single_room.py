@@ -52,15 +52,10 @@ def singleRoom(page: ft.Page):
                             run_spacing=12,
                             controls=[
                                 # En móvil: 2 fotos por fila (col=6). En PC: 1 por fila (col=12)
-<<<<<<< Updated upstream
-                                ft.Container(col={"sm": 6, "md": 12}, content=img(choice(room_info["data"]["category_images"]), h=200)),
-                                ft.Container(col={"sm": 6, "md": 12}, content=img(choice(room_info["data"]["category_images"]), h=200)),
-=======
                                 ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200)),
                                 ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200)),
                                 ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200)),
                                 ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200))
->>>>>>> Stashed changes
                             ]
                         )
                     ]
