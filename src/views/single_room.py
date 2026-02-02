@@ -16,46 +16,49 @@ def singleRoom(page: ft.Page):
 
     menu = NavigationBar(page)
 
-    def img(src, expand=1):
+    def img(src, h=200):
         return ft.Container(
-            expand=expand,
             border_radius=16,
+            height=h,
             clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-            content=ft.Image(
-                src=src,
-                fit=ft.BoxFit.COVER,
-            ),
+            content=ft.Image(src=src, fit=ft.BoxFit.COVER),
         )
 
-    imagenes_habitacion = ft.Row(
-        height=400,
-        spacing=12,
-        controls=[
-            img(foto_portada),
-            # Columna derecha
-            ft.Column(
-                spacing=12,
-                expand=1,
-                controls=[
-                    ft.Row(
-                        spacing=12,
-                        expand=1,
-                        controls=[
-                            img(rm.TakeRandomPhotoByRoomType(room_info["type"])),
-                            img(rm.TakeRandomPhotoByRoomType(room_info["type"])),
-                        ],
-                    ),
-                    ft.Row(
-                        spacing=12,
-                        expand=1,
-                        controls=[
-                            img(rm.TakeRandomPhotoByRoomType(room_info["type"])),
-                            img(rm.TakeRandomPhotoByRoomType(room_info["type"])),
-                        ],
-                    ),
-                ],
-            ),
-        ],
+    # Contenedor principal adaptable
+    imagenes_habitacion = ft.Container(
+        # Esto centra el bloque en PC y deja margen en móvil
+        alignment=ft.Alignment.CENTER,
+        padding=ft.padding.all(20),
+        content=ft.ResponsiveRow(
+            spacing=12,
+            run_spacing=12,
+            controls=[
+                # IMAGEN PRINCIPAL: 12 columnas en móvil (sm), 8 en PC (md)
+                ft.Container(
+                    col={"sm": 12, "md": 8},
+                    # En móvil bajamos la altura para que no ocupe toda la pantalla
+                    content=img(foto_portada, h=300 if page.width < 600 else 412),
+                ),
+                
+                # BLOQUE DERECHO: Se va abajo en móvil automáticamente
+                ft.Column(
+                    col={"sm": 12, "md": 4},
+                    spacing=12,
+                    controls=[
+                        # Usamos otra fila responsive para las pequeñas
+                        ft.ResponsiveRow(
+                            spacing=12,
+                            run_spacing=12,
+                            controls=[
+                                # En móvil: 2 fotos por fila (col=6). En PC: 1 por fila (col=12)
+                                ft.Container(col={"sm": 6, "md": 12}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200)),
+                                ft.Container(col={"sm": 6, "md": 12}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200)),
+                            ]
+                        )
+                    ]
+                ),
+            ],
+        )
     )
 
     tipo_habitacion = ft.Text(
@@ -65,10 +68,25 @@ def singleRoom(page: ft.Page):
             weight="bold",
     )
 
-    propiedades = ft.Text(
-            value=f"Valoración: {data['avg_rating']} - Precio: {data['price']}$/noche" if room_info else "Cargando...", 
+    propiedades_text = ft.Text(
+            value=f"Propiedades de la habitación", 
             color="black",
-            size=16,
+            size=32,
+            weight="bold",
+    )
+
+    propiedades = ft.ResponsiveRow(
+        spacing=10,
+        run_spacing=10,
+        controls=[
+            ft.Container(
+                col={"sm": 6, "md": 4}, # Esto es para el responsive
+                content=ft.Row([
+                    ft.Text(item, color="black")
+                ]),
+                padding=5,
+            ) for item in data["content"]
+        ],
     )
 
     def responsive(e):
@@ -94,6 +112,7 @@ def singleRoom(page: ft.Page):
                                 menu,
                                 imagenes_habitacion,
                                 tipo_habitacion,
+                                propiedades_text,
                                 propiedades
                         ]
                     ),
