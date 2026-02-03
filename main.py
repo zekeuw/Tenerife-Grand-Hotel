@@ -6,7 +6,7 @@ from src.views.login import logIn
 from src.views.signup import signUp
 from src.views.page_404 import connectionErrorPage
 from src.views.single_room import singleRoom
-from src.views.my_bookings import MyBookingsPage
+# from src.views.my_bookings import MyBookingsPage
 
 def main(page: ft.Page):
     page.title = "Tenerife Grand Hotel"

@@ -46,9 +46,14 @@ def signUp(page: ft.Page):
                         margin=15
                         )
     
-    birth = ft.DatePicker(
-                        field_label_text="Fecha de nacimiento", 
-                        barrier_color="#000000",
+    birth = ft.TextField(
+                        label="Nacimiento",
+                        color="black",
+                        hint_text="Introduzca su fecha de nacimiento...", 
+                        label_style=ft.TextStyle(color=ft.Colors.BLACK), 
+                        hint_style=ft.TextStyle(color=ft.Colors.BLACK),
+                        focused_border_color="black",
+                        margin=15
                         )
     
     passwd = ft.TextField(
@@ -72,6 +77,8 @@ def signUp(page: ft.Page):
                         focused_border_color="black",
                         margin=15
                         )
+    
+    error = ft.Text("", visible=False, color="red")
 
 
     central_container = ft.Container(
@@ -83,29 +90,42 @@ def signUp(page: ft.Page):
                     user_name,
                     name,
                     last_names,
+                    birth,
+                    phone,
                     passwd,
                     validate_passwd,
+                    error,
                     ft.Button(content="Crear cuenta", color="white", bgcolor="blue", scale=1.5, margin=10, 
-                              on_click=lambda e: buffer(user_name.value, name.value, last_names.value, phone.value, birth.value, passwd.value, validate_passwd.value))
+                              on_click=lambda e: buffer(user_name.value, name.value, last_names.value, phone.value, birth.value, passwd.value))
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
             width=page.width,
-            height=page.height,
+            padding=40,
             bgcolor="#d1d1d1",
             border_radius=10,
         ),
         alignment=ft.Alignment.CENTER, 
     )
 
-    def buffer(user_name, name, last_names, passwd):
+    def buffer(user_name, name, last_names, phone, birth, passwd):
         if validatePassword():
-            data = {"username": user_name, "password": passwd, "name": name, "surname": last_names, "phone": phone, "birth": birth}
-            createUser(data)
+            try:
+                data = {"username": user_name, "password": passwd, "name": name, "surname": last_names, "phone": phone, "birth": birth}
+                createUser(data)
+                page.username = user_name
+                page.go("/userPage")
+            except Exception as e:
+                print(e)
+                error.value = str(e)
+                error.visible = True
+        else:
+            error.value = "Las contraseñas no coinciden"
+            error.visible = True
 
     def validatePassword():
-        pass   
+        return validate_passwd.value == passwd.value and passwd.value
 
     def responsive(e):
         if not page.width: return

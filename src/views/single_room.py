@@ -7,6 +7,7 @@ import flet as ft
 from src.components.navigation_bar import NavigationBar
 import src.Backend.RoomsManagement as rm
 from src.Backend.BookingManagement import DateAvailable
+from src.views.carousel import RoomCarousel
 
 def singleRoom(page: ft.Page):
 
@@ -232,6 +233,13 @@ def singleRoom(page: ft.Page):
         ]
     )
 
+    best_rooms = rm.TakeMostValuedRooms()
+
+    mi_carrusel = RoomCarousel(
+        page=page, 
+        rooms_data=best_rooms,
+    )
+
     def responsive(e):
         if not page.width: return
         menu.resize(page.width)
@@ -256,7 +264,8 @@ def singleRoom(page: ft.Page):
                                 imagenes_habitacion,
                                 tipo_habitacion,
                                 propiedades_text,
-                                seccion_info
+                                seccion_info,
+                                mi_carrusel
                         ]
                     ),
                 ]
