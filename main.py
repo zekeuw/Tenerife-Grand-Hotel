@@ -6,7 +6,11 @@ from src.views.login import logIn
 from src.views.signup import signUp
 from src.views.page_404 import connectionErrorPage
 from src.views.single_room import singleRoom
-from src.views.my_bookings import MyBookingsPage
+<<<<<<< Updated upstream
+=======
+from src.views.booking_process import BookProcess
+>>>>>>> Stashed changes
+# from src.views.my_bookings import MyBookingsPage
 
 def main(page: ft.Page):
     page.title = "Tenerife Grand Hotel"
@@ -39,8 +43,11 @@ def main(page: ft.Page):
         elif page.route == "/singleRoom":
             page.views.append(singleRoom(page))
         
-        elif page.route == "/MyBookings":
-            page.views.append(MyBookingsPage(page)) # <--- ¡AÑADE LOS PARÉNTESIS!
+        elif page.route == "/processBooking":
+            page.views.append(BookProcess(page))
+        
+        # elif page.route == "/MyBookings":
+        #     page.views.append(MyBookingsPage(page))
 
         page.update()
 
