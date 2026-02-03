@@ -145,7 +145,7 @@ def singleRoom(page: ft.Page):
         else:
 
             #---------------------------------------- AQUI FALTA LA PAGINA A LA QUE IR -----------------------------------
-            page.go("/pagina")
+            page.go("/processBooking")
         
 
     imagenes_habitacion = ft.Container(
@@ -212,7 +212,27 @@ def singleRoom(page: ft.Page):
             ],
         )
     )
-        
+    
+    seccion_info_mobile = ft.Column(
+        spacing=50,
+        controls=[
+            propiedades,
+            ft.Container(
+                content=ft.Column([
+                    ft.Text("Reserva tu estancia", weight="bold", size=16, color="black"),
+                    
+                    ft.Row([
+                        input_fecha_entrada,
+                        input_fecha_salida,
+                    ], spacing=10),
+                    errorLog,
+                    ft.ElevatedButton("Confirmar Reserva", bgcolor="blue", color="white", on_click=lambda e: confirmar_reserva(e))
+                ], spacing=15)
+            )
+        ]
+    )
+    seccion_info_mobile.visible = False
+
     seccion_info = ft.Row(
         vertical_alignment=ft.CrossAxisAlignment.START,
         spacing=50,
@@ -242,7 +262,10 @@ def singleRoom(page: ft.Page):
 
     def responsive(e):
         if not page.width: return
+        is_mobile = page.width < 800
         menu.resize(page.width)
+        seccion_info_mobile.visible = True if is_mobile else False
+        seccion_info.visible = False if is_mobile else True
 
     page.on_resize = responsive
     if page.width:
@@ -265,7 +288,11 @@ def singleRoom(page: ft.Page):
                                 tipo_habitacion,
                                 propiedades_text,
                                 seccion_info,
+<<<<<<< Updated upstream
                                 mi_carrusel
+=======
+                                seccion_info_mobile
+>>>>>>> Stashed changes
                         ]
                     ),
                 ]
