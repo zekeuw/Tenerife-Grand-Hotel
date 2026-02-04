@@ -151,6 +151,7 @@ def singleRoom(page: ft.Page):
         else:
 
             if page.username:
+                setattr(page, "booking_data", {"fechaIni": input_fecha_entrada.value, "fechaFin": input_fecha_salida.value, "roomId": room_id})
                 page.go("/processBooking")
             else:
                 page.go("/logIn")

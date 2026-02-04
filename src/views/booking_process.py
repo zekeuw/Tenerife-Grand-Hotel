@@ -1,5 +1,8 @@
 import flet as ft
 from src.components.navigation_bar import NavigationBar
+from src.Backend.BookingManagement import createBooking
+
+from datetime import datetime
 
 def BookProcess(page: ft.Page):
     if page.username:
@@ -9,15 +12,22 @@ def BookProcess(page: ft.Page):
     else:
          # Si no, menú normal
          menu = NavigationBar(page)
+        
+    data = getattr(page, "booking_data", None)
+
+    ini_date = data["fechaIni"]
+    fin_Date = data["fechaFin"]
+    room_id = data["roomId"]
     
     user_data_container = ft.Container(
         border=ft.Border.all(width=1, color=ft.Colors.BLACK_38),
         border_radius=15,
         expand=True, 
+        margin=ft.Margin.only(left=40),
         padding=ft.Padding.only(left=40, right=40, top=10, bottom=20), 
         content=ft.Column(
             scroll=ft.ScrollMode.AUTO,
-            spacing=10, 
+            spacing=10,
             controls=[
                 ft.Text(value="Proceso de Reserva", size=24, weight="bold", color="black"),
 
@@ -75,6 +85,7 @@ def BookProcess(page: ft.Page):
         border=ft.Border.all(width=1, color=ft.Colors.BLACK_38),
         border_radius=15,
         expand=True, 
+        margin=ft.Margin.only(right=40),
         padding=ft.Padding.only(left=40, right=40, top=10, bottom=20), 
         content=ft.Column(
             controls=[
@@ -84,13 +95,13 @@ def BookProcess(page: ft.Page):
                 ft.Row(
                     controls=[
                         ft.Text(value="Check in: ", color="black", size=14, weight="bold"),
-                        ft.Text(value="Lunes, 16 de noviembre 2026", color="black", size=14)
+                        ft.Text(value=ini_date, color="black", size=14)
                     ]
                 ),
                 ft.Row(
                     controls=[
                         ft.Text(value="Check out: ", color="black", size=14, weight="bold"),
-                        ft.Text(value="Lunes, 16 de noviembre 2026", color="black", size=14)
+                        ft.Text(value=fin_Date, color="black", size=14)
                     ]
                 ),
             
@@ -123,6 +134,22 @@ def BookProcess(page: ft.Page):
             
         )
     )
+
+    confirm = ft.ElevatedButton("Confirmar Reserva", bgcolor="blue", color="white", on_click=lambda e: confirmar_reserva(e))
+
+    def confirmar_reserva(e):
+        try:
+            print(ini_date)
+            ini_obj = datetime.strptime(ini_date, "%d-%m-%Y")
+            new_ini = ini_obj.strftime("%Y-%m-%d")
+            fin_obj = datetime.strptime(fin_Date, "%d-%m-%Y")
+            new_fin = fin_obj.strftime("%Y-%m-%d")
+
+            createBooking(room_id, new_ini, new_fin, page.username)
+            page.go("/MyBookings")
+        except Exception as e:
+            print(e)
+
     data_container_mobile = ft.Column(
                         controls = [
                             user_data_container,
@@ -130,12 +157,19 @@ def BookProcess(page: ft.Page):
                         ]
                     )
     data_container_mobile.visible=False
+
+    room_confirm = ft.Column( #esto se crea para que el boton de 
+        controls=[
+            room_data_container, confirm
+        ]
+    )
+
     data_container = ft.Row(
                         spacing=300,
                         vertical_alignment=ft.CrossAxisAlignment.START,
                         controls = [
                             user_data_container,
-                            room_data_container
+                            room_confirm
                         ]
                     )
 
@@ -159,7 +193,8 @@ def BookProcess(page: ft.Page):
                 controls=[
                     menu,
                     data_container,
-                    data_container_mobile
+                    data_container_mobile,
+                    
                 ]
             )
         ]
