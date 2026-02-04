@@ -21,19 +21,14 @@ def userPage(page: ft.Page):
     txtPhone = ft.TextField(value=data["phone"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", margin=ft.Margin.only(left=40))
     txtBirth = ft.TextField(value=data["birth"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", margin=ft.Margin.only(left=40))
 
-    txtNewPass = ft.TextField(label="Nueva Contraseña", password=True, can_reveal_password=True, width=300, bgcolor="white", border_color="#0f62fe", text_size=15, margin=ft.Margin.only(left=40))
+    txtFieldNewPass = ft.TextField(label="Nueva Contraseña", password=True, can_reveal_password=True, width=300, bgcolor="white", border_color="#0f62fe", text_size=15, margin=ft.Margin.only(left=40), visible=False)
 
     errorLog = ft.Text(value="", color="#fe0f13", visible=False)
     
     chgeDesc = ft.Text(value="*Deje en blanco o sin tocar para no modificar los campos.", color="#888888")
     #creamos un contenedor que va a ser invisible por defecto, que luego se mostrara al darle click al boton de modificar datos
-    rowPass = ft.Row(
-        visible=False, 
-        controls=[
-            ft.Text("Nueva Contraseña:", size=15, weight="bold", color="#0f62fe", width=160),
-            txtNewPass
-        ]
-    )
+    txtNewPass = ft.Text("Nueva Contraseña:", size=15, weight="bold", color="#0f62fe", width=160, visible=False)
+
 
     # estos botones/rows van a estar apareciendo y desapareciendo continuamente, por eso los creamos en variables y los ponemos aqui
     btn_editar = ft.ElevatedButton(
@@ -65,182 +60,65 @@ def userPage(page: ft.Page):
 
     txtFields = [txtUserName, txtName, txtSurname, txtPhone, txtBirth] #almacenamos todos los textfields para cambiarle los estilos al darle al boton de editar
 
-    menu_lateral = ft.Container(
-        height= page.height,
-        bgcolor="white",
-        width= page.width * 0.20,
-        padding= ft.padding.only(left=50, top=50),
-        alignment=ft.Alignment.TOP_LEFT,
-        content = ft.Column(
-            spacing=50,
-            
-            controls=[ft.Container(
-            ft.Image(
-                src="/media/icons/icon_left.png",
-                width= 25,
-                height=25,
-            ),
-            on_click=lambda _: page.go("/")
-            ),
-            ft.Row(
-                controls=[
-                ft.Image(
-                    src="/media/icons/user_logo.png",
-                    height=20,
-                    width=20
-
-                ),
-                ft.Text(
-                value="Detalles Personales",
-                color="#0f62fe",
-                weight="bold",
-                )
-                ]
-            ),
-            ft.Container(expand=True),
-            ft.Container(
-                margin=ft.Margin.only(bottom=30),
-                on_click=lambda e: logout(),
-                content=ft.Row(
-                        controls=[
-                            ft.Image(
-                                src="/media/icons/log_out.png",
-                                height=20,
-                                width=20
-                            ),
-                            ft.Text(
-                                value="Cerrar sesión",
-                                color="#fe0f13",
-                                weight="bold",
-                            ),
-                        ]
-                    )
-                ),
-            ft.Container(
-                margin=ft.Margin.only(bottom=30),
-                on_click=lambda e: manageDelete(page.username),
-                content=ft.Row(
-                        controls=[
-                            ft.IconButton(icon=ft.Icons.DELETE_OUTLINE, icon_color="red"),
-                            ft.Text(
-                                value="Borrar cuenta",
-                                color="#fe0f13",
-                                weight="bold",
-                            ),
-                        ]
-                    )
-                )       
-                ]
-                ),
-
-                border= ft.border.only(
-                    right=ft.border.BorderSide(1, ft.Colors.GREY_300)
-                    )
-                )
-    
-    main_content = ft.Container(
+    columna_izquierda = ft.Column(
         expand=True,
-        padding=ft.padding.all(40),
-        content=ft.Column(
-            controls=[
-                ft.Text("Datos Personales", size=24, weight="bold", color="#888888"),
-                ft.Text("Consulta y edita tus datos personales", color="#888888"),
-                ft.Column(
-                    margin=ft.Margin.only(top=30),
-                    spacing=30,
+        controls=[
+            ft.Text("Nombre de Usuario:", size=15, weight="bold", color="#000000"),
+            txtUserName,
+            ft.Text("Nombre:", size=15, weight="bold", color="#000000"),
+            txtName,
+            ft.Text("Apellidos:", size=15, weight="bold", color="#000000"),
+            txtSurname,
+        ]
+    )
+
+    columna_derecha = ft.Column(
+        expand=True,
+        controls=[
+            ft.Text("Teléfono:", size=15, weight="bold", color="#000000"),
+            txtPhone,
+            ft.Text("Fecha de nacimiento:", size=15, weight="bold", color="#000000"),
+            txtBirth,
+            ft.Divider(height=10, color="transparent"),
+            txtNewPass, # Input de contraseña (condicional)
+            txtNewPass
+        ]
+    )
+    
+    central_container = ft.Container(
+            padding=40,
+            bgcolor="#d1d1d1",
+            border_radius=10,
+            content= ft.Container(
+                content = ft.Column(
                     controls=[
+                        ft.Text("Datos Personales", size=24, weight="bold", color="#888888"),
+                        ft.Text("Consulta y edita tus datos personales", color="#888888"),
                         ft.Row(
-                            controls=[
-                                ft.Text("Nombre de Usuario:", size=15, weight="bold", color="#000000", width=160),
-                                txtUserName
-                            ]
+                            alignment=ft.MainAxisAlignment.START,
+                            vertical_alignment=ft.CrossAxisAlignment.START,
+                            spacing=50,
+                            controls=[columna_izquierda, columna_derecha]
                         ),
-                        ft.Row(
-                            controls=[
-                            ft.Text("Nombre:", size=15, weight="bold", color="#000000", width=160),
-                            txtName
-                            ]     
-                        ),
-                        ft.Row(
-                            controls=[
-                            ft.Text("Apellidos:", size=15, weight="bold", color="#000000", width=160),
-                            txtSurname
-                            ]
-                        ),
-                        ft.Row(
-                            controls=[
-                            ft.Text("Teléfono:", size=15, weight="bold", color="#000000", width=160),
-                            txtPhone
-                            ]
-                        ),
-                        ft.Row(
-                            controls=[
-                            ft.Text("Fecha de nacimiento:", size=15, weight="bold", color="#000000", width=160),
-                            txtBirth
-                            ]
-                        ),
-                        rowPass, # linea invisible de contraseña
-                        errorLog,
-                        ft.Container(
-                            margin=ft.Margin.only(top=20),
-                            content=ft.Column(
-                                controls=[
-                                    btn_editar,
-                                    row_botones_accion
-                                ]
-                            )
-                        )
+                        
+                        ft.Divider(height=20, color="transparent"),
+                        
+                        # Zona de errores y Botón editar principal
+                        ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[errorLog]),
+                        ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[chgeDesc]),
+                        ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[btn_editar]),
+                        row_botones_accion # Botones guardar/cancelar
                     ]
                 )
-            ]
         )
     )
     
-    vista = ft.View(
-        route="/user",
-        bgcolor="white",
-        padding=0,
-        controls=[
-            ft.Column(
-                expand=True,
-                spacing=0,
-                controls=[
-                    menu,
-
-                    ft.Row(
-                        expand=True,
-                        spacing=0,
-                        controls=[
-                            menu_lateral,
-                            main_content
-                        ]
-                    )
-                    
-                ]
-            )
-        ]
-    )
 
     def manageDelete(username):
         '''Devuelve al usuario a la pagina principal y cambia el usuario logueado a none'''
         deleteUser(username)
         page.username = None
         page.go("/")
-
-    def responsive(e):
-        if not page.width: return
-        is_mobile = page.width < 800
-        global photo_moving
-        
-        menu.resize(page.width)
-
-        
-        desplazamiento = 340 if is_mobile else 340*2
-
-        photo_height = 500 if is_mobile else 800
-        photo_width = page.width * (0.95 if is_mobile else 0.8) 
-
-
 
         try:
             page.update()
@@ -259,7 +137,8 @@ def userPage(page: ft.Page):
         row_botones_accion.visible = modo_edicion
         
 
-        rowPass.visible = modo_edicion
+        txtFieldNewPass.visible = modo_edicion
+        txtNewPass.visible = modo_edicion
 
 
         for field in txtFields:
@@ -335,18 +214,37 @@ def userPage(page: ft.Page):
             errorLog.value = str(e)
             errorLog.visible = True
             page.update()
-
+    
+    def responsive(e):
+        if not page.width: return
+        menu.resize(page.width)
 
     page.on_resize = responsive
     if page.width:
         responsive(None)
-    
 
+    vista = ft.View(
+        route="/user",
+        bgcolor="white",
+        padding=0,
+        controls=[
+            ft.Column(
+                expand=True,
+                spacing=0,
+                controls=[
+                    menu,
 
-    
-
+                    ft.Row(
+                        expand=True,
+                        spacing=0,
+                        controls=[
+                            central_container
+                        ]
+                    )
+                    
+                ]
+            )
+        ]
+    )
 
     return vista
-
-    
-    
