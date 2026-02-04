@@ -2,7 +2,13 @@ import flet as ft
 from src.components.navigation_bar import NavigationBar
 
 def BookProcess(page: ft.Page):
-    menu = NavigationBar(page)
+    if page.username:
+         # Si hay usuario, mostramos menú de logueado
+         print(f"Usuario detectado: {page.session}") # Debug
+         menu = NavigationBar(page, state="logged_in")
+    else:
+         # Si no, menú normal
+         menu = NavigationBar(page)
     
     user_data_container = ft.Container(
         border=ft.Border.all(width=1, color=ft.Colors.BLACK_38),

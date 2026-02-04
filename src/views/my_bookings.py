@@ -110,7 +110,7 @@ def BookingCard(page: ft.Page, booking_data):
         try:
         # Intentamos la actualización
             UpdateBooking(room_id, booking_data["IniDate"], inputEntrada.value, inputSalida.value)
-            
+            print("hola")
             # Si tiene éxito, cerramos el modo edición
             toggle_edit_mode(False)
             page.update()
@@ -122,6 +122,9 @@ def BookingCard(page: ft.Page, booking_data):
     def delete(e):
         try:
             DeleteBookings(booking_data["RoomId"], booking_data["IniDate"])
+            tarjeta.visible = False
+            page.update()
+
         except Exception as e:
             errorLog.value = e
             errorLog.visible = True
@@ -199,8 +202,5 @@ def BookingCard(page: ft.Page, booking_data):
             )
         ]
     )
-    
-    return ft.Container(content=row, padding=20, margin=ft.Margin.only(right=40, left=40), border_radius=15, bgcolor="white", shadow=ft.BoxShadow(blur_radius=5))
-
-    
-
+    tarjeta = ft.Container(content=row, padding=20, margin=ft.Margin.only(right=40, left=40), border_radius=15, bgcolor="white", shadow=ft.BoxShadow(blur_radius=5))
+    return tarjeta
