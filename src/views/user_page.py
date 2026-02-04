@@ -121,11 +121,7 @@ def userPage(page: ft.Page):
                 on_click=lambda e: manageDelete(page.username),
                 content=ft.Row(
                         controls=[
-                            ft.Image(
-                                src="/media/icons/log_out.png",
-                                height=20,
-                                width=20
-                            ),
+                            ft.IconButton(icon=ft.Icons.DELETE_OUTLINE, icon_color="red"),
                             ft.Text(
                                 value="Borrar cuenta",
                                 color="#fe0f13",

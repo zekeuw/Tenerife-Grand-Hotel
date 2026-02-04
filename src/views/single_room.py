@@ -20,7 +20,13 @@ def singleRoom(page: ft.Page):
     room_type_name = room_info["type"]
     foto_portada = room_info.get("foto_portada")
 
-    menu = NavigationBar(page)
+    if page.username:
+         # Si hay usuario, mostramos menú de logueado
+         print(f"Usuario detectado: {page.session}") # Debug
+         menu = NavigationBar(page, state="logged_in")
+    else:
+         # Si no, menú normal
+         menu = NavigationBar(page)
 
     def img(src, h=200):
         return ft.Container(
@@ -144,8 +150,10 @@ def singleRoom(page: ft.Page):
             page.update()
         else:
 
-            #---------------------------------------- AQUI FALTA LA PAGINA A LA QUE IR -----------------------------------
-            page.go("/processBooking")
+            if page.username:
+                page.go("/processBooking")
+            else:
+                page.go("/logIn")
         
 
     imagenes_habitacion = ft.Container(
