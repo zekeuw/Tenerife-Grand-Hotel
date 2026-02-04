@@ -260,6 +260,80 @@ def singleRoom(page: ft.Page):
         rooms_data=best_rooms,
     )
 
+    def ReviewItem(title, author, comment, score, score_label, score_color, pros=None, cons=None, date=""):
+        # Lista de puntos positivos (Verde) o negativos (Rojo)
+        points = []
+        if pros:
+            for p in pros:
+                points.append(ft.Row([ft.Icon(ft.Icons.ADD, color="green", size=16), ft.Text(p, size=13)]))
+        if cons:
+            for c in cons:
+                points.append(ft.Row([ft.Icon(ft.Icons.REMOVE, color="red", size=16), ft.Text(c, size=13)]))
+
+        return ft.Column([
+            ft.Row([
+                ft.Column([
+                    ft.Text(title, weight="bold", size=16),
+                    ft.Text(author, size=12, color="grey"),
+                    ft.Text(comment, size=14),
+                    ft.Column(points, spacing=2),
+                ], expand=True),
+                ft.Column([
+                    ft.Row([
+                        ft.Text(score_label, color=score_color, weight="bold"),
+                        ft.Container(
+                            content=ft.Text(str(score), weight="bold"),
+                            bgcolor=ft.Colors.with_opacity(0.1, score_color),
+                            padding=10,
+                            border_radius=10
+                        )
+                    ], alignment=ft.MainAxisAlignment.END),
+                    ft.Text(f"Reviewed on\n{date}", size=11, color="grey", text_align=ft.TextAlign.RIGHT)
+                ], horizontal_alignment=ft.CrossAxisAlignment.END)
+            ]),
+            ft.Divider(height=40, thickness=1, color=ft.Colors.BLACK_12)
+        ])
+
+    # SECCIÓN PRINCIPAL DE RESEÑAS
+    reviews_section = ft.Container(
+        padding=40,
+        content=ft.Row(
+            vertical_alignment=ft.CrossAxisAlignment.START,
+            controls=[
+                # LADO IZQUIERDO: Puntaje General
+                ft.Column([
+                    ft.Text("Reviews", size=45, weight="bold"),
+                    ft.Text("9.6 / 10", size=40, weight="bold", color="blue"),
+                ], width=300),
+
+                # LADO DERECHO: Lista de comentarios
+                ft.VerticalDivider(width=20, color="transparent"),
+                ft.Column([
+                    ReviewItem(
+                        title="Excellent value for the price!",
+                        author="Mark M.",
+                        comment="We enjoyed our stay at this hotel. We will definitely come back!",
+                        score=10,
+                        score_label="Excellent",
+                        score_color="green",
+                        pros=["Great location!", "Service", "Bottle of champagne in the room!"],
+                        date="20 September, 2022"
+                    ),
+                    ReviewItem(
+                        title="Good hotel but noisy location",
+                        author="Karena L.",
+                        comment="Had room facing the street and it was super noisy. Unfortunately, we couldn't change room",
+                        score=5.6,
+                        score_label="Average",
+                        score_color="orange",
+                        cons=["Noise"],
+                        date="10 September, 2022"
+                    ),
+                ], expand=True)
+            ]
+        )
+    )
+
     def responsive(e):
         if not page.width: return
         is_mobile = page.width < 800
@@ -288,11 +362,10 @@ def singleRoom(page: ft.Page):
                                 tipo_habitacion,
                                 propiedades_text,
                                 seccion_info,
-<<<<<<< Updated upstream
-                                mi_carrusel
-=======
-                                seccion_info_mobile
->>>>>>> Stashed changes
+                                mi_carrusel,
+                                seccion_info_mobile,
+                                reviews_section
+
                         ]
                     ),
                 ]
