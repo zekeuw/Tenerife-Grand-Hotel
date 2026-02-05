@@ -306,14 +306,14 @@ def singleRoom(page: ft.Page):
     # SECCIÓN PRINCIPAL DE RESEÑAS
     reviews_section = ft.Container(
         padding=40,
-        content=ft.Row(
-            vertical_alignment=ft.CrossAxisAlignment.START,
-            controls=[
-                # LADO IZQUIERDO: Puntaje General
-                ft.Column([
-                    ft.Text("Reviews", size=45, weight="bold"),
-                    ft.Text("9.6 / 10", size=40, weight="bold", color="blue"),
-                ], width=300),
+        content=ft.ResponsiveRow( 
+        vertical_alignment=ft.CrossAxisAlignment.START,
+        controls=[
+            # LADO IZQUIERDO: 12 columnas en móvil (toda la fila), 4 en escritorio
+            ft.Column([
+                ft.Text("Reviews", size=45, weight="bold"),
+                ft.Text("9.6 / 10", size=40, weight="bold", color="blue"),
+            ], col={"sm": 12, "md": 4}),
 
                 # LADO DERECHO: Lista de comentarios
                 ft.VerticalDivider(width=20, color="transparent"),
@@ -338,7 +338,7 @@ def singleRoom(page: ft.Page):
                         cons=["Noise"],
                         date="10 September, 2022"
                     ),
-                ], expand=True)
+                ], col={"sm": 12, "md": 8})
             ]
         )
     )
