@@ -1,6 +1,6 @@
 import flet as ft
 from src.components.navigation_bar import NavigationBar
-from src.Backend.RoomsManagement import TakeAllRooms, FilterRooms
+from src.Backend.RoomsManagement import TakeAllRooms, FilterRooms, TakeRoomImage
 from src.Backend.BookingManagement import GetAvailableRooms
 from random import sample
 import datetime 
@@ -11,6 +11,11 @@ def CreateRoomCard(page, room_data):
     price = room_data.get("price")
     description = room_data.get("description")
     img_src = room_data.get("main_image")
+
+    # this variable manages the active filters
+    
+
+    
 
     return ft.Container(
         width=300,
@@ -58,6 +63,14 @@ def allRooms(page: ft.Page):
     entry_date_inputs = []
     exit_date_inputs = []
 
+    state = {
+        "pool_rooms": TakeAllRooms(), 
+        "active_filters": [],               # checkbox filters
+        "guest_number": 0,                   
+        "Start_date": None,
+        "End_date": None
+    }
+
     grid_rooms = ft.GridView(
         expand=True,
         runs_count=5, 
@@ -81,20 +94,71 @@ def allRooms(page: ft.Page):
         if should_update:
             grid_rooms.update()
 
+    def AplyFilter():
+        '''Utiliza la variable de state para aplicar los filtros a las habitaciones'''
+        
+        result = []
+
+        for room in state["pool_rooms"]:
+            match = True # if a room doesn't match the filters it turns to false
+
+            guests = room.get("guests") #gets the number of guests on the current room on the loop
+            if state["guest_number"] > 0 and int(guests) < state["guest_number"]:
+                match = False
+            
+            if match and state["active_filters"]:
+                room_services = room.get("content")
+                room_beds = room.get("bed")
+                room_category = room.get("category")
+                precio_room = float(room.get("price"))
+
+                for filter in state["active_filters"]:
+
+                    #if it has an euro, we use price logic
+                    if "€" in filter:
+                        match_precio = False
+                        if filter == "0€ - 50€" and (0 <= precio_room <= 50): match_precio = True
+                        elif filter == "50€ - 100€" and (50 < precio_room <= 100): match_precio = True
+                        elif filter == "100€ - 150€" and (100 < precio_room <= 150): match_precio = True
+                        elif filter == "150€ - 200€" and (150 < precio_room <= 200): match_precio = True
+                        elif filter == "+200€" and (precio_room > 200): match_precio = True
+                        
+                        if not match_precio:
+                            match = False
+                    
+                    # from now on we just go through a list of elifs and if the filter doesn't match any we use an else at the end to take the room out
+                    elif room_category in state["active_filters"]:
+                        pass
+
+                    # since we're goin' through all filters, if any of 'em is not in the rooms services the room is already out
+                    elif filter in room_services:
+                        pass
+
+                    elif filter in room_beds:
+                        pass
+
+                    else:
+                        match = False
+            
+            # if all filters match with a room and the match variable isn't changed we append it to the result list
+            if match:
+                result.append(room)
+        
+        LoadCards(result)
+
     def FilterChange(e):
-        e.control.update() 
+        '''Now this just changes the state filters and calls aply filter'''
         label = e.control.label.value 
         is_checked = e.control.value
-
+        
         if is_checked:
-            if label not in active_filters: active_filters.append(label)
+            if label not in state["active_filters"]: 
+                state["active_filters"].append(label)
         else:
-            if label in active_filters: active_filters.remove(label)
+            if label in state["active_filters"]: 
+                state["active_filters"].remove(label)
         
-        if not active_filters: rooms = TakeAllRooms()
-        else: rooms = FilterRooms(active_filters)
-        
-        LoadCards(rooms, should_update=True)
+        AplyFilter()
 
 
     today = datetime.datetime.now()
@@ -129,25 +193,38 @@ def allRooms(page: ft.Page):
     def Disponibility(e):
         '''Recoge los dos datos de los datepickers y busca las habitaciones disponibles'''
         
-        # Check if dates are selected to avoid errors
         if not entry_datepicker.value or not exit_datepicker.value:
-            ################## aqui hay que agregar algun rollo al frontend
-            print("Error: Fechas no seleccionadas")
+            entry_datepicker.error_text = "Requerido"
+            entry_datepicker.update()
             return
-
-        # Direct conversion: datetime object -> formatted string for Backend
-        # Assuming your backend needs 'YYYY-MM-DD'
+        
         new_ini = entry_datepicker.value.strftime("%Y-%m-%d")
         new_fin = exit_datepicker.value.strftime("%Y-%m-%d")
 
-        print(f"Buscando desde {new_ini} hasta {new_fin}") # Debug
-
         try:
-            # Call your backend
-            room_data = GetAvailableRooms(new_ini, new_fin)
-            LoadCards(room_data, should_update=True)
-        except Exception as err:
-            print(err)
+            # we get all the rooms available to narrow the filter's pool
+            filtered_rooms = GetAvailableRooms(new_ini, new_fin)
+
+            image_rooms = list(map(TakeRoomImage, filtered_rooms))
+
+            state["pool_rooms"] = image_rooms
+
+            AplyFilter()
+        
+        except Exception as e:
+            print("Error de debug: ", e)
+
+    def ChangePersons(e):
+        try:
+            if e.control.value:
+                value = int(e.control.value)
+                state["guest_number"] = value
+                AplyFilter()
+        except ValueError:
+            pass
+
+        
+
 
 
     entry_datepicker = ft.DatePicker(
@@ -238,7 +315,9 @@ def allRooms(page: ft.Page):
                     border_radius=35, height=30,
                     label=ft.Text(value="Numero de personas", size=10),
                     keyboard_type=ft.KeyboardType.NUMBER,
-                    input_filter=ft.InputFilter(allow=True, regex_string=r"[0-9]", replacement_string="")
+                    input_filter=ft.InputFilter(allow=True, regex_string=r"[0-9]", replacement_string=""),
+                    on_change=ChangePersons
+
                 ),
                 ft.Container(height=10),
                 ft.Button(content=ft.Text("Buscar Disponibilidad"), bgcolor="blue", color="white", width=float("inf"), on_click=lambda e: Disponibility(e)),
