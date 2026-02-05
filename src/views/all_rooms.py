@@ -24,7 +24,6 @@ def CreateRoomCard(page, room_data):
         ink=True,
         on_click= lambda e: (
                 setattr(page, "selected_room_data", {"data": room_data, "type": room_type, "foto_portada": img_src}),
-                # Corrección para evitar avisos de deprecación si actualizas en el futuro
                 page.go("/singleRoom") if hasattr(page, "go") else page.session.set("route", "/singleRoom")
         ), 
         content=ft.Column(
