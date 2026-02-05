@@ -129,7 +129,6 @@ def userPage(page: ft.Page):
         controls=[central_container],
         alignment=ft.MainAxisAlignment.CENTER, # Centrado vertical
         horizontal_alignment=ft.CrossAxisAlignment.CENTER, # Centrado horizontal
-        expand= True
     )
     
     def manageDelete(username):
@@ -250,14 +249,12 @@ def userPage(page: ft.Page):
         padding=0,
         controls=[
             ft.Column(
-                expand=True,
                 spacing=0,
                 controls=[
                     menu,
-
                     ft.Row(
-                        expand=True,
                         spacing=0,
+                        alignment=ft.MainAxisAlignment.CENTER,
                         controls=[
                             centrado
                         ]
