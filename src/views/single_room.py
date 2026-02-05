@@ -7,7 +7,7 @@ import flet as ft
 from src.components.navigation_bar import NavigationBar
 import src.Backend.RoomsManagement as rm
 from src.Backend.BookingManagement import DateAvailable
-from src.views.carousel import RoomCarousel
+from src.components.carousel import RoomCarousel
 
 def singleRoom(page: ft.Page):
 
