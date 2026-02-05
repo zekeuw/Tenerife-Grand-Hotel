@@ -152,7 +152,7 @@ def GetAvailableRooms(StartDate:str, EndDate:str):
         ids.append(elemento["RoomId"])
 
     query = {
-        "RoomId" : {"$nin": ids}
+        "_id" : {"$nin": ids}
     }
 
     data = rooms.find(query)
