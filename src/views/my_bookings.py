@@ -6,8 +6,6 @@ from src.Backend.BookingManagement import UpdateBooking, GetBookingsOfUser, Dele
 from src.Backend.Utils.Exceptions import NotFoundError
 from src.components.navigation_bar import NavigationBar
 
-#---------- Solo esta creado la tarjeta que se va a repetir en 
-
 def MyBookingsPage(page: ft.Page):
     page.title = "Tenerife Grand Hotel"
     page.theme_mode = ft.ThemeMode.LIGHT

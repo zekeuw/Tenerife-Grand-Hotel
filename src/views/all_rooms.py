@@ -1,9 +1,10 @@
 import flet as ft
 from src.components.navigation_bar import NavigationBar
 from src.Backend.RoomsManagement import TakeAllRooms, FilterRooms
+from src.Backend.BookingManagement import GetAvailableRooms
 from random import sample
 import datetime 
-
+from datetime import date
 def CreateRoomCard(page, room_data):
     room_id = room_data.get("id", room_data.get("_id"))
     room_type = room_data.get("category") 
@@ -125,6 +126,30 @@ def allRooms(page: ft.Page):
                 text_field.value = fecha_str
                 text_field.update()
 
+    def Disponibility(e):
+        '''Recoge los dos datos de los datepickers y busca las habitaciones disponibles'''
+        
+        # Check if dates are selected to avoid errors
+        if not entry_datepicker.value or not exit_datepicker.value:
+            ################## aqui hay que agregar algun rollo al frontend
+            print("Error: Fechas no seleccionadas")
+            return
+
+        # Direct conversion: datetime object -> formatted string for Backend
+        # Assuming your backend needs 'YYYY-MM-DD'
+        new_ini = entry_datepicker.value.strftime("%Y-%m-%d")
+        new_fin = exit_datepicker.value.strftime("%Y-%m-%d")
+
+        print(f"Buscando desde {new_ini} hasta {new_fin}") # Debug
+
+        try:
+            # Call your backend
+            room_data = GetAvailableRooms(new_ini, new_fin)
+            LoadCards(room_data, should_update=True)
+        except Exception as err:
+            print(err)
+
+
     entry_datepicker = ft.DatePicker(
         on_change=UpdateEntryDate,
         cancel_text="Cancelar",
@@ -216,7 +241,7 @@ def allRooms(page: ft.Page):
                     input_filter=ft.InputFilter(allow=True, regex_string=r"[0-9]", replacement_string="")
                 ),
                 ft.Container(height=10),
-                ft.Button(content=ft.Text("Buscar Disponibilidad"), bgcolor="blue", color="white", width=float("inf")),
+                ft.Button(content=ft.Text("Buscar Disponibilidad"), bgcolor="blue", color="white", width=float("inf"), on_click=lambda e: Disponibility(e)),
                 ft.Divider(),
                 
                 ft.Row(

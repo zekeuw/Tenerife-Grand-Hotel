@@ -139,7 +139,6 @@ def BookProcess(page: ft.Page):
 
     def confirmar_reserva(e):
         try:
-            print(ini_date)
             ini_obj = datetime.strptime(ini_date, "%d-%m-%Y")
             new_ini = ini_obj.strftime("%Y-%m-%d")
             fin_obj = datetime.strptime(fin_Date, "%d-%m-%Y")
