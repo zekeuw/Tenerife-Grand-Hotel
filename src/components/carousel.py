@@ -50,7 +50,7 @@ class RoomCarousel(ft.Container):
                         width=300, height=320, padding=5, margin=15,
                         bgcolor="white", border_radius=15,
                         shadow=ft.BoxShadow(blur_radius=5, color=ft.Colors.BLACK),
-                        on_click=lambda e, d=data, t=room_type: self.go_to_room(d, t),
+                        on_click=lambda e, datos=data, tipo=room_type: self.go_to_room(datos, tipo),
                         content=ft.Column([
                             ft.Image(src=data.get("main_image"), height=180, width=300, fit="COVER", border_radius=5),
                             ft.Text(f"{data['category']}", color="black", size=16),
@@ -62,7 +62,6 @@ class RoomCarousel(ft.Container):
         self.card_row.controls = cards
 
     def go_to_room(self, data, room_type):
-        # Usamos self.main_page que definimos arriba
         setattr(self.main_page, "selected_room_data", {"data": data, "type": room_type})
         self.main_page.go("/singleRoom")
 
