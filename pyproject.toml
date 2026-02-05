@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-flet = {extras = ["all"], version = "^0.80.5"}
+flet = "^0.80.5"
 pymongo = "^4.16.0"
 bcrypt = "^5.0.0"
 
