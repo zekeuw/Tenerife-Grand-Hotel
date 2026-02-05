@@ -100,7 +100,7 @@ class NavigationBar(ft.Container):
                             ),
                             ft.Divider(),
                             ft.TextButton("Inicio", on_click=lambda _: self.NavigateAndClose("/")), 
-                            ft.TextButton("Mis Reservas"),
+                            ft.TextButton("Mis Reservas", on_click=lambda _: self.NavigateAndClose("/MyBookings")),
                             ft.TextButton("Habitaciones", on_click=lambda _: self.NavigateAndClose("/allRooms")),
                             ft.Divider(),
                             *( #donde estaba esto durante los dos años que llevo en este ciclo? >:(
