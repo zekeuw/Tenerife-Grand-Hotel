@@ -358,7 +358,7 @@ def allRooms(page: ft.Page):
         fab_filters.visible = is_mobile
 
         if page.width < 1000:
-            grid_rooms.runs_count = 1  # <--- AQUÍ ESTÁ EL CAMBIO: 1 columna en móviles/tablets
+            grid_rooms.runs_count = 1 
         elif page.width < 1450:
             grid_rooms.runs_count = 2
         elif page.width < 1750:
@@ -403,7 +403,6 @@ def allRooms(page: ft.Page):
                             )
                         ]
                     ),
-                    # Drawer personalizado sobre el contenido
                     drawer_container
                 ]
             )
