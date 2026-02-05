@@ -38,6 +38,20 @@ def userPage(page: ft.Page):
                                     on_click=lambda e: toggle_edit(modo_edicion=True)
                                 )
     
+    btn_logout = ft.ElevatedButton(
+                                    "Cerrar sesión",
+                                    bgcolor="#fe0f0f",
+                                    color="white",
+                                    on_click=lambda e: logout()
+                                )
+    
+    btn_eliminar = ft.ElevatedButton(
+                                    "Borrar la cuenta",
+                                    bgcolor="#000000",
+                                    color="white",
+                                    on_click=lambda e: manageDelete(page.username)
+                                )
+    
     row_botones_accion= ft.Row(
                                 visible=False,
                                 controls=[
@@ -79,9 +93,8 @@ def userPage(page: ft.Page):
             txtPhone,
             ft.Text("Fecha de nacimiento:", size=15, weight="bold", color="#000000"),
             txtBirth,
-            ft.Divider(height=10, color="transparent"),
-            txtNewPass, # Input de contraseña (condicional)
-            txtNewPass
+            txtNewPass,
+            txtFieldNewPass
         ]
     )
     
@@ -103,17 +116,22 @@ def userPage(page: ft.Page):
                         
                         ft.Divider(height=20, color="transparent"),
                         
-                        # Zona de errores y Botón editar principal
                         ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[errorLog]),
-                        ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[chgeDesc]),
-                        ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[btn_editar]),
+                        ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[btn_editar, btn_logout]),
+                        ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[btn_eliminar]),
                         row_botones_accion # Botones guardar/cancelar
                     ]
                 )
-        )
+        ), alignment=ft.Alignment.CENTER
+    )
+
+    centrado = ft.Column(
+        controls=[central_container],
+        alignment=ft.MainAxisAlignment.CENTER, # Centrado vertical
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER, # Centrado horizontal
+        expand= True
     )
     
-
     def manageDelete(username):
         '''Devuelve al usuario a la pagina principal y cambia el usuario logueado a none'''
         deleteUser(username)
@@ -134,6 +152,9 @@ def userPage(page: ft.Page):
            En el otro modo, el usuario solo esta viendo los datos, por lo que solo se ve el boton de editar y los campos que puede ver el usuario'''
         
         btn_editar.visible = not modo_edicion
+        btn_logout.visible = not modo_edicion
+        btn_eliminar.visible = not modo_edicion
+
         row_botones_accion.visible = modo_edicion
         
 
@@ -238,7 +259,7 @@ def userPage(page: ft.Page):
                         expand=True,
                         spacing=0,
                         controls=[
-                            central_container
+                            centrado
                         ]
                     )
                     
