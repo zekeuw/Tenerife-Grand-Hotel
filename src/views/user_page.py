@@ -81,7 +81,7 @@ def userPage(page: ft.Page):
                                     "Borrar la cuenta",
                                     bgcolor="#000000",
                                     color="white",
-                                    on_click=lambda e: manageDelete(page.username)
+                                    on_click=lambda e: manageDelete(page, page.username)
                                 )
     
     row_botones_accion= ft.Row(
@@ -163,16 +163,34 @@ def userPage(page: ft.Page):
         horizontal_alignment=ft.CrossAxisAlignment.CENTER, # Centrado horizontal
     )
     
-    def manageDelete(username):
-        '''Devuelve al usuario a la pagina principal y cambia el usuario logueado a none'''
-        deleteUser(username)
-        page.username = None
-        page.go("/")
-
-        try:
+    def manageDelete(page: ft.Page, username):
+        
+        def confirm_delete(e):
+            deleteUser(username)
+            page.username = None
+            confirm_dialog.open = False
+            page.go("/")
             page.update()
-        except Exception:
-            pass
+
+        # Función para cerrar el diálogo si cancela
+        def close_dlg(e):
+            confirm_dialog.open = False
+            page.update()
+
+        confirm_dialog = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Confirmar eliminación"),
+            content=ft.Text(f"¿Estás seguro de que deseas eliminar la cuenta de {username}? Esta acción no se puede deshacer."),
+            actions=[
+                ft.TextButton("Confirmar", on_click=confirm_delete),
+                ft.TextButton("Cancelar", on_click=close_dlg),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+
+        page.overlay.append(confirm_dialog)
+        confirm_dialog.open = True
+        page.update()
     
     def logout():
         page.username = None

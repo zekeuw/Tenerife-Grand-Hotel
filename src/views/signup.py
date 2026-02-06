@@ -1,5 +1,5 @@
 import flet as ft
-import datetime
+from datetime import date
 
 from src.Backend.UsersManagement import createUser
 from src.components.navigation_bar import NavigationBar
@@ -53,7 +53,7 @@ def signUp(page: ft.Page):
     def UpdateEntryDate(e):
         if entry_datepicker.value:
             fecha_entrada = entry_datepicker.value
-            fecha_str = fecha_entrada.strftime("%d-%m-%Y")
+            fecha_str = fecha_entrada.strftime("%Y-%m-%d")
 
             for text_field in date_inputs:
                 text_field.value = fecha_str
@@ -65,7 +65,7 @@ def signUp(page: ft.Page):
         cancel_text="Cancelar",
         confirm_text="Confirmar Entrada",
         help_text="Selecciona fecha de llegada",
-        last_date= datetime.datetime(2026, 1, 1)
+        last_date= date.today()
     )
 
     page.overlay.append(entry_datepicker)
@@ -148,7 +148,7 @@ def signUp(page: ft.Page):
     def buffer(user_name, name, last_names, phone, birth, passwd):
         if validatePassword():
             try:
-                data = {"username": user_name, "password": passwd, "name": name, "surname": last_names, "phone": phone, "birth": birth}
+                data = {"username": user_name, "password": passwd, "name": name, "surname": last_names, "phone": phone, "birth": str(birth.date())}
                 createUser(data)
                 page.username = user_name
                 page.go("/userPage")
