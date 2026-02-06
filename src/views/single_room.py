@@ -144,7 +144,7 @@ def singleRoom(page: ft.Page):
 
         
         room_id = room_info["data"].get("_id") or room_info["data"].get("id")
-
+        print(room_info)
         if not DateAvailable(room_id, str_fecha_in, str_fecha_out):
             errorLog.visible = True
             errorLog.value = "Habitacion ya reservada durante las fechas introducidas"
@@ -152,7 +152,18 @@ def singleRoom(page: ft.Page):
         else:
 
             if page.username:
-                setattr(page, "booking_data", {"fechaIni": input_fecha_entrada.value, "fechaFin": input_fecha_salida.value, "roomId": room_id})
+                booking_data = {
+                    "fechaIni": input_fecha_entrada.value, 
+                    "fechaFin": input_fecha_salida.value, 
+                    "roomId": room_id,
+                    "price": room_info["data"]["price"],
+                    "type": room_info["data"]["category"],
+                    "description": room_info["data"]["description"],
+                    "bed": room_info["data"]["bed"],
+                    "content": room_info["data"]["content"],
+                    "main_img": room_info["data"]["main_image"]
+                }
+                setattr(page, "booking_data", booking_data)
                 page.go("/processBooking")
             else:
                 page.go("/logIn")

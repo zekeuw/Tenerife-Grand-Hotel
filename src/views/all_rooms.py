@@ -13,11 +13,6 @@ def CreateRoomCard(page, room_data):
     description = room_data.get("description")
     img_src = room_data.get("main_image")
 
-    # this variable manages the active filters
-    
-
-    
-
     return ft.Container(
         width=300,
         height=320,
