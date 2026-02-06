@@ -253,7 +253,7 @@ def allRooms(page: ft.Page):
     def create_filters_view():     
         input_fecha_entrada = ft.TextField(
             border_radius=35,
-            height=30,
+            height=40,
             label=ft.Text(value="Fecha Entrada", size=10),
             hint_text="DD-MM-AAAA",
             width=300,
@@ -265,7 +265,7 @@ def allRooms(page: ft.Page):
         
         input_fecha_salida = ft.TextField(
             border_radius=35,
-            height=30,
+            height=40,
             label=ft.Text(value="Fecha Salida", size=10),
             hint_text="DD-MM-AAAA",
             width=300,
@@ -308,10 +308,12 @@ def allRooms(page: ft.Page):
                 ft.Container(height=15), 
                 
                 ft.TextField(
-                    border_radius=35, height=30,
+                    border_radius=35,
+                    height=40,
+                    color="black",
                     label=ft.Text(value="Numero de personas", size=10),
                     keyboard_type=ft.KeyboardType.NUMBER,
-                    input_filter=ft.InputFilter(allow=True, regex_string=r"[0-9]", replacement_string=""),
+                    input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]?$", replacement_string=""),
                     on_change=ChangePersons
 
                 ),
