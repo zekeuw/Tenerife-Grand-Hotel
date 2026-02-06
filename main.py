@@ -17,6 +17,7 @@ def main(page: ft.Page):
     def route_change(route):
         
         print(f"Ruta actual: {page.route}") # Debug para ver qué pasa
+        page.overlay.clear()
         page.views.clear() if page.views  else None
          # Pa s altar directamente a users en debug
         if page.route == "/":
