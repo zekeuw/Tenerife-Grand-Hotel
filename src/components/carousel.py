@@ -6,7 +6,7 @@ class RoomCarousel(ft.Container):
         # Cambiamos el nombre a 'main_page' para evitar el conflicto
         self.main_page = page 
         self.rooms_data = rooms_data
-        self.desplazamiento = 340 * 2
+        self.desplazamiento = 280   
         
         # Referencia al Row para el scroll
         self.card_row = ft.Row(
@@ -22,23 +22,38 @@ class RoomCarousel(ft.Container):
         self.content = ft.Column(
             width=1800,
             align=ft.Alignment.CENTER,
-            controls=[
-                ft.Text(size=24, weight="bold", color="black", margin=ft.margin.only(left=40)),
-                ft.Row(
-                    controls=[
-                        ft.IconButton(
-                            icon=ft.Icons.ARROW_BACK_IOS_ROUNDED, 
-                            on_click=self.scroll_left
+            controls= [
+            ft.Stack(
+                controls=[
+                    # Capa 1: El carrusel de tarjetas (centrado)
+                    ft.Container(
+                        content=self.card_row,
+                        padding=ft.padding.symmetric(horizontal=40), # Espacio para que las flechas no tapen el texto
+                    ),
+                    # Capa 2: Flecha Izquierda (Pegada al borde)
+                    ft.Container(
+                        content=ft.IconButton(
+                            icon=ft.Icons.ARROW_BACK_IOS_ROUNDED,
+                            on_click=self.scroll_left,
+                            icon_size=25,
                         ),
-                        self.card_row,
-                        ft.IconButton(
-                            icon=ft.Icons.ARROW_FORWARD_IOS_ROUNDED, 
-                            on_click=self.scroll_right
+                        left=0,
+                        top=120, # Ajusta esto para centrarla verticalmente respecto a tu imagen
+                    ),
+                    # Capa 3: Flecha Derecha (Pegada al borde)
+                    ft.Container(
+                        content=ft.IconButton(
+                            icon=ft.Icons.ARROW_FORWARD_IOS_ROUNDED,
+                            on_click=self.scroll_right,
+                            icon_size=25,
                         ),
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                )
-            ]
+                        right=0,
+                        top=120,
+                    ),
+                ],
+                width=self.main_page.width, # Ocupa todo el ancho del móvil
+                height=350, # Altura total del área del carrusel
+            )]
         )
 
     def _build_cards(self):
@@ -47,12 +62,12 @@ class RoomCarousel(ft.Container):
             for data in rooms:
                 cards.append(
                     ft.Container(
-                        width=300, height=320, padding=5, margin=15,
+                        width=240, height=320, padding=10, margin=15,
                         bgcolor="white", border_radius=15,
                         shadow=ft.BoxShadow(blur_radius=5, color=ft.Colors.BLACK),
                         on_click=lambda e, datos=data, tipo=room_type: self.go_to_room(datos, tipo),
                         content=ft.Column([
-                            ft.Image(src=data.get("main_image"), height=180, width=300, fit="COVER", border_radius=5),
+                            ft.Image(src=data.get("main_image"), height=180, width=240, fit="COVER", border_radius=5),
                             ft.Text(f"{data['category']}", color="black", size=16),
                             ft.Text(f"Valoraciones: {data['avg_rating']}", color="black"),
                             ft.Text(f"Desde {data['price']}$/noche", color="black", weight="bold")

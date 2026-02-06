@@ -4,6 +4,7 @@ import datetime
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 import flet as ft
+
 from src.components.navigation_bar import NavigationBar
 import src.Backend.RoomsManagement as rm
 from src.Backend.BookingManagement import DateAvailable
@@ -188,20 +189,6 @@ def singleRoom(page: ft.Page):
         )
     )
 
-    tipo_habitacion = ft.Text(
-            value=room_type_name,
-            color="black",
-            size=32,
-            weight="bold",
-    )
-
-    propiedades_text = ft.Text(
-            value=f"Propiedades de la habitación", 
-            color="black",
-            size=32,
-            weight="bold",
-    )
-
     propiedades = ft.Container(
         width=600, 
         content=ft.ResponsiveRow(
@@ -221,46 +208,70 @@ def singleRoom(page: ft.Page):
             ],
         )
     )
-    
-    seccion_info_mobile = ft.Column(
-        spacing=50,
-        controls=[
-            propiedades,
-            ft.Container(
-                content=ft.Column([
-                    ft.Text("Reserva tu estancia", weight="bold", size=16, color="black"),
-                    
-                    ft.Row([
-                        input_fecha_entrada,
-                        input_fecha_salida,
-                    ], spacing=10),
-                    errorLog,
-                    ft.ElevatedButton("Confirmar Reserva", bgcolor="blue", color="white", on_click=lambda e: confirmar_reserva(e))
-                ], spacing=15)
-            )
-        ]
-    )
-    seccion_info_mobile.visible = False
 
-    seccion_info = ft.Row(
-        vertical_alignment=ft.CrossAxisAlignment.START,
-        spacing=50,
-        controls=[
-            propiedades,
-            ft.Container(
-                content=ft.Column([
-                    ft.Text("Reserva tu estancia", weight="bold", size=16, color="black"),
-                    
-                    ft.Row([
-                        input_fecha_entrada,
-                        input_fecha_salida,
-                    ], spacing=10),
-                    errorLog,
-                    ft.ElevatedButton("Confirmar Reserva", bgcolor="blue", color="white", on_click=lambda e: confirmar_reserva(e))
-                ], spacing=15)
-            )
-        ]
+    info_section = ft.Container(
+        alignment=ft.Alignment.CENTER,
+        padding=40,
+        content=ft.Row(
+            alignment=ft.MainAxisAlignment.CENTER,
+            vertical_alignment=ft.CrossAxisAlignment.START,
+            spacing=80,
+            controls=[
+                # COLUMNA IZQUIERDA
+                ft.Container(
+                    width=400,
+                    content=ft.Column(
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=15,
+                        controls=[
+                            ft.Text(
+                                "Propiedades de la habitación",
+                                size=28,
+                                weight="bold",
+                                text_align=ft.TextAlign.CENTER,
+                                color="black"
+                            ),
+                            propiedades
+                        ]
+                    )
+                ),
+
+                # COLUMNA DERECHA
+                ft.Container(
+                    width=400,
+                    content=ft.Column(
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=15,
+                        controls=[
+                            ft.Text(
+                                "Reserva tu estancia",
+                                size=28,
+                                weight="bold",
+                                text_align=ft.TextAlign.CENTER,
+                                color="black"
+                            ),
+                            ft.Row(
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                spacing=10,
+                                controls=[
+                                    input_fecha_entrada,
+                                    input_fecha_salida,
+                                ]
+                            ),
+                            errorLog,
+                            ft.ElevatedButton(
+                                "Confirmar Reserva",
+                                bgcolor="blue",
+                                color="white",
+                                on_click=confirmar_reserva
+                            )
+                        ]
+                    )
+                )
+            ]
+        )
     )
+
 
     best_rooms = rm.TakeMostValuedRooms()
 
@@ -270,7 +281,6 @@ def singleRoom(page: ft.Page):
     )
 
     def ReviewItem(title, author, comment, score, score_label, score_color, pros=None, cons=None, date=""):
-        # Lista de puntos positivos (Verde) o negativos (Rojo)
         points = []
         if pros:
             for p in pros:
@@ -309,13 +319,13 @@ def singleRoom(page: ft.Page):
         content=ft.ResponsiveRow( 
         vertical_alignment=ft.CrossAxisAlignment.START,
         controls=[
-            # LADO IZQUIERDO: 12 columnas en móvil (toda la fila), 4 en escritorio
+            # LADO IZQUIERDO:
             ft.Column([
                 ft.Text("Reviews", size=45, weight="bold"),
                 ft.Text("9.6 / 10", size=40, weight="bold", color="blue"),
             ], col={"sm": 12, "md": 4}),
 
-                # LADO DERECHO: Lista de comentarios
+                # LADO DERECHO:
                 ft.VerticalDivider(width=20, color="transparent"),
                 ft.Column([
                     ReviewItem(
@@ -344,11 +354,10 @@ def singleRoom(page: ft.Page):
     )
 
     def responsive(e):
-        if not page.width: return
-        is_mobile = page.width < 800
+        if not page.width:
+            return
+
         menu.resize(page.width)
-        seccion_info_mobile.visible = True if is_mobile else False
-        seccion_info.visible = False if is_mobile else True
 
     page.on_resize = responsive
     if page.width:
@@ -359,25 +368,16 @@ def singleRoom(page: ft.Page):
         bgcolor="white",
         padding=20,
         controls=[
-            ft.Stack(
+            ft.Column(
+                scroll=ft.ScrollMode.AUTO, 
                 expand=True,
                 controls=[
-                    ft.Column(
-                        scroll=ft.ScrollMode.AUTO, 
-                        expand=True,
-                        controls=[
-                                menu,
-                                imagenes_habitacion,
-                                tipo_habitacion,
-                                propiedades_text,
-                                seccion_info,
-                                mi_carrusel,
-                                seccion_info_mobile,
-                                reviews_section
-
-                        ]
-                    ),
+                    menu,
+                    imagenes_habitacion,
+                    info_section,
+                    mi_carrusel,
+                    reviews_section
                 ]
-            )
+            ),
         ]
      )

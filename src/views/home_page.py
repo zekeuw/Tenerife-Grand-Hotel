@@ -68,11 +68,14 @@ def BestRoomsCardList(page):
     return True
 
 def homePage(page: ft.Page):
+    page.window.maximized = True
+    page.update()
     global photo_moving
     VIEWS_WIDTH = page.width *0.8
     VIEWS_HEIGTH = 800
     page.assets_dir = "assets"
     photo_moving = VIEWS_WIDTH
+
     if page.username:
          # Si hay usuario, mostramos menú de logueado
          print(f"Usuario detectado: {page.session}") # Debug

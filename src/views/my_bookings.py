@@ -1,5 +1,5 @@
 import flet as ft
-from datetime import datetime
+import datetime
 
 
 from src.Backend.BookingManagement import UpdateBooking, GetBookingsOfUser, DeleteBookings
@@ -52,19 +52,45 @@ def BookingCard(page: ft.Page, booking_data):
     current_ini = booking_data["IniDate"]
     current_fin = booking_data["FinDate"]
 
-    # --- 1. Definición de Funciones (Callbacks) ---
+    def UpdateEntryDate(e):
+        if entry_datepicker.value:
+            inputEntrada.value = entry_datepicker.value.strftime("%Y-%m-%d")
+            # Ajustamos la fecha mínima de salida automáticamente
+            exit_datepicker.first_date = entry_datepicker.value + datetime.timedelta(days=1)
+            page.update()
+
+    def UpdateExitDate(e):
+        if exit_datepicker.value:
+            inputSalida.value = exit_datepicker.value.strftime("%Y-%m-%d")
+            page.update()
+
+    entry_datepicker = ft.DatePicker(
+        on_change=UpdateEntryDate,
+        first_date=datetime.datetime.today()
+    )
     
+    exit_datepicker = ft.DatePicker(
+        on_change=UpdateExitDate,
+        first_date=datetime.datetime.today() + datetime.timedelta(days=1)
+    )
+
+    page.overlay.extend([entry_datepicker, exit_datepicker])
+
+    def open_entry_picker(e):
+        if row_botones_confirmacion.visible:
+            entry_datepicker.open = True
+            page.update()
+
+    def open_exit_picker(e):
+        if row_botones_confirmacion.visible:
+            exit_datepicker.open = True
+            page.update()
+
     def toggle_edit_mode(editable: bool, updated = False):
         """Cambia entre modo lectura y modo edición"""
         # Alternar visibilidad de botones
         btn_modificar.visible = not editable
         row_botones_confirmacion.visible = editable
-        
-        # Activar/Desactivar campos de texto
-        # El truco es cambiar 'read_only' y el 'border'
-        inputEntrada.read_only = not editable
-        inputSalida.read_only = not editable
-        errorLog.visible = False
         
         if editable:
             inputEntrada.border = ft.InputBorder.OUTLINE
@@ -77,31 +103,8 @@ def BookingCard(page: ft.Page, booking_data):
             inputSalida.value = current_fin
             inputEntrada.border = ft.InputBorder.NONE
             inputSalida.border = ft.InputBorder.NONE
-            
+
         page.update()
-
-    def change_entry_date(e):
-        if dp_entrada.value:
-            inputEntrada.value = dp_entrada.value.strftime("%Y-%m-%d")
-            inputEntrada.update()
-            page.update()
-
-    def change_exit_date(e):
-        if dp_salida.value:
-            inputSalida.value = dp_salida.value.strftime("%Y-%m-%d")
-            inputSalida.update()
-            page.update()
-
-    def open_entry_picker(e):
-        # Solo abrimos el calendario si estamos en modo edición (no read_only)
-        if not inputEntrada.read_only:
-            dp_entrada.open = True
-            dp_entrada.update()
-
-    def open_exit_picker(e):
-        if not inputSalida.read_only:
-            dp_salida.open = True
-            dp_salida.update()
 
     def confirm_update(e):
 
@@ -127,21 +130,28 @@ def BookingCard(page: ft.Page, booking_data):
             errorLog.value = e
             errorLog.visible = True
 
-
-    dp_entrada = ft.DatePicker(on_change=change_entry_date)
-    dp_salida = ft.DatePicker(on_change=change_exit_date)
-    page.overlay.extend([dp_entrada, dp_salida])
+    errorLog = ft.Text(value="", color="#fe0f13", visible=False)
 
     inputEntrada = ft.TextField(
-        value=current_ini, label="Entrada", width=175, height=50,
-        read_only=True, border=ft.InputBorder.NONE, # Empieza modo lectura
-        on_click=open_entry_picker, icon=ft.Icons.CALENDAR_MONTH
+        value=current_ini,
+        label="Fecha Entrada",
+        read_only=True, 
+        border=ft.InputBorder.NONE,
+        suffix_icon=ft.Icons.CALENDAR_MONTH,
+        on_click=open_entry_picker,
+        width=150,
+        height=45
     )
 
     inputSalida = ft.TextField(
-        value=current_fin, label="Salida", width=175, height=50,
-        read_only=True, border=ft.InputBorder.NONE, # Empieza modo lectura
-        on_click=open_exit_picker, icon=ft.Icons.CALENDAR_TODAY
+        value=current_fin,
+        label="Fecha Salida",
+        read_only=True, 
+        border=ft.InputBorder.NONE,
+        suffix_icon=ft.Icons.CALENDAR_TODAY,
+        on_click=open_exit_picker,
+        width=150,
+        height=45
     )
 
     # El botón inicial
