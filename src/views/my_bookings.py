@@ -7,6 +7,8 @@ from src.Backend.Utils.Exceptions import NotFoundError
 from src.components.navigation_bar import NavigationBar
 
 def MyBookingsPage(page: ft.Page):
+    page.overlay.clear()
+
     page.title = "Tenerife Grand Hotel"
     page.theme_mode = ft.ThemeMode.LIGHT
     menu = NavigationBar(page, state="logged_in")
@@ -52,39 +54,110 @@ def BookingCard(page: ft.Page, booking_data):
     current_ini = booking_data["IniDate"]
     current_fin = booking_data["FinDate"]
 
+    today = datetime.datetime.now()
+    
+    entry_date_inputs = []
+    exit_date_inputs = []
+
     def UpdateEntryDate(e):
         if entry_datepicker.value:
-            inputEntrada.value = entry_datepicker.value.strftime("%Y-%m-%d")
-            # Ajustamos la fecha mínima de salida automáticamente
-            exit_datepicker.first_date = entry_datepicker.value + datetime.timedelta(days=1)
-            page.update()
+            fecha_entrada = entry_datepicker.value
+            fecha_str = fecha_entrada.strftime("%d-%m-%Y")
+
+            for text_field in entry_date_inputs:
+                text_field.value = fecha_str
+                text_field.update()
+
+            min_exit_date = fecha_entrada + datetime.timedelta(days=1)
+            exit_datepicker.first_date = min_exit_date
+            
+            if exit_datepicker.value and exit_datepicker.value <= fecha_entrada:
+                exit_datepicker.value = None
+                for text_field in exit_date_inputs:
+                    text_field.value = ""
+                    text_field.update()
+            
+            exit_datepicker.update()
 
     def UpdateExitDate(e):
         if exit_datepicker.value:
-            inputSalida.value = exit_datepicker.value.strftime("%Y-%m-%d")
-            page.update()
+            fecha_str = exit_datepicker.value.strftime("%d-%m-%Y")
+            for text_field in exit_date_inputs:
+                text_field.value = fecha_str
+                text_field.update()
 
     entry_datepicker = ft.DatePicker(
         on_change=UpdateEntryDate,
-        first_date=datetime.datetime.today()
+        cancel_text="Cancelar",
+        confirm_text="Confirmar Entrada",
+        help_text="Selecciona fecha de llegada",
+        first_date=today 
     )
     
     exit_datepicker = ft.DatePicker(
         on_change=UpdateExitDate,
-        first_date=datetime.datetime.today() + datetime.timedelta(days=1)
+        cancel_text="Cancelar",
+        confirm_text="Confirmar Salida",
+        help_text="Selecciona fecha de salida",
+        first_date=today + datetime.timedelta(days=1)
     )
 
     page.overlay.extend([entry_datepicker, exit_datepicker])
 
+    page.update()
+
+    errorLog = ft.Text(value="", color="#fe0f13", visible=False)
+
     def open_entry_picker(e):
-        if row_botones_confirmacion.visible:
-            entry_datepicker.open = True
-            page.update()
+        entry_datepicker.open = True
+        page.update()
 
     def open_exit_picker(e):
-        if row_botones_confirmacion.visible:
-            exit_datepicker.open = True
-            page.update()
+        exit_datepicker.open = True
+        page.update()
+
+    inputEntrada = ft.TextField(
+        border_radius=35,
+        height=30,
+        label=ft.Text(value="Fecha Entrada", size=10),
+        hint_text="DD-MM-AAAA",
+        width=150,
+        read_only=True,
+        text_style=ft.TextStyle(color="black", size=12),
+        suffix_icon=ft.Icons.CALENDAR_MONTH,
+        on_click=open_entry_picker
+    )
+
+    inputSalida = ft.TextField(
+        border_radius=35,
+        height=30,
+        label=ft.Text(value="Fecha Salida", size=10),
+        hint_text="DD-MM-AAAA",
+        width=150,
+        read_only=True, 
+        text_style=ft.TextStyle(color="black", size=12), 
+        suffix_icon=ft.Icons.CALENDAR_TODAY,
+        on_click=open_exit_picker 
+    )
+
+
+    entry_date_inputs.append(inputEntrada)
+    exit_date_inputs.append(inputSalida)
+
+    # def confirmar_reserva(e):
+        
+    #     fecha_in = entry_datepicker.value
+    #     fecha_out = exit_datepicker.value
+
+        
+    #     if not fecha_in or not fecha_out:
+    #         errorLog.visible = True
+    #         errorLog.value = "Debe de elegir ambas fechas"
+    #         page.update()
+    #         return
+
+    #     str_fecha_in = fecha_in.strftime("%Y-%m-%d")
+    #     str_fecha_out = fecha_out.strftime("%Y-%m-%d")
 
     def toggle_edit_mode(editable: bool, updated = False):
         """Cambia entre modo lectura y modo edición"""
@@ -132,27 +205,6 @@ def BookingCard(page: ft.Page, booking_data):
 
     errorLog = ft.Text(value="", color="#fe0f13", visible=False)
 
-    inputEntrada = ft.TextField(
-        value=current_ini,
-        label="Fecha Entrada",
-        read_only=True, 
-        border=ft.InputBorder.NONE,
-        suffix_icon=ft.Icons.CALENDAR_MONTH,
-        on_click=open_entry_picker,
-        width=150,
-        height=45
-    )
-
-    inputSalida = ft.TextField(
-        value=current_fin,
-        label="Fecha Salida",
-        read_only=True, 
-        border=ft.InputBorder.NONE,
-        suffix_icon=ft.Icons.CALENDAR_TODAY,
-        on_click=open_exit_picker,
-        width=150,
-        height=45
-    )
 
     # El botón inicial
     btn_modificar = ft.ElevatedButton(
