@@ -246,9 +246,12 @@ def userPage(page: ft.Page):
                 birth = None
             else: birth = txtBirth.value
             
-            if txtNewPass.value == "" or logIn(data["username"], txtNewPass.value):
+            if txtFieldNewPass.value == "" or logIn(data["username"], txtFieldNewPass.value):
                 password = None
-            else: password = txtNewPass.value
+            
+            else: 
+                password = txtFieldNewPass.value
+                print(password)
 
             if username == None and name == None and surname == None and phone == None and birth == None and password == None:
                 raise Exception("Debe modificar al menos un campo")
