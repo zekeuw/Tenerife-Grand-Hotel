@@ -3,7 +3,7 @@ from ..Connection import conectUsersCollection
 
 def retrieveUser(username: str):
     '''Busca al usuario por el username y devuelve el diccionario correspondiente'''
-    '''A lo mejor deberia de haber un archivo distinto pa estas cosas'''
+    '''A lo mejor deberia de haber puesto esto dentro de userManagement'''
 
     users = conectUsersCollection()
     query = {"username": username}
