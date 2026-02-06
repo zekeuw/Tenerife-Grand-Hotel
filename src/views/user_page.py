@@ -3,6 +3,8 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 import flet as ft
+import datetime
+
 from src.components.navigation_bar import NavigationBar
 
 from src.Backend.UsersManagement import deleteUser, updateUser, logIn
@@ -13,13 +15,43 @@ def userPage(page: ft.Page):
     data = retrieveUser(page.username)
     menu = NavigationBar(page, state="user_page")
 
+    def open_entry_picker(e):
+        entry_datepicker.open = True
+        entry_datepicker.update()
 
     #---------------------- TextFields ---------------------------
     txtUserName = ft.TextField(value=data["username"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", margin=ft.Margin.only(left=40))
     txtName = ft.TextField(value=data["name"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", margin=ft.Margin.only(left=40))
     txtSurname = ft.TextField(value=data["surname"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", margin=ft.Margin.only(left=40))
     txtPhone = ft.TextField(value=data["phone"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", margin=ft.Margin.only(left=40))
-    txtBirth = ft.TextField(value=data["birth"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", margin=ft.Margin.only(left=40))
+    txtBirth = ft.TextField(
+        value=data["birth"],
+        read_only=True,
+        border=ft.InputBorder.NONE,
+        text_size=15,
+        color="#555555",
+        margin=ft.Margin.only(left=40),
+        on_click= open_entry_picker
+    )
+
+
+    def UpdateEntryDate(e):
+        if entry_datepicker.value:
+            fecha_entrada = entry_datepicker.value
+            fecha_str = fecha_entrada.strftime("%Y-%m-%d")
+
+            txtBirth.value = fecha_str
+
+    entry_datepicker = ft.DatePicker(
+        on_change=UpdateEntryDate,
+        cancel_text="Cancelar",
+        confirm_text="Confirmar Entrada",
+        help_text="Selecciona fecha de llegada",
+        last_date= datetime.datetime.today()
+    )
+
+    page.overlay.append(entry_datepicker)
+    page.update()
 
     txtFieldNewPass = ft.TextField(label="Nueva Contraseña", password=True, can_reveal_password=True, width=300, bgcolor="white", border_color="#0f62fe", text_size=15, margin=ft.Margin.only(left=40), visible=False)
 
