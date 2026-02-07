@@ -201,19 +201,21 @@ def singleRoom(page: ft.Page):
     )
 
     propiedades = ft.Container(
-        content=ft.ResponsiveRow(
-            spacing=0,
-            run_spacing=5,
+        padding=ft.padding.only(bottom=20),
+        content=ft.Row(
+            alignment=ft.MainAxisAlignment.CENTER, 
+            wrap=True,
+            spacing=30,     
+            run_spacing=10,
             controls=[
                 ft.Container(
-                    col={"sm": 6, "md": 6}, 
                     content=ft.Row(
                         controls=[
                             ft.Text(item, color="black", size=14)
                         ],
-                        spacing=5
+                        spacing=5,
+                        alignment=ft.MainAxisAlignment.CENTER
                     ),
-                    padding=ft.padding.only(top=2, bottom=2),
                 ) for item in data["content"]
             ],
         )
