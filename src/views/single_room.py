@@ -5,10 +5,12 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')
 
 import flet as ft
 
+
 from src.components.navigation_bar import NavigationBar
+from src.components.carousel import RoomCarousel
 import src.Backend.RoomsManagement as rm
 from src.Backend.BookingManagement import DateAvailable
-from src.components.carousel import RoomCarousel
+from src.Backend.ReviewsManagement import getAllReviewsFromRoom 
 
 def singleRoom(page: ft.Page):
 
@@ -16,17 +18,17 @@ def singleRoom(page: ft.Page):
     
     if not room_info:
         page.go("/404")
+        return ft.View(controls=[ft.Text("Error: No room selected")])
     
     data = room_info["data"]
+    current_room_id = data.get("_id") or data.get("id")
+    
     room_type_name = room_info["type"]
     foto_portada = room_info.get("foto_portada")
 
     if page.username:
-         # Si hay usuario, mostramos menú de logueado
-         print(f"Usuario detectado: {page.session}") # Debug
          menu = NavigationBar(page, state="logged_in")
     else:
-         # Si no, menú normal
          menu = NavigationBar(page)
 
     def img(src, h=200):
@@ -38,7 +40,6 @@ def singleRoom(page: ft.Page):
         )
     
     today = datetime.datetime.now()
-    
     entry_date_inputs = []
     exit_date_inputs = []
 
@@ -121,15 +122,12 @@ def singleRoom(page: ft.Page):
         on_click=open_exit_picker 
     )
 
-
     entry_date_inputs.append(input_fecha_entrada)
     exit_date_inputs.append(input_fecha_salida)
 
     def confirmar_reserva(e):
-        
         fecha_in = entry_datepicker.value
         fecha_out = exit_datepicker.value
-
         
         if not fecha_in or not fecha_out:
             errorLog.visible = True
@@ -139,35 +137,28 @@ def singleRoom(page: ft.Page):
 
         str_fecha_in = fecha_in.strftime("%Y-%m-%d")
         str_fecha_out = fecha_out.strftime("%Y-%m-%d")
-
-
-
-        
-        room_id = room_info["data"].get("_id") or room_info["data"].get("id")
-        print(room_info)
-        if not DateAvailable(room_id, str_fecha_in, str_fecha_out):
+    
+        if not DateAvailable(current_room_id, str_fecha_in, str_fecha_out):
             errorLog.visible = True
             errorLog.value = "Habitacion ya reservada durante las fechas introducidas"
             page.update()
         else:
-
             if page.username:
                 booking_data = {
                     "fechaIni": input_fecha_entrada.value, 
                     "fechaFin": input_fecha_salida.value, 
-                    "roomId": room_id,
-                    "price": room_info["data"]["price"],
-                    "type": room_info["data"]["category"],
-                    "description": room_info["data"]["description"],
-                    "bed": room_info["data"]["bed"],
-                    "content": room_info["data"]["content"],
-                    "main_img": room_info["data"]["main_image"]
+                    "roomId": current_room_id,
+                    "price": data["price"],
+                    "type": data["category"],
+                    "description": data["description"],
+                    "bed": data["bed"],
+                    "content": data["content"],
+                    "main_img": data["main_image"]
                 }
                 setattr(page, "booking_data", booking_data)
                 page.go("/processBooking")
             else:
                 page.go("/logIn")
-        
 
     imagenes_habitacion = ft.Container(
         alignment=ft.Alignment.CENTER,
@@ -188,10 +179,10 @@ def singleRoom(page: ft.Page):
                             spacing=12,
                             run_spacing=12,
                             controls=[
-                                ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200)),
-                                ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200)),
-                                ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200)),
-                                ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_info["type"]), h=200))
+                                ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_type_name), h=200)),
+                                ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_type_name), h=200)),
+                                ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_type_name), h=200)),
+                                ft.Container(col={"sm": 6, "md": 6}, content=img(rm.TakeRandomPhotoByRoomType(room_type_name), h=200))
                             ]
                         )
                     ]
@@ -210,9 +201,7 @@ def singleRoom(page: ft.Page):
             controls=[
                 ft.Container(
                     content=ft.Row(
-                        controls=[
-                            ft.Text(item, color="black", size=14)
-                        ],
+                        controls=[ft.Text(item, color="black", size=14)],
                         spacing=5,
                         alignment=ft.MainAxisAlignment.CENTER
                     ),
@@ -229,7 +218,6 @@ def singleRoom(page: ft.Page):
             vertical_alignment=ft.CrossAxisAlignment.START,
             run_spacing=50,
             controls=[
-                # COLUMNA IZQUIERDA
                 ft.Container(
                     width=400,
                     content=ft.Column(
@@ -237,19 +225,11 @@ def singleRoom(page: ft.Page):
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         spacing=15,
                         controls=[
-                            ft.Text(
-                                "Propiedades de la habitación",
-                                size=28,
-                                weight="bold",
-                                text_align=ft.TextAlign.CENTER,
-                                color="black"
-                            ),
+                            ft.Text("Propiedades de la habitación", size=28, weight="bold", text_align=ft.TextAlign.CENTER, color="black"),
                             propiedades
                         ]
                     )
                 ),
-
-                # COLUMNA DERECHA
                 ft.Container(
                     width=400,
                     content=ft.Column(
@@ -257,29 +237,15 @@ def singleRoom(page: ft.Page):
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         spacing=15,
                         controls=[
-                            ft.Text(
-                                "Reserva tu estancia",
-                                size=28,
-                                weight="bold",
-                                text_align=ft.TextAlign.CENTER,
-                                color="black"
-                            ),
+                            ft.Text("Reserva tu estancia", size=28, weight="bold", text_align=ft.TextAlign.CENTER, color="black"),
                             ft.Row(
                                 alignment=ft.MainAxisAlignment.CENTER,
                                 wrap=True,
                                 spacing=10,
-                                controls=[
-                                    input_fecha_entrada,
-                                    input_fecha_salida,
-                                ]
+                                controls=[input_fecha_entrada, input_fecha_salida]
                             ),
                             errorLog,
-                            ft.ElevatedButton(
-                                "Confirmar Reserva",
-                                bgcolor="blue",
-                                color="white",
-                                on_click=confirmar_reserva
-                            )
+                            ft.ElevatedButton("Confirmar Reserva", bgcolor="blue", color="white", on_click=confirmar_reserva)
                         ]
                     )
                 )
@@ -287,31 +253,49 @@ def singleRoom(page: ft.Page):
         )
     )
 
-
     best_rooms = rm.TakeMostValuedRooms()
+    mi_carrusel = RoomCarousel(page=page, rooms_data=best_rooms)
 
-    mi_carrusel = RoomCarousel(
-        page=page, 
-        rooms_data=best_rooms,
-    )
+    try:
+        reviews_list_data = getAllReviewsFromRoom(current_room_id)
+        if not reviews_list_data:
+            reviews_list_data = []
+    except Exception as e:
+        print(f"Error cargando reseñas: {e}")
+        reviews_list_data = []
 
-    def ReviewItem(title, author, comment, score, score_label, score_color, pros=None, cons=None, date=""):
-        points = []
-        if pros:
-            for p in pros:
-                points.append(ft.Row([ft.Icon(ft.Icons.ADD, color="green", size=16), ft.Text(p, size=13, color="black")]))
-        if cons:
-            for c in cons:
-                points.append(ft.Row([ft.Icon(ft.Icons.REMOVE, color="red", size=16), ft.Text(c, size=13, color="black")]))
+    total_reviews = len(reviews_list_data)
+    average_score = 0
+    if total_reviews > 0:
+        suma_notas = sum([r.get("mark", 0) for r in reviews_list_data])
+        average_score = round(suma_notas / total_reviews, 1)
+
+    score_display_text = f"{average_score} / 5" if total_reviews > 0 else "N/A"
+
+    def ReviewItem(title, author, comment, score, date=""):
+        if score >= 5:
+            score_label = "Excelente"
+            score_color = "green"
+        elif score >= 3:
+            score_label = "Bueno"
+            score_color = "orange"
+        else:
+            score_label = "Malo"
+            score_color = "red"
+        
+        if date:
+            isdate = True
+        else:
+            isdate = False
 
         return ft.Column([
             ft.Row([
                 ft.Column([
                     ft.Text(title, weight="bold", size=16, color="black"),
-                    ft.Text(author, size=12, color="black"),
+                    ft.Text(f"Por: {author}", size=12, color="grey"),
                     ft.Text(comment, size=14, color="black"),
-                    ft.Column(points, spacing=2),
                 ], expand=True),
+                
                 ft.Column([
                     ft.Row([
                         ft.Text(score_label, color=score_color, weight="bold"),
@@ -322,61 +306,55 @@ def singleRoom(page: ft.Page):
                             border_radius=10
                         )
                     ], alignment=ft.MainAxisAlignment.END),
-                    ft.Text(f"Reviewed on\n{date}", size=11, color="black", text_align=ft.TextAlign.RIGHT)
+                    ft.Text(f"Fecha:\n{date}", size=11, color="black", text_align=ft.TextAlign.RIGHT, visible=isdate)
                 ], horizontal_alignment=ft.CrossAxisAlignment.END)
             ]),
             ft.Divider(height=40, thickness=1, color=ft.Colors.BLACK_12)
         ])
 
-    # SECCIÓN PRINCIPAL DE RESEÑAS
+    reviews_controls_list = []
+    
+    if total_reviews == 0:
+        reviews_controls_list.append(
+            ft.Text("No hay reseñas todavía para esta habitación.", italic=True, color="grey")
+        )
+    else:
+        for r in reviews_list_data[-2:]:
+            reviews_controls_list.append(
+                ReviewItem(
+                    title=r.get("title", "Sin título"),
+                    author=r.get("id_Client", "Usuario"), 
+                    comment=r.get("description", ""),
+                    score=r.get("mark", 0),
+                    date=r.get("reviewDate", "")
+                )
+            )
+
     reviews_section = ft.Container(
         padding=40,
         content=ft.ResponsiveRow( 
         vertical_alignment=ft.CrossAxisAlignment.START,
         controls=[
-            # LADO IZQUIERDO:
             ft.Column([
-                ft.Text("Reviews", size=45, weight="bold", color="black"),
-                ft.Text("9.6 / 10", size=40, weight="bold", color=ft.Colors.BLUE_800),
+                ft.Text("Reseñas", size=45, weight="bold", color="black"),
+                ft.Text(score_display_text, size=40, weight="bold", color=ft.Colors.BLUE_800),
+                ft.Text(f"Basado en {total_reviews} opiniones", color="grey")
             ], col={"sm": 12, "md": 4}),
 
-                # LADO DERECHO:
-                ft.VerticalDivider(width=20, color="transparent"),
-                ft.Column([
-                    ReviewItem(
-                        title="Excellent value for the price!",
-                        author="Mark M.",
-                        comment="We enjoyed our stay at this hotel. We will definitely come back!",
-                        score=10,
-                        score_label="Excellent",
-                        score_color="green",
-                        pros=["Great location!", "Service", "Bottle of champagne in the room!"],
-                        date="20 September, 2022"
-                    ),
-                    ReviewItem(
-                        title="Good hotel but noisy location",
-                        author="Karena L.",
-                        comment="Had room facing the street and it was super noisy. Unfortunately, we couldn't change room",
-                        score=5.6,
-                        score_label="Average",
-                        score_color="orange",
-                        cons=["Noise"],
-                        date="10 September, 2022"
-                    ),
-                ], col={"sm": 12, "md": 8})
-            ]
-        )
+            # Lista Derecha
+            ft.Column(
+                controls=reviews_controls_list,
+                col={"sm": 12, "md": 8}
+            )
+        ])
     )
 
     def responsive(e):
-        if not page.width:
-            return
-
+        if not page.width: return
         menu.resize(page.width)
 
     page.on_resize = responsive
-    if page.width:
-        responsive(None)
+    if page.width: responsive(None)
 
     return ft.View(
         route="/singleRoom", 

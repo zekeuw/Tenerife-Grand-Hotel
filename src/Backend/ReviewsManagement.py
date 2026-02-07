@@ -55,7 +55,9 @@ def getAllReviewsFromRoom(roomId:str):
     rooms = conectRoomCollection()
     query = {"_id": roomId}
 
-    data = rooms.find(query)
+    data = rooms.find_one(query)
+
+    data = dict(data)
 
     reviews = data["reviews"]
 
