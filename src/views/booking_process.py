@@ -11,6 +11,8 @@ def BookProcess(page: ft.Page):
         
     data = getattr(page, "booking_data", None)
 
+    print(page.username)
+
     # Extraemos los datos de la habitación
     ini_date = data["fechaIni"]
     fin_Date = data["fechaFin"]

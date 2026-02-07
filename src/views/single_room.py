@@ -201,7 +201,6 @@ def singleRoom(page: ft.Page):
     )
 
     propiedades = ft.Container(
-        width=600, 
         content=ft.ResponsiveRow(
             spacing=0,
             run_spacing=5,
@@ -222,16 +221,17 @@ def singleRoom(page: ft.Page):
 
     info_section = ft.Container(
         alignment=ft.Alignment.CENTER,
-        padding=40,
-        content=ft.Row(
+        padding=ft.padding.symmetric(horizontal=20, vertical=40),
+        content=ft.ResponsiveRow(
             alignment=ft.MainAxisAlignment.CENTER,
             vertical_alignment=ft.CrossAxisAlignment.START,
-            spacing=80,
+            run_spacing=50,
             controls=[
                 # COLUMNA IZQUIERDA
                 ft.Container(
                     width=400,
                     content=ft.Column(
+                        col={"sm": 12, "md": 6},
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         spacing=15,
                         controls=[
@@ -251,6 +251,7 @@ def singleRoom(page: ft.Page):
                 ft.Container(
                     width=400,
                     content=ft.Column(
+                        col={"sm": 12, "md": 6},
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         spacing=15,
                         controls=[
@@ -263,6 +264,7 @@ def singleRoom(page: ft.Page):
                             ),
                             ft.Row(
                                 alignment=ft.MainAxisAlignment.CENTER,
+                                wrap=True,
                                 spacing=10,
                                 controls=[
                                     input_fecha_entrada,
@@ -295,30 +297,30 @@ def singleRoom(page: ft.Page):
         points = []
         if pros:
             for p in pros:
-                points.append(ft.Row([ft.Icon(ft.Icons.ADD, color="green", size=16), ft.Text(p, size=13)]))
+                points.append(ft.Row([ft.Icon(ft.Icons.ADD, color="green", size=16), ft.Text(p, size=13, color="black")]))
         if cons:
             for c in cons:
-                points.append(ft.Row([ft.Icon(ft.Icons.REMOVE, color="red", size=16), ft.Text(c, size=13)]))
+                points.append(ft.Row([ft.Icon(ft.Icons.REMOVE, color="red", size=16), ft.Text(c, size=13, color="black")]))
 
         return ft.Column([
             ft.Row([
                 ft.Column([
-                    ft.Text(title, weight="bold", size=16),
-                    ft.Text(author, size=12, color="grey"),
-                    ft.Text(comment, size=14),
+                    ft.Text(title, weight="bold", size=16, color="black"),
+                    ft.Text(author, size=12, color="black"),
+                    ft.Text(comment, size=14, color="black"),
                     ft.Column(points, spacing=2),
                 ], expand=True),
                 ft.Column([
                     ft.Row([
                         ft.Text(score_label, color=score_color, weight="bold"),
                         ft.Container(
-                            content=ft.Text(str(score), weight="bold"),
+                            content=ft.Text(str(score), weight="bold", color="black"),
                             bgcolor=ft.Colors.with_opacity(0.1, score_color),
                             padding=10,
                             border_radius=10
                         )
                     ], alignment=ft.MainAxisAlignment.END),
-                    ft.Text(f"Reviewed on\n{date}", size=11, color="grey", text_align=ft.TextAlign.RIGHT)
+                    ft.Text(f"Reviewed on\n{date}", size=11, color="black", text_align=ft.TextAlign.RIGHT)
                 ], horizontal_alignment=ft.CrossAxisAlignment.END)
             ]),
             ft.Divider(height=40, thickness=1, color=ft.Colors.BLACK_12)
@@ -332,8 +334,8 @@ def singleRoom(page: ft.Page):
         controls=[
             # LADO IZQUIERDO:
             ft.Column([
-                ft.Text("Reviews", size=45, weight="bold"),
-                ft.Text("9.6 / 10", size=40, weight="bold", color="blue"),
+                ft.Text("Reviews", size=45, weight="bold", color="black"),
+                ft.Text("9.6 / 10", size=40, weight="bold", color=ft.Colors.BLUE_800),
             ], col={"sm": 12, "md": 4}),
 
                 # LADO DERECHO:
