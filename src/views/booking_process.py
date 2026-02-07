@@ -129,12 +129,43 @@ def BookProcess(page: ft.Page):
         error_found = False
         
         for field in fields_to_validate:
+            field.border_color = "black"
+            field.helper = ""
+            field.helper_style = ft.TextStyle(color="red")
+        
+        for field in fields_to_validate:
             if not field.value or str(field.value).strip() == "":
-                field.label = ft.Text(field.label, weight="bold", color="red") if isinstance(field.label, str) else field.label
+                field.border_color = "red"
+                field.helper = "Campo obligatorio"
                 error_found = True
-        if error_found: return
-    
 
+        if tf_email.value:
+            email_val = tf_email.value.strip()
+            if "@" not in email_val or "." not in email_val:
+                tf_email.border_color = "red"
+                tf_email.helper = "Falta el '@' o el '.'"
+                error_found = True
+
+        if tf_telefono.value:
+            phone_val = tf_telefono.value.strip()
+            
+            # quitamos espacios para contar solo los números
+            solo_numeros = "".join(filter(str.isdigit, phone_val))
+            
+            if len(solo_numeros) != 9:
+                tf_telefono.border_color = "red"
+                tf_telefono.helper = f"Deben ser 9 dígitos"
+                error_found = True
+            elif not phone_val.replace(" ", "").isdigit() and not phone_val.startswith("+"):
+                tf_telefono.border_color = "red"
+                tf_telefono.helper = "Solo números válidos"
+                error_found = True
+
+        page.update() 
+
+        if error_found:
+            return
+    
         try:
             ini_obj = datetime.strptime(ini_date, "%d-%m-%Y")
             new_ini = ini_obj.strftime("%Y-%m-%d")
