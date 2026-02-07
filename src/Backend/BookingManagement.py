@@ -123,7 +123,7 @@ def GetBookingsOfUser(userName:str) -> list:
 
     bookings = conectBookingCollection()
 
-    data = bookings.find({"UserName": userName})
+    data = bookings.find({"UserName": userName}).sort("IniDate", -1)
 
     if not data:
         raise NotFoundError("No hay ninguna reserva")

@@ -3,7 +3,7 @@ import pymongo
 from src.Backend.Utils.Exceptions import NotFoundError
 from src.Backend.Connection import conectRoomCollection
 
-def createReview(title: str, roomId:str, review:str,mark:int, userId:str, bookingStart:str):
+def createReview(title: str, roomId:str, review:str,mark:int, userId:str, bookingStart:str, review_date:str):
     '''Creates a review :P'''
     rooms = conectRoomCollection()
     
@@ -13,14 +13,14 @@ def createReview(title: str, roomId:str, review:str,mark:int, userId:str, bookin
     if not review:
         raise ValueError("El comentario no puede estar vacío.")
 
-
     new_review = {
         "title": title,
         "id_Client": userId,
         "id_room": roomId,  
         "mark": int(mark),
         "description": review,
-        "bookingStartDate": bookingStart
+        "bookingStartDate": bookingStart,
+        "reviewDate": review_date
     }
 
     result = rooms.update_one(
@@ -50,3 +50,13 @@ def returnReview(userId:str, roomId:str, bookingStart:str):
 
     if data and "reviews" in data and len(data["reviews"]) > 0:
         return data["reviews"][0]
+    
+def getAllReviewsFromRoom(roomId:str):
+    rooms = conectRoomCollection()
+    query = {"_id": roomId}
+
+    data = rooms.find(query)
+
+    reviews = data["reviews"]
+
+    return reviews

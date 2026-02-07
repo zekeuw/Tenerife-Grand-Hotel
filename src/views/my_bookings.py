@@ -1,27 +1,24 @@
 import flet as ft
 import datetime
 
-# Asumo que estos imports funcionan correctamente en tu proyecto
 from src.Backend.BookingManagement import UpdateBooking, GetBookingsOfUser, DeleteBookings
 from src.Backend.Utils.Exceptions import NotFoundError
 from src.components.navigation_bar import NavigationBar
+from src.Backend.ReviewsManagement import createReview, returnReview
 
 def MyBookingsPage(page: ft.Page):
-
     
     page.overlay.clear()
     page.title = "Tenerife Grand Hotel"
     page.theme_mode = ft.ThemeMode.LIGHT
     
-    # 1. Validación de usuario antes de cargar nada
     if not page.username:
         page.go("/logIn")
-        return ft.Container() # Retornamos vacío para evitar cargar el resto
+        return ft.Container()
 
     menu = NavigationBar(page, state="logged_in")
     data = GetBookingsOfUser(page.username)
     
-    # Contenedor para las tarjetas (usamos Column con scroll para muchas reservas)
     cards_column = ft.Column(spacing=20)
     
     no_data = ft.Text(
@@ -36,11 +33,10 @@ def MyBookingsPage(page: ft.Page):
         no_data.visible = True
     else:
         for elemento in data:
-            # Instanciamos la Clase BookingCard
-            tarjeta = BookingCard(page, elemento, cards_column)
-            cards_column.controls.append(tarjeta)
+            card = BookingCard(page, elemento, cards_column)
+            cards_column.controls.append(card)
 
-    contenido = ft.Container(
+    content = ft.Container(
         expand=True,
         bgcolor="white",
         padding=20,
@@ -59,30 +55,62 @@ def MyBookingsPage(page: ft.Page):
         route="/MyBookings",
         bgcolor="white",
         controls=[
-            contenido # Tu contenedor principal
+            content
         ]
     )
 
 
+class StarRating(ft.Row):
+    def __init__(self, initial_rating=0):
+        super().__init__()
+        self.value = initial_rating
+        self.alignment = ft.MainAxisAlignment.CENTER
+        self.spacing = 5
+        
+        self.star_buttons = []
+        for i in range(1, 6):
+            btn = ft.IconButton(
+                icon=ft.Icons.STAR if i <= self.value else ft.Icons.STAR_BORDER,
+                icon_color=ft.Colors.AMBER if i <= self.value else ft.Colors.GREY_400,
+                icon_size=30,
+                tooltip=f"{i} Estrellas",
+                on_click=lambda e, score=i: self.set_rating(score)
+            )
+            self.star_buttons.append(btn)
+        
+        self.controls = self.star_buttons
+
+    def set_rating(self, score):
+        self.value = score
+        for i, btn in enumerate(self.star_buttons):
+            if (i + 1) <= score:
+                btn.icon = ft.Icons.STAR
+                btn.icon_color = ft.Colors.AMBER
+            else:
+                btn.icon = ft.Icons.STAR_BORDER
+                btn.icon_color = ft.Colors.GREY_400
+        self.update()
+
 class BookingCard(ft.Container):
     def __init__(self, page_ref: ft.Page, booking_data, parent_column: ft.Column):
         super().__init__()
-        # ERROR ORIGINAL: self.page = page (No se puede hacer)
-        # CORRECCIÓN: Usamos otro nombre, ej: main_page
+
         self.main_page = page_ref 
-        
         self.booking_data = booking_data
         self.parent_column = parent_column 
         
         self.room_id = booking_data.get("RoomId", "N/A")
-        
-        # --- (Resto de la lógica de fechas igual que antes) ---
+
         raw_ini = booking_data.get("IniDate")
         raw_fin = booking_data.get("FinDate")
         self.date_ini_obj = self.parse_date(raw_ini)
         self.date_fin_obj = self.parse_date(raw_fin)
-        
-        # Estilos visuales
+
+        today = datetime.datetime.now().date()
+        booking_end_date = self.date_fin_obj.date()
+
+        self.is_editable = booking_end_date >= today
+
         self.padding = 20
         self.border_radius = 15
         self.bgcolor = "white"
@@ -91,7 +119,12 @@ class BookingCard(ft.Container):
 
         self.error_log = ft.Text(value="", color="#fe0f13", visible=False, size=12)
 
-        # DatePickers
+        self.data = returnReview(self.main_page.username, self.room_id, self.booking_data["IniDate"])
+        if self.data:
+            self.is_review = True
+        else:
+            self.is_review = False
+
         self.entry_datepicker = ft.DatePicker(
             on_change=self.update_entry_date_ui,
             cancel_text="Cancelar",
@@ -110,10 +143,8 @@ class BookingCard(ft.Container):
             first_date=datetime.datetime.now() + datetime.timedelta(days=1)
         )
 
-        # CORRECCIÓN: Usamos self.main_page aquí
         self.main_page.overlay.extend([self.entry_datepicker, self.exit_datepicker])
 
-        # Inputs de Texto
         self.input_entrada = ft.TextField(
             value=self.date_ini_obj.strftime("%d-%m-%Y") if self.date_ini_obj else "",
             label="Fecha Entrada",
@@ -121,7 +152,8 @@ class BookingCard(ft.Container):
             width=140,
             height=40,
             text_size=13,
-            read_only=True,
+            read_only=True, 
+            disabled=not self.is_editable, 
             suffix_icon=ft.Icons.CALENDAR_MONTH,
             border=ft.InputBorder.NONE,
             on_click=lambda _: self.open_date_picker(self.entry_datepicker)
@@ -135,16 +167,17 @@ class BookingCard(ft.Container):
             height=40,
             text_size=13,
             read_only=True,
+            disabled=not self.is_editable, 
             suffix_icon=ft.Icons.CALENDAR_TODAY,
             border=ft.InputBorder.NONE,
             on_click=lambda _: self.open_date_picker(self.exit_datepicker)
         )
 
-        # Botones
         self.btn_modificar = ft.ElevatedButton(
             "Modificar", 
             bgcolor="blue", color="white",
             height=35,
+            visible=self.is_editable, 
             on_click=self.toggle_edit_mode
         )
 
@@ -167,10 +200,26 @@ class BookingCard(ft.Container):
             icon=ft.Icons.DELETE_OUTLINE, 
             icon_color="red", 
             tooltip="Eliminar reserva",
+            visible=self.is_editable, 
             on_click=self.delete_booking
         )
 
-        # Layout
+        self.btn_review = ft.ElevatedButton(
+            "Dejar Reseña",
+            icon=ft.Icons.RATE_REVIEW,
+            bgcolor="orange", color="white",
+            height=35,
+            visible=(not self.is_editable and not self.is_review),
+            on_click=self.open_review_modal
+        )
+
+        status_indicator = ft.Container()
+        if not self.is_editable:
+            status_indicator = ft.Container(
+                content=ft.Text("Finalizada", color="grey", italic=True, size=12),
+                padding=ft.padding.only(right=10)
+            )
+
         info_column = ft.Column([
              ft.Row([
                 ft.Container(
@@ -194,7 +243,9 @@ class BookingCard(ft.Container):
                 ft.Row(
                     alignment=ft.MainAxisAlignment.END,
                     controls=[
-                        self.btn_eliminar,
+                        status_indicator,
+                        self.btn_review,   
+                        self.btn_eliminar, 
                         self.btn_modificar,
                         self.btn_cancelar,
                         self.btn_guardar
@@ -210,8 +261,6 @@ class BookingCard(ft.Container):
             ]
         )
 
-    # --- Métodos de Ayuda (Iguales, pero ajustando referencias a page) ---
-    
     def parse_date(self, date_val):
         if isinstance(date_val, str):
             try:
@@ -222,37 +271,27 @@ class BookingCard(ft.Container):
                 except:
                     return datetime.datetime.now()
         elif isinstance(date_val, (datetime.date, datetime.datetime)):
+            if isinstance(date_val, datetime.date) and not isinstance(date_val, datetime.datetime):
+                 return datetime.datetime(date_val.year, date_val.month, date_val.day)
             return date_val
         return datetime.datetime.now()
 
     def open_date_picker(self, picker):
-        # 1. Comprobamos si estamos en modo edición
-        if self.btn_guardar.visible:
-            picker.open = True       # Cambiamos la propiedad
-            self.main_page.update()  # <--- ¡ESTO ES LO QUE FALTABA!
-        else:
-            # (Opcional) Feedback visual si el usuario olvida dar a 'Modificar'
-            print("Debes pulsar 'Modificar' para cambiar la fecha")
+        if self.btn_guardar.visible and self.is_editable:
+            picker.open = True      
+            self.main_page.update() 
 
     def update_entry_date_ui(self, e):
         if self.entry_datepicker.value:
-            # --- CORRECCIÓN IMPORTANTE ---
-            # Quitamos la zona horaria para que sea compatible con el resto del sistema
             date = self.entry_datepicker.value.replace(tzinfo=None)
-            # -----------------------------
-
             self.input_entrada.value = date.strftime("%d-%m-%Y")
             
-            # Calculamos la nueva fecha mínima de salida (mañana)
             min_exit = date + datetime.timedelta(days=1)
             self.exit_datepicker.first_date = min_exit 
             
-            # Obtenemos valor actual de salida y lo limpiamos también
             current_exit_val = self.exit_datepicker.value
-            if current_exit_val:
-                current_exit_val = current_exit_val.replace(tzinfo=None)
+            if current_exit_val: current_exit_val = current_exit_val.replace(tzinfo=None)
 
-            # Ahora la comparación es segura (Naive vs Naive)
             if current_exit_val and current_exit_val <= date:
                 self.exit_datepicker.value = None
                 self.input_salida.value = ""
@@ -264,14 +303,13 @@ class BookingCard(ft.Container):
 
     def update_exit_date_ui(self, e):
         if self.exit_datepicker.value:
-            # Limpiamos zona horaria
             safe_date = self.exit_datepicker.value.replace(tzinfo=None)
-            
             self.input_salida.value = safe_date.strftime("%d-%m-%Y")
             self.input_salida.error_text = None
             self.input_salida.update()
 
     def toggle_edit_mode(self, e):
+        if not self.is_editable: return
         self.btn_modificar.visible = False
         self.btn_eliminar.visible = False
         self.btn_cancelar.visible = True
@@ -281,7 +319,6 @@ class BookingCard(ft.Container):
         self.input_entrada.border_color = "blue"
         self.input_salida.border = ft.InputBorder.OUTLINE
         self.input_salida.border_color = "blue"
-        
         self.update()
 
     def cancel_edit(self, e):
@@ -297,7 +334,6 @@ class BookingCard(ft.Container):
         
         self.input_entrada.border = ft.InputBorder.NONE
         self.input_salida.border = ft.InputBorder.NONE
-        
         self.update()
 
     def confirm_update(self, e):
@@ -308,27 +344,24 @@ class BookingCard(ft.Container):
             return
 
         try:
-            # Recuperamos valores. Si vienen del picker, limpiamos zona horaria.
             val_ini = self.entry_datepicker.value
             if val_ini: val_ini = val_ini.replace(tzinfo=None)
             
             val_fin = self.exit_datepicker.value
             if val_fin: val_fin = val_fin.replace(tzinfo=None)
 
-            # Si el usuario no tocó el picker, parseamos el texto del input
             new_ini = val_ini or datetime.datetime.strptime(self.input_entrada.value, "%d-%m-%Y")
             new_fin = val_fin or datetime.datetime.strptime(self.input_salida.value, "%d-%m-%Y")
             
             str_ini = new_ini.strftime("%Y-%m-%d")
             str_fin = new_fin.strftime("%Y-%m-%d")
             
-            # Llamada al Backend
             UpdateBooking(self.room_id, self.booking_data["IniDate"], str_ini, str_fin)
             
-            # Actualizar referencias locales
             self.date_ini_obj = new_ini
             self.date_fin_obj = new_fin
             self.booking_data["IniDate"] = str_ini 
+            self.booking_data["FinDate"] = str_fin 
             
             self.main_page.snack_bar = ft.SnackBar(ft.Text("Reserva modificada correctamente"), bgcolor="green")
             self.main_page.snack_bar.open = True
@@ -348,7 +381,6 @@ class BookingCard(ft.Container):
             self.parent_column.controls.remove(self)
             self.parent_column.update()
             
-            # CORRECCIÓN: Usamos self.main_page aquí
             self.main_page.snack_bar = ft.SnackBar(ft.Text("Reserva eliminada"), bgcolor="red")
             self.main_page.snack_bar.open = True
             self.main_page.update()
@@ -357,3 +389,81 @@ class BookingCard(ft.Container):
             self.error_log.value = str(ex)
             self.error_log.visible = True
             self.update()
+
+    def open_review_modal(self, e):
+
+        star_rating_widget = StarRating()
+
+        review_title = ft.TextField(
+            label="Titulo",
+            multiline=False,
+            hint_text="Escribe un titulo para la reseña..."
+        )
+
+        review_input = ft.TextField(
+            label="Comentarios (opcional)",
+            multiline=True,
+            max_lines=5,
+            hint_text="Cuéntanos más sobre tu experiencia..."
+        )
+        error_text = ft.Text("", color="red", size=12, visible=False)
+
+        def close_dlg(e):
+            dialog.open = False
+            self.main_page.update()
+
+        def send_review_action(e):
+            rating = star_rating_widget.value 
+            
+            if rating == 0:
+                error_text.value = "Por favor, selecciona una puntuación."
+                error_text.visible = True
+                dialog.update() 
+                return
+            
+            title = review_title.value
+
+            if title == "":
+                error_text.value = "El titulo es un campo obligatorio"
+                self.btn_review.visible = False
+                error_text.visible = True
+                dialog.update()
+                return
+            
+            today_date = datetime.datetime.now()
+            date_text = today_date.strftime("%Y-%m-%d")
+            
+            try:
+                createReview(title, self.room_id, review_input.value, rating, self.main_page.username, self.booking_data["IniDate"], date_text)
+                close_dlg(None)
+                
+            except Exception as ex:
+                print(f"Error reseña: {ex}")
+
+        dialog = ft.AlertDialog(
+            modal=True,
+            title=ft.Text(f"Valorar Habitación {self.room_id}", text_align=ft.TextAlign.CENTER),
+            content=ft.Container(
+                width=400, 
+                content=ft.Column([
+                    ft.Text("¿Qué nota le pones?", size=16),
+                    ft.Divider(color="transparent", height=10),
+                    star_rating_widget,
+                    ft.Divider(color="transparent", height=5),
+                    error_text,
+                    ft.Divider(),
+                    review_title,
+                    ft.Divider(color="transparent", height=5),
+                    review_input
+                ], tight=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
+            ),
+            actions=[
+                ft.TextButton("Cancelar", on_click=close_dlg),
+                ft.ElevatedButton("Enviar", on_click=send_review_action, bgcolor="blue", color="white"),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+
+        self.main_page.overlay.append(dialog)
+        dialog.open = True
+        self.main_page.update()
