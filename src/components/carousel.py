@@ -21,7 +21,7 @@ class RoomCarousel(ft.Container):
         # Estructura visual
         self.content = ft.Column(
             width=1800,
-            align=ft.Alignment.CENTER,
+            alignment=ft.Alignment.CENTER,
             controls= [
             ft.Stack(
                 controls=[
@@ -65,6 +65,7 @@ class RoomCarousel(ft.Container):
                         width=240, height=320, padding=10, margin=15,
                         bgcolor="white", border_radius=15,
                         shadow=ft.BoxShadow(blur_radius=5, color=ft.Colors.BLACK),
+                        ink=True,
                         on_click=lambda e, datos=data, tipo=room_type: self.go_to_room(datos, tipo),
                         content=ft.Column([
                             ft.Image(src=data.get("main_image"), height=180, width=240, fit="COVER", border_radius=5),
@@ -77,8 +78,12 @@ class RoomCarousel(ft.Container):
         self.card_row.controls = cards
 
     def go_to_room(self, data, room_type):
-        setattr(self.main_page, "selected_room_data", {"data": data, "type": room_type})
-        self.main_page.go("/singleRoom")
+        setattr(self.main_page, "selected_room_data", {"data": data, "type": room_type, "foto_portada": data.get("main_image")})
+        
+        if self.main_page.route == "/singleRoom":
+            self.main_page.go("/reloading")
+        else:
+            self.main_page.go("/singleRoom")
 
     async def scroll_left(self, e):
         await self.card_row.scroll_to(delta=-self.desplazamiento, duration=500, curve="easeOut")
