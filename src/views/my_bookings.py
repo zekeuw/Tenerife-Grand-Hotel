@@ -51,6 +51,12 @@ def MyBookingsPage(page: ft.Page):
         )
     )
 
+    def responsive(e):
+        if not page.width: return
+        menu.resize(page.width)
+    
+    page.on_resize = responsive
+
     return ft.View(
         route="/MyBookings",
         bgcolor="white",
