@@ -16,22 +16,24 @@ def userPage(page: ft.Page):
     menu = NavigationBar(page, state="user_page")
 
     def open_entry_picker(e):
-        entry_datepicker.open = True
-        entry_datepicker.update()
+        if not txtBirth.read_only:
+            entry_datepicker.open = True
+            entry_datepicker.update()
 
     #---------------------- TextFields ---------------------------
-    txtUserName = ft.TextField(value=data["username"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", margin=ft.Margin.only(left=40))
-    txtName = ft.TextField(value=data["name"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", margin=ft.Margin.only(left=40))
-    txtSurname = ft.TextField(value=data["surname"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", margin=ft.Margin.only(left=40))
-    txtPhone = ft.TextField(value=data["phone"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", margin=ft.Margin.only(left=40))
+    txtUserName = ft.TextField(value=data["username"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", text_align=ft.TextAlign.CENTER)
+    txtName = ft.TextField(value=data["name"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", text_align=ft.TextAlign.CENTER)
+    txtSurname = ft.TextField(value=data["surname"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", text_align=ft.TextAlign.CENTER)
+    txtPhone = ft.TextField(value=data["phone"], read_only=True, border=ft.InputBorder.NONE, text_size=15, color="#555555", text_align=ft.TextAlign.CENTER)
+
     txtBirth = ft.TextField(
         value=data["birth"],
         read_only=True,
         border=ft.InputBorder.NONE,
         text_size=15,
         color="#555555",
-        margin=ft.Margin.only(left=40),
-        on_click= open_entry_picker
+        on_click= open_entry_picker,
+        text_align=ft.TextAlign.CENTER
     )
 
 
@@ -53,7 +55,17 @@ def userPage(page: ft.Page):
     page.overlay.append(entry_datepicker)
     page.update()
 
-    txtFieldNewPass = ft.TextField(label="Nueva Contraseña", password=True, can_reveal_password=True, width=300, bgcolor="white", border_color="#0f62fe", text_size=15, margin=ft.Margin.only(left=40), visible=False)
+    txtFieldNewPass = ft.TextField(
+        label="Nueva Contraseña", 
+        password=True, 
+        can_reveal_password=True, 
+        width=300, 
+        bgcolor="white", 
+        border_color="#0f62fe", 
+        text_size=15, 
+        visible=False, 
+        text_align=ft.TextAlign.CENTER
+    )
 
     errorLog = ft.Text(value="", color="#fe0f13", visible=False)
     
@@ -84,30 +96,23 @@ def userPage(page: ft.Page):
                                     on_click=lambda e: manageDelete(page, page.username)
                                 )
     
-    row_botones_accion= ft.Row(
-                                visible=False,
-                                controls=[
-                                    
-                                    ft.OutlinedButton(
-                                        "Cancelar",
-                                        style=ft.ButtonStyle(color="#fe0f13"),
-                                        on_click=lambda e: toggle_edit(modo_edicion=False)
-                                    ),
-                                    ft.ElevatedButton(
-                                        "Guardar Cambios",
-                                        bgcolor="#198754",
-                                        color="white",
-                                        on_click=lambda e: confirmChanges()
-                                    ),
-                                    chgeDesc
-                                ]
-                            )
+    row_botones_accion = ft.Column(
+        visible=False,
+        controls=[
+            ft.Row([
+                ft.OutlinedButton("Cancelar", style=ft.ButtonStyle(color="#fe0f13"), on_click=lambda e: toggle_edit(False)),
+                ft.ElevatedButton("Guardar", bgcolor="#198754", color="white", on_click=lambda e: confirmChanges()),
+            ], alignment=ft.MainAxisAlignment.CENTER),
+            chgeDesc
+        ], horizontal_alignment=ft.CrossAxisAlignment.CENTER
+    )
 
 
     txtFields = [txtUserName, txtName, txtSurname, txtPhone, txtBirth] #almacenamos todos los textfields para cambiarle los estilos al darle al boton de editar
 
     columna_izquierda = ft.Column(
-        expand=True,
+        col={"sm": 12, "md": 6}, # 12 en móvil (pantalla completa), 6 en escritorio (mitad)
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             ft.Text("Nombre de Usuario:", size=15, weight="bold", color="#000000"),
             txtUserName,
@@ -119,7 +124,8 @@ def userPage(page: ft.Page):
     )
 
     columna_derecha = ft.Column(
-        expand=True,
+        col={"sm": 12, "md": 6},
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             ft.Text("Teléfono:", size=15, weight="bold", color="#000000"),
             txtPhone,
@@ -131,36 +137,29 @@ def userPage(page: ft.Page):
     )
     
     central_container = ft.Container(
-            padding=40,
+            padding=20,
             bgcolor="#d1d1d1",
             border_radius=10,
-            content= ft.Container(
-                content = ft.Column(
-                    controls=[
-                        ft.Text("Datos Personales", size=24, weight="bold", color="#888888"),
-                        ft.Text("Consulta y edita tus datos personales", color="#888888"),
-                        ft.Row(
-                            alignment=ft.MainAxisAlignment.START,
-                            vertical_alignment=ft.CrossAxisAlignment.START,
-                            spacing=50,
-                            controls=[columna_izquierda, columna_derecha]
-                        ),
-                        
-                        ft.Divider(height=20, color="transparent"),
-                        
-                        ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[errorLog]),
-                        ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[btn_editar, btn_logout]),
-                        ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[btn_eliminar]),
-                        row_botones_accion # Botones guardar/cancelar
-                    ]
-                )
-        ), alignment=ft.Alignment.CENTER
-    )
+            content = ft.Column(
+                scroll=ft.ScrollMode.AUTO,
+                tight=True,
+                controls=[
+                    ft.Text("Datos Personales", size=24, weight="bold", color="#888888"),
+                    ft.Text("Consulta y edita tus datos personales", color="#888888"),
 
-    centrado = ft.Column(
-        controls=[central_container],
-        alignment=ft.MainAxisAlignment.CENTER, # Centrado vertical
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER, # Centrado horizontal
+                    ft.ResponsiveRow(
+                        spacing=20,
+                        controls=[columna_izquierda, columna_derecha]
+                    ),
+                    
+                    ft.Divider(height=20, color="transparent"),
+                    
+                    ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[errorLog]),
+                    ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[btn_editar, btn_logout]),
+                    ft.Row(alignment=ft.MainAxisAlignment.CENTER, controls=[btn_eliminar]),
+                    row_botones_accion # Botones guardar/cancelar
+                ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10
+            )
     )
     
     def manageDelete(page: ft.Page, username):
@@ -290,32 +289,43 @@ def userPage(page: ft.Page):
     
     def responsive(e):
         if not page.width: return
+ 
+        if page.width > 850:
+            central_container.width = 800
+        else:
+            central_container.width = page.width - 40 
+        
         menu.resize(page.width)
+        page.update()
 
     page.on_resize = responsive
-    if page.width:
-        responsive(None)
 
     vista = ft.View(
         route="/user",
         bgcolor="white",
         padding=0,
+        scroll=ft.ScrollMode.AUTO, # Permite scroll en toda la página
         controls=[
-            ft.Column(
-                spacing=0,
+            menu,
+            ft.Row(
+                alignment=ft.MainAxisAlignment.CENTER, # Centra el contenido horizontalmente
                 controls=[
-                    menu,
-                    ft.Row(
-                        spacing=0,
-                        alignment=ft.MainAxisAlignment.CENTER,
+                    ft.Column(
+                        # Forzamos a que la columna principal no se estire innecesariamente
+                        tight=True, 
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         controls=[
-                            centrado
-                        ]
+                            ft.Divider(height=20, color="transparent"), # Espaciado superior
+                            central_container,
+                            ft.Divider(height=20, color="transparent"), # Espaciado inferior
+                        ],
                     )
-                    
                 ]
             )
         ]
     )
+
+    if page.width:
+        responsive(None)
 
     return vista
