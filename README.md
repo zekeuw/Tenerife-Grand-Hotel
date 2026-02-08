@@ -22,9 +22,9 @@
 
 ## Descripción y Contexto
 
-[cite_start]El objetivo principal de este proyecto es diseñar y desarrollar una aplicación funcional que resuelva la necesidad práctica de gestionar reservas en un hotel[cite: 13, 14, 15]. [cite_start]La aplicación implementa un sistema **CRUD** (Crear, Leer, Actualizar, Eliminar) completo, permitiendo a los usuarios interactuar con la base de datos de manera eficiente y segura[cite: 37, 38, 39, 40, 41].
+El objetivo principal de este proyecto es diseñar y desarrollar una aplicación funcional que resuelva la necesidad práctica de gestionar reservas en un hotel. La aplicación implementa un sistema **CRUD** (Crear, Leer, Actualizar, Eliminar) completo, permitiendo a los usuarios interactuar con la base de datos de manera eficiente y segura.
 
-[cite_start]La solución se centra en la experiencia del usuario (UX), ofreciendo navegación fluida, validación de datos y feedback visual inmediato ante las acciones del usuario[cite: 18, 27].
+La solución se centra en la experiencia del usuario (UX), ofreciendo navegación fluida, validación de datos y feedback visual inmediato ante las acciones del usuario.
 
 ---
 
@@ -58,9 +58,9 @@
 ## Tecnologías Utilizadas
 
 * **Lenguaje:** Python 3.10+
-* [cite_start]**Frontend:** [Flet](https://flet.dev) (Framework para UI en Python)[cite: 122].
-* [cite_start]**Base de Datos:** MongoDB (NoSQL)[cite: 123].
-* [cite_start]**Controlador DB:** Pymongo[cite: 125].
+* **Frontend:** [Flet](https://flet.dev) (Framework para UI en Python).
+* **Base de Datos:** MongoDB (NoSQL).
+* **Controlador DB:** Pymongo.
 * **Gestión de Dependencias:** Poetry.
 * **Control de Versiones:** Git & GitHub.
 
@@ -68,7 +68,7 @@
 
 ## Estructura del Proyecto
 
-[cite_start]El código sigue una **arquitectura modular** para garantizar la escalabilidad y el mantenimiento, separando la lógica de negocio, los datos y la interfaz de usuario[cite: 52, 182, 185].
+El código sigue una **arquitectura modular** para garantizar la escalabilidad y el mantenimiento, separando la lógica de negocio, los datos y la interfaz de usuario.
 
 ```text
 TenerifeGrandHotel/
