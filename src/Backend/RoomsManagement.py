@@ -11,6 +11,13 @@ def TakeRandomPhotoByRoomType(room_type):
         images = room["category_images"]
         idx = randint(0, len(images) - 1)
         return images[idx]
+    
+def TakeRamdomPhotoByRoomId(room_Id):
+    '''Just takes the room id and calls the above function by its type'''
+    rooms_collection = conectRoomCollection()
+    room = rooms_collection.find_one({"_id": room_Id})
+    image = TakeRandomPhotoByRoomType(room["category"])
+    return image
 
 def TakeRoomImage(room):
     room["main_image"] = choice(room["category_images"])

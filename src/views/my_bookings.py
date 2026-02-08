@@ -5,6 +5,7 @@ from src.Backend.BookingManagement import UpdateBooking, GetBookingsOfUser, Dele
 from src.Backend.Utils.Exceptions import NotFoundError
 from src.components.navigation_bar import NavigationBar
 from src.Backend.ReviewsManagement import createReview, returnReview
+from src.Backend.RoomsManagement import TakeRamdomPhotoByRoomId
 
 def MyBookingsPage(page: ft.Page):
     
@@ -231,10 +232,10 @@ class BookingCard(ft.Container):
         info_column = ft.Column([
              ft.Row([
                 ft.Container(
-                    width=50, height=50, 
-                    bgcolor="#f0f0f0", border_radius=10,
+                    width=100, height=100, 
+                    bgcolor="#ffffff", border_radius=10,
                     alignment=ft.Alignment.CENTER,
-                    content=ft.Icon(ft.Icons.HOTEL, color="black54")
+                    content=ft.Image(src=TakeRamdomPhotoByRoomId(self.room_id), border_radius=5, margin=ft.Margin.only(left=10, right=10))
                 ),
                 ft.Column([
                     ft.Text(f"Habitación {self.room_id}", weight="bold", size=16),
