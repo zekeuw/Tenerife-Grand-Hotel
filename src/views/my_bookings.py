@@ -126,8 +126,10 @@ class BookingCard(ft.Container):
         self.error_log = ft.Text(value="", color="#fe0f13", visible=False, size=12)
 
         self.data = returnReview(self.main_page.username, self.room_id, self.booking_data["IniDate"])
+
+        #initially i thoght that a user should not review a booking twice, so the check is still here :P
         if self.data:
-            self.is_review = True
+            self.is_review = False
         else:
             self.is_review = False
 
