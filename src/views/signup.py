@@ -64,7 +64,7 @@ def signUp(page: ft.Page):
         on_change=UpdateEntryDate,
         cancel_text="Cancelar",
         confirm_text="Confirmar Entrada",
-        help_text="Selecciona fecha de llegada",
+        help_text="Selecciona tu fecha de nacimiento",
         last_date= date.today()
     )
 

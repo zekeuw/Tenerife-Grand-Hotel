@@ -381,20 +381,47 @@ class BookingCard(ft.Container):
             self.update()
 
     def delete_booking(self, e):
-        try:
-            DeleteBookings(self.booking_data["RoomId"], self.booking_data["IniDate"])
-            
-            self.parent_column.controls.remove(self)
-            self.parent_column.update()
-            
-            self.main_page.snack_bar = ft.SnackBar(ft.Text("Reserva eliminada"), bgcolor="red")
-            self.main_page.snack_bar.open = True
+
+        # Función que realmente borra
+        def confirm_delete(e):
+            try:
+                DeleteBookings(self.booking_data["RoomId"], self.booking_data["IniDate"])
+                
+                self.parent_column.controls.remove(self)
+                self.parent_column.update()
+
+                confirm_dialog.open = False
+                self.main_page.snack_bar = ft.SnackBar(ft.Text("Reserva eliminada"), bgcolor="red")
+                self.main_page.snack_bar.open = True
+                self.main_page.update()
+
+            except Exception as ex:
+                confirm_dialog.open = False
+                self.error_log.value = str(ex)
+                self.error_log.visible = True
+                self.update()
+
+        # Función para cerrar el diálogo si cancela
+        def close_dlg(e):
+            confirm_dialog.open = False
             self.main_page.update()
 
-        except Exception as ex:
-            self.error_log.value = str(ex)
-            self.error_log.visible = True
-            self.update()
+        # Crear el diálogo de confirmación
+        confirm_dialog = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Confirmar eliminación"),
+            content=ft.Text(f"¿Estás seguro de que deseas eliminar la reserva para la habitación {self.booking_data['RoomId']}?"),
+            actions=[
+                ft.TextButton("Confirmar", on_click=confirm_delete, style=ft.ButtonStyle(color="red")),
+                ft.TextButton("Cancelar", on_click=close_dlg),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+
+        # Añadir al overlay de la página principal y abrir
+        self.main_page.overlay.append(confirm_dialog)
+        confirm_dialog.open = True
+        self.main_page.update()
 
     def open_review_modal(self, e):
 
