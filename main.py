@@ -18,18 +18,15 @@ def main(page: ft.Page):
         
         print(f"Ruta actual: {page.route}") # Debug para ver qué pasa
 
-        if page.route == "/reloading":
-            page.views.clear()
-            page.route = "/singleRoom"
-
         page.overlay.clear()
         page.views.clear() if page.views  else None
+
          # Pa s altar directamente a users en debug
         if page.route == "/":
             page.views.append(homePage(page))
 
-        elif page.route == "/userPage":
-            page.views.append(userPage(page))
+        elif page.route.startswith("/singleRoom"):
+            page.views.append(singleRoom(page))
         
         elif page.route == "/allRooms":
             page.views.append(allRooms(page))

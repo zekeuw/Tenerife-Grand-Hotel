@@ -1,4 +1,5 @@
 import flet as ft
+import time
 
 class RoomCarousel(ft.Container):
     def __init__(self, page: ft.Page, rooms_data):
@@ -25,12 +26,12 @@ class RoomCarousel(ft.Container):
             controls= [
             ft.Stack(
                 controls=[
-                    # Capa 1: El carrusel de tarjetas (centrado)
+
                     ft.Container(
                         content=self.card_row,
                         padding=ft.padding.symmetric(horizontal=40), # Espacio para que las flechas no tapen el texto
                     ),
-                    # Capa 2: Flecha Izquierda (Pegada al borde)
+    
                     ft.Container(
                         content=ft.IconButton(
                             icon=ft.Icons.ARROW_BACK_IOS_ROUNDED,
@@ -38,9 +39,9 @@ class RoomCarousel(ft.Container):
                             icon_size=25,
                         ),
                         left=0,
-                        top=120, # Ajusta esto para centrarla verticalmente respecto a tu imagen
+                        top=120, 
                     ),
-                    # Capa 3: Flecha Derecha (Pegada al borde)
+
                     ft.Container(
                         content=ft.IconButton(
                             icon=ft.Icons.ARROW_FORWARD_IOS_ROUNDED,
@@ -51,8 +52,8 @@ class RoomCarousel(ft.Container):
                         top=120,
                     ),
                 ],
-                width=self.main_page.width, # Ocupa todo el ancho del móvil
-                height=350, # Altura total del área del carrusel
+                width=self.main_page.width,
+                height=350,
             )]
         )
 
@@ -80,10 +81,9 @@ class RoomCarousel(ft.Container):
     def go_to_room(self, data, room_type):
         setattr(self.main_page, "selected_room_data", {"data": data, "type": room_type, "foto_portada": data.get("main_image")})
         
-        if self.main_page.route == "/singleRoom":
-            self.main_page.go("/reloading")
-        else:
-            self.main_page.go("/singleRoom")
+        unique_id = time.time()
+
+        self.main_page.go(f"/singleRoom?v={unique_id}")
 
     async def scroll_left(self, e):
         await self.card_row.scroll_to(delta=-self.desplazamiento, duration=500, curve="easeOut")
