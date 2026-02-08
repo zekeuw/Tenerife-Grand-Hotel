@@ -1,6 +1,97 @@
-﻿<h1>Guía de usuario</h1>
-## Librerías a instalar para el correcto funcionamiento:
-<br>
-- flet
-<br>
-- pymongo
+# Tenerife Grand Hotel - App de Gestión de Reservas
+
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![Flet](https://img.shields.io/badge/Flet-Frontend-purple)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
+![Poetry](https://img.shields.io/badge/Poetry-Dependency%20Manager-blue)
+
+**Tenerife Grand Hotel** es una aplicación de escritorio multiplataforma desarrollada como Proyecto de Aprendizaje Basado en Proyectos (ABP). La aplicación permite la gestión integral de reservas hoteleras, ofreciendo una interfaz moderna e intuitiva construida con **Flet** (Python) y respaldada por una base de datos documental en **MongoDB**.
+
+---
+
+## Tabla de Contenidos
+
+1. [Descripción y Contexto](#-descripción-y-contexto)
+2. [Características Principales](#-características-principales)
+3. [Tecnologías Utilizadas](#-tecnologías-utilizadas)
+4. [Estructura del Proyecto](#-estructura-del-proyecto)
+5. [Instalación y Despliegue](#-instalación-y-despliegue)
+6. [Autores](#-autores)
+
+---
+
+## Descripción y Contexto
+
+[cite_start]El objetivo principal de este proyecto es diseñar y desarrollar una aplicación funcional que resuelva la necesidad práctica de gestionar reservas en un hotel[cite: 13, 14, 15]. [cite_start]La aplicación implementa un sistema **CRUD** (Crear, Leer, Actualizar, Eliminar) completo, permitiendo a los usuarios interactuar con la base de datos de manera eficiente y segura[cite: 37, 38, 39, 40, 41].
+
+[cite_start]La solución se centra en la experiencia del usuario (UX), ofreciendo navegación fluida, validación de datos y feedback visual inmediato ante las acciones del usuario[cite: 18, 27].
+
+---
+
+## Características Principales
+
+### Gestión de Usuarios
+* **Registro e Inicio de Sesión:** Sistema de autenticación seguro para acceder a las funcionalidades de reserva.
+* **Perfil de Usuario:** Visualización y edición de datos personales (Nombre, Teléfono, Contraseña).
+* **Eliminación de Cuenta:** Funcionalidad para borrar la cuenta de forma permanente con confirmación de seguridad.
+
+### Gestión de Habitaciones y Catálogo
+* **Exploración Visual:** Carrusel de imágenes y tarjetas detalladas de las habitaciones (Presidential, Luxury, Apartment, etc.).
+* **Filtros Avanzados:** Búsqueda en tiempo real por:
+    * Fechas de estancia (Validación de entrada/salida).
+    * Número de huéspedes.
+    * Rango de precios.
+    * Servicios (Wifi, Jacuzzi, TV, etc.).
+    * Categoría de habitación.
+
+### Sistema de Reservas (Core)
+* **Disponibilidad en Tiempo Real:** Verificación de fechas para evitar solapamientos de reservas.
+* **Proceso de Pago Simulado:** Cálculo automático de precios (Noches + IVA) y formulario de datos de facturación.
+* **Mis Reservas:** Panel para visualizar el historial de reservas, modificar fechas (si la reserva es futura) o cancelar estancias.
+
+### Reseñas y Valoraciones
+* Sistema de valoración (1-5 estrellas) para las habitaciones.
+* Visualización de comentarios de otros usuarios para facilitar la toma de decisiones.
+
+---
+
+## Tecnologías Utilizadas
+
+* **Lenguaje:** Python 3.10+
+* [cite_start]**Frontend:** [Flet](https://flet.dev) (Framework para UI en Python)[cite: 122].
+* [cite_start]**Base de Datos:** MongoDB (NoSQL)[cite: 123].
+* [cite_start]**Controlador DB:** Pymongo[cite: 125].
+* **Gestión de Dependencias:** Poetry.
+* **Control de Versiones:** Git & GitHub.
+
+---
+
+## Estructura del Proyecto
+
+[cite_start]El código sigue una **arquitectura modular** para garantizar la escalabilidad y el mantenimiento, separando la lógica de negocio, los datos y la interfaz de usuario[cite: 52, 182, 185].
+
+```text
+TenerifeGrandHotel/
+├── assets/                 # Imágenes, iconos y recursos estáticos
+│   ├── media/
+│   │   ├── icons/
+│   │   └── img/
+├── src/
+│   ├── Backend/            # Lógica de Negocio y Acceso a Datos
+│   │   ├── BookingManagement.py
+│   │   ├── RoomsManagement.py
+│   │   ├── UsersManagement.py
+│   │   ├── ReviewsManagement.py
+│   │   └── Utils/          # Validaciones y configuración
+│   ├── components/         # Componentes UI reutilizables (Navbar, Cards)
+│   └── views/              # Pantallas de la aplicación (Flet Views)
+│       ├── home_page.py
+│       ├── user_page.py
+│       ├── all_rooms.py
+│       ├── booking_process.py
+│       ├── login.py
+│       ├── signup.py
+│       └── ...
+├── app.py                  # Punto de entrada (Main)
+├── pyproject.toml          # Configuración de dependencias (Poetry)
+└── README.md               # Documentación
