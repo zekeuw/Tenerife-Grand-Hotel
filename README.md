@@ -4,6 +4,7 @@
 ![Flet](https://img.shields.io/badge/Flet-Frontend-purple)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
 ![Poetry](https://img.shields.io/badge/Poetry-Dependency%20Manager-blue)
+![Pytest](https://img.shields.io/badge/Pytest-Testing-yellow)
 
 **Tenerife Grand Hotel** es una aplicación de escritorio multiplataforma desarrollada como Proyecto de Aprendizaje Basado en Proyectos (ABP). La aplicación permite la gestión integral de reservas hoteleras, ofreciendo una interfaz moderna e intuitiva construida con **Flet** (Python) y respaldada por una base de datos documental en **MongoDB**.
 
@@ -16,7 +17,8 @@
 3. [Tecnologías Utilizadas](#-tecnologías-utilizadas)
 4. [Estructura del Proyecto](#-estructura-del-proyecto)
 5. [Instalación y Despliegue](#-instalación-y-despliegue)
-6. [Autores](#-autores)
+6. [Testing](#-testing)
+7. [Autores](#-autores)
 
 ---
 
@@ -37,30 +39,25 @@ La solución se centra en la experiencia del usuario (UX), ofreciendo navegació
 
 ### Gestión de Habitaciones y Catálogo
 * **Exploración Visual:** Carrusel de imágenes y tarjetas detalladas de las habitaciones (Presidential, Luxury, Apartment, etc.).
-* **Filtros Avanzados:** Búsqueda en tiempo real por:
-    * Fechas de estancia (Validación de entrada/salida).
-    * Número de huéspedes.
-    * Rango de precios.
-    * Servicios (Wifi, Jacuzzi, TV, etc.).
-    * Categoría de habitación.
+* **Filtros Avanzados:** Búsqueda en tiempo real por fechas, huéspedes, precio, servicios y categoría.
 
 ### Sistema de Reservas (Core)
 * **Disponibilidad en Tiempo Real:** Verificación de fechas para evitar solapamientos de reservas.
 * **Proceso de Pago Simulado:** Cálculo automático de precios (Noches + IVA) y formulario de datos de facturación.
-* **Mis Reservas:** Panel para visualizar el historial de reservas, modificar fechas (si la reserva es futura) o cancelar estancias.
+* **Mis Reservas:** Panel para visualizar historial, modificar fechas o cancelar estancias.
 
-### Reseñas y Valoraciones
-* Sistema de valoración (1-5 estrellas) para las habitaciones.
-* Visualización de comentarios de otros usuarios para facilitar la toma de decisiones.
+### Reseñas y Calidad
+* **Valoraciones:** Sistema de estrellas y comentarios.
+* **Alta Fiabilidad:** Código testeado con Pytest para asegurar la robustez de las funciones críticas.
 
 ---
 
 ## Tecnologías Utilizadas
 
 * **Lenguaje:** Python 3.10+
-* **Frontend:** [Flet](https://flet.dev) (Framework para UI en Python).
-* **Base de Datos:** MongoDB (NoSQL).
-* **Controlador DB:** Pymongo.
+* **Frontend:** [Flet](https://flet.dev) (Framework UI).
+* **Backend:** MongoDB (NoSQL) con Pymongo.
+* **Testing:** [Pytest](https://docs.pytest.org/) (Pruebas unitarias).
 * **Gestión de Dependencias:** Poetry.
 * **Control de Versiones:** Git & GitHub.
 
@@ -68,29 +65,27 @@ La solución se centra en la experiencia del usuario (UX), ofreciendo navegació
 
 ## Estructura del Proyecto
 
-El código sigue una **arquitectura modular** para garantizar la escalabilidad y el mantenimiento, separando la lógica de negocio, los datos y la interfaz de usuario.
+El código sigue una **arquitectura modular** estricta. Se ha incluido un directorio de pruebas dentro de `src` para validar la lógica de negocio.
 
 ```text
 TenerifeGrandHotel/
 ├── assets/                 # Imágenes, iconos y recursos estáticos
 │   ├── media/
-│   │   ├── icons/
-│   │   └── img/
 ├── src/
 │   ├── Backend/            # Lógica de Negocio y Acceso a Datos
 │   │   ├── BookingManagement.py
 │   │   ├── RoomsManagement.py
 │   │   ├── UsersManagement.py
-│   │   ├── ReviewsManagement.py
 │   │   └── Utils/          # Validaciones y configuración
 │   ├── components/         # Componentes UI reutilizables (Navbar, Cards)
+│   ├── test/               # Batería de Pruebas (Pytest) [NUEVO]
+│   │   ├── test_bookings.py
+│   │   ├── test_users.py
+│   │   └── ...
 │   └── views/              # Pantallas de la aplicación (Flet Views)
 │       ├── home_page.py
 │       ├── user_page.py
-│       ├── all_rooms.py
 │       ├── booking_process.py
-│       ├── login.py
-│       ├── signup.py
 │       └── ...
 ├── app.py                  # Punto de entrada (Main)
 ├── pyproject.toml          # Configuración de dependencias (Poetry)
