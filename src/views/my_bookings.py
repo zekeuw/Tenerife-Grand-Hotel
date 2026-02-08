@@ -55,6 +55,14 @@ def MyBookingsPage(page: ft.Page):
     def responsive(e):
         if not page.width: return
         menu.resize(page.width)
+
+        for card in cards_column.controls:
+            if isinstance(card, BookingCard):
+                card.ajustar_responsive(page.width)
+
+    responsive(page)
+
+
     
     page.on_resize = responsive
 
@@ -154,10 +162,13 @@ class BookingCard(ft.Container):
 
         self.main_page.overlay.extend([self.entry_datepicker, self.exit_datepicker])
 
+        
+
         self.input_entrada = ft.TextField(
             value=self.date_ini_obj.strftime("%d-%m-%Y") if self.date_ini_obj else "",
             label="Fecha Entrada",
             hint_text="DD-MM-AAAA",
+            dense=True,
             width=140,
             height=40,
             text_size=13,
@@ -172,6 +183,7 @@ class BookingCard(ft.Container):
             value=self.date_fin_obj.strftime("%d-%m-%Y") if self.date_fin_obj else "",
             label="Fecha Salida",
             hint_text="DD-MM-AAAA",
+            dense=True,
             width=140,
             height=40,
             text_size=13,
@@ -263,12 +275,16 @@ class BookingCard(ft.Container):
             ]
         )
 
+
         self.content = ft.ResponsiveRow(
             controls=[
                 ft.Column(col={"xs": 12, "md": 5}, controls=[info_column]),
                 ft.Column(col={"xs": 12, "md": 7}, controls=[controls_column]),
             ]
         )
+
+    
+
 
     def parse_date(self, date_val):
         if isinstance(date_val, str):
@@ -425,6 +441,36 @@ class BookingCard(ft.Container):
         self.main_page.overlay.append(confirm_dialog)
         confirm_dialog.open = True
         self.main_page.update()
+    
+    def ajustar_responsive(self, width):
+        is_phone = width < 600
+        
+        if is_phone:
+
+            self.input_entrada.suffix_icon = None
+            self.input_salida.suffix_icon = None
+
+            self.input_entrada.text_align = ft.TextAlign.START
+            self.input_salida.text_align = ft.TextAlign.START
+            
+            padding_movil = ft.padding.symmetric(horizontal=5)
+            self.input_entrada.content_padding = padding_movil
+            self.input_salida.content_padding = padding_movil
+            
+        else:
+
+            self.input_entrada.suffix_icon = ft.Icons.CALENDAR_MONTH
+            self.input_salida.suffix_icon = ft.Icons.CALENDAR_TODAY
+            
+
+            self.input_entrada.text_align = ft.TextAlign.START
+            self.input_salida.text_align = ft.TextAlign.START
+            
+
+            padding_desktop = ft.padding.only(left=10, right=5)
+            self.input_entrada.content_padding = padding_desktop
+            self.input_salida.content_padding = padding_desktop
+
 
     def open_review_modal(self, e):
 
