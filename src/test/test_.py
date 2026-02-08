@@ -14,7 +14,7 @@ from src.Backend.BookingManagement import createBooking, UpdateBooking, GetAvail
 
 #------------------- Exceptions ---------------------
 from pymongo.errors import DuplicateKeyError
-from Utils.Exceptions import NotFoundError
+from src.Backend.Utils.Exceptions import NotFoundError
 
 @pytest.fixture
 def cleanup_test_data():
