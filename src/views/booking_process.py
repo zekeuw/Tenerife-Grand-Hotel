@@ -30,7 +30,7 @@ def BookProcess(page: ft.Page):
     
     tf_tarjeta_nombre = ft.TextField(label="Nombre en la tarjeta", hint_text="Como aparece en la tarjeta", icon=ft.Icons.PERSON, color="black")
     tf_tarjeta_num = ft.TextField(label="Número de la tarjeta", hint_text="xxxx xxxxx xxxxx xxxxx", icon=ft.Icons.CREDIT_CARD, color="black")
-    tf_caducidad = ft.TextField(label="Caducidad", hint_text="MM/AA", width=170, icon=ft.Icons.CALENDAR_MONTH_OUTLINED, margin=ft.Margin.only(bottom=20), color="black")
+    tf_caducidad = ft.TextField(label="Caducidad", hint_text="MM/AA", width=170, icon=ft.Icons.CALENDAR_MONTH_OUTLINED, margin=ft.Margin.only(bottom=20), color="black", input_filter=ft.InputFilter(allow=True, regex_string=r"^^(0[1-9]|1[0-2]|[0-1])?(\/)?([0-9]{0,2})$"))
     tf_cvc = ft.TextField(label="CVC", hint_text="***", width=120, password=True, icon=ft.Icons.NUMBERS, max_length=3, color="black")
 
     fields_to_validate = [tf_nombre, tf_email, tf_telefono, tf_tarjeta_nombre, tf_tarjeta_num, tf_caducidad, tf_cvc]
