@@ -437,7 +437,7 @@ class BookingCard(ft.Container):
         )
 
         review_input = ft.TextField(
-            label="Comentarios (opcional)",
+            label="Comentarios",
             multiline=True,
             max_lines=5,
             hint_text="Cuéntanos más sobre tu experiencia..."

@@ -268,7 +268,7 @@ def userPage(page: ft.Page):
             
             else: 
                 password = txtFieldNewPass.value
-                print(password)
+                
 
             if username == None and name == None and surname == None and phone == None and birth == None and password == None:
                 raise Exception("Debe modificar al menos un campo")
