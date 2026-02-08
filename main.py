@@ -49,6 +49,9 @@ def main(page: ft.Page):
         elif page.route == "/MyBookings":
             page.views.append(MyBookingsPage(page))
 
+        elif page.route == "/userPage":
+            page.views.append(userPage(page))
+
         page.update()
 
     def view_pop(view):
