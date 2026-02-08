@@ -127,9 +127,9 @@ class BookingCard(ft.Container):
 
         self.data = returnReview(self.main_page.username, self.room_id, self.booking_data["IniDate"])
 
-        #initially i thoght that a user should not review a booking twice, so the check is still here :P
+        
         if self.data:
-            self.is_review = False
+            self.is_review = True
         else:
             self.is_review = False
 
@@ -470,10 +470,13 @@ class BookingCard(ft.Container):
             
             try:
                 createReview(title, self.room_id, review_input.value, rating, self.main_page.username, self.booking_data["IniDate"], date_text)
+                self.btn_review.visible = False
                 close_dlg(None)
                 
             except Exception as ex:
                 print(f"Error reseña: {ex}")
+
+        
 
         dialog = ft.AlertDialog(
             modal=True,
